@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(pnpm type-check)",
+      "Bash(pnpm db:types)",
+      "Bash(pnpm dev)",
+      "Bash(pnpm dev --turbopack)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm install)",
+      "Bash(pnpm supabase migration list *)",
+      "Bash(pnpm supabase migration new *)",
+      "Bash(pnpm supabase inspect *)",
+      "Bash(mkdir -p *)",
+      "Bash(pkill -f *)",
+      "Bash(rm -rf .next)",
+      "Bash(rm -rf .next/*)",
+      "Bash(lsof -i :*)",
+      "Bash(curl -s http://localhost:*)",
+      "Bash(curl -s -L http://localhost:*)",
+      "Bash(curl -s -o /dev/null http://localhost:*)",
+      "Bash(curl -s -L -o /dev/null *http://localhost:*)",
+      "Bash(curl -s -o /dev/null -w * http://localhost:*)"
+    ]
+  }
+}

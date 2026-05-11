@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.local.example
 
 # vercel
 .vercel
@@ -39,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 顧客機密ファイル (Private リポジトリでも除外)
+N-LIC様_業務フロー・改善ご要望＿手書きシート.pdf
+*.pdf
+

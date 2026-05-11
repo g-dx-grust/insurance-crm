@@ -1,26 +1,210 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
+@custom-variant dark (&:is(.dark *));
+
+/* ───────── G-DX ホワイトテーマ（基本） ───────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* === G-DX デザイントークン（Source of truth） === */
+  /* 背景 */
+  --color-bg:           #FFFFFF;
+  --color-bg-secondary: #F5F5F5;
+  --color-bg-sidebar:   #F8F8F8;
+
+  /* テキスト */
+  --color-text:          #111111;
+  --color-text-sub:      #374151;
+  --color-text-muted:    #6B7280;
+  --color-text-disabled: #9CA3AF;
+
+  /* 境界線 */
+  --color-border:        #E5E5E5;
+  --color-border-strong: #D1D5DB;
+
+  /* アクセント（N-LIC 用に 1 色のみ） */
+  --color-accent:       #1A56DB;
+  --color-accent-hover: #1648C2;
+  --color-accent-tint:  rgba(26, 86, 219, 0.08);
+
+  /* ステータス */
+  --color-success: #16A34A;
+  --color-warning: #CA8A04;
+  --color-error:   #DC2626;
+
+  /* 角丸（最大 8px、ピル型禁止） */
+  --radius:    8px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* フォント */
+  --font-base: var(--font-noto-sans-jp), 'Noto Sans JP', sans-serif;
+
+  /* フォントスケール（ユーザー設定で 0.9 / 1.0 / 1.1） */
+  --font-scale: 1;
+  --font-xs:  calc(11px * var(--font-scale));
+  --font-sm:  calc(12px * var(--font-scale));
+  --font-md:  calc(14px * var(--font-scale));
+  --font-lg:  calc(16px * var(--font-scale));
+  --font-xl:  calc(20px * var(--font-scale));
+  --font-2xl: calc(22px * var(--font-scale));
+
+  /* === shadcn/ui トークンを G-DX 値にマッピング === */
+  --background:           var(--color-bg);
+  --foreground:           var(--color-text);
+  --card:                 var(--color-bg);
+  --card-foreground:      var(--color-text);
+  --popover:              var(--color-bg);
+  --popover-foreground:   var(--color-text);
+  --primary:              var(--color-accent);
+  --primary-foreground:   #FFFFFF;
+  --secondary:            var(--color-bg-secondary);
+  --secondary-foreground: var(--color-text);
+  --muted:                var(--color-bg-secondary);
+  --muted-foreground:     var(--color-text-muted);
+  --accent:               var(--color-accent-tint);
+  --accent-foreground:    var(--color-accent);
+  --destructive:          var(--color-error);
+  --border:               var(--color-border);
+  --input:                var(--color-border);
+  --ring:                 var(--color-accent);
+
+  /* チャート色（アクセント1色 + ニュートラル諸色のみ。彩度の高い色は禁止） */
+  --chart-1: var(--color-accent);
+  --chart-2: var(--color-text-sub);
+  --chart-3: var(--color-text-muted);
+  --chart-4: var(--color-border-strong);
+  --chart-5: var(--color-border);
+
+  /* サイドバー（shadcn 用マッピング） */
+  --sidebar:                       var(--color-bg-sidebar);
+  --sidebar-foreground:            var(--color-text);
+  --sidebar-primary:               var(--color-accent);
+  --sidebar-primary-foreground:    #FFFFFF;
+  --sidebar-accent:                var(--color-accent-tint);
+  --sidebar-accent-foreground:     var(--color-accent);
+  --sidebar-border:                var(--color-border);
+  --sidebar-ring:                  var(--color-accent);
 }
 
+/* ───────── G-DX ブラックテーマ ───────── */
+.dark {
+  --color-bg:           #0F172A;
+  --color-bg-secondary: #1E293B;
+  --color-bg-sidebar:   #1E293B;
+
+  --color-text:          #F8FAFC;
+  --color-text-sub:      #CBD5E1;
+  --color-text-muted:    #94A3B8;
+  --color-text-disabled: #475569;
+
+  --color-border:        #334155;
+  --color-border-strong: #475569;
+
+  --color-accent:       #3B82F6;
+  --color-accent-hover: #2563EB;
+  --color-accent-tint:  rgba(59, 130, 246, 0.12);
+
+  --color-success: #22C55E;
+  --color-warning: #EAB308;
+  --color-error:   #EF4444;
+
+  /* shadcn マッピングは :root が var(--color-*) を参照しているため、
+     ダークでも自動的に上記の上書き値で再評価される */
+  --primary-foreground: #FFFFFF;
+}
+
+/* ───────── Tailwind v4 テーマブリッジ ───────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-base);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-base);
+
+  /* G-DX 専用トークン（bg-bg, text-text-sub, bg-success 等の Tailwind ユーティリティを生成） */
+  --color-bg:            var(--color-bg);
+  --color-bg-secondary:  var(--color-bg-secondary);
+  --color-bg-sidebar:    var(--color-bg-sidebar);
+  --color-text:          var(--color-text);
+  --color-text-sub:      var(--color-text-sub);
+  --color-text-muted:    var(--color-text-muted);
+  --color-text-disabled: var(--color-text-disabled);
+  --color-border-strong: var(--color-border-strong);
+  --color-accent-hover:  var(--color-accent-hover);
+  --color-accent-tint:   var(--color-accent-tint);
+  --color-success:       var(--color-success);
+  --color-warning:       var(--color-warning);
+  --color-error:         var(--color-error);
+
+  /* shadcn 標準ブリッジ */
+  --color-sidebar-ring:                var(--sidebar-ring);
+  --color-sidebar-border:              var(--sidebar-border);
+  --color-sidebar-accent-foreground:   var(--sidebar-accent-foreground);
+  --color-sidebar-accent:              var(--sidebar-accent);
+  --color-sidebar-primary-foreground:  var(--sidebar-primary-foreground);
+  --color-sidebar-primary:             var(--sidebar-primary);
+  --color-sidebar-foreground:          var(--sidebar-foreground);
+  --color-sidebar:                     var(--sidebar);
+  --color-chart-5:           var(--chart-5);
+  --color-chart-4:           var(--chart-4);
+  --color-chart-3:           var(--chart-3);
+  --color-chart-2:           var(--chart-2);
+  --color-chart-1:           var(--chart-1);
+  --color-ring:              var(--ring);
+  --color-input:             var(--input);
+  --color-border:            var(--border);
+  --color-destructive:       var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent:            var(--accent);
+  --color-muted-foreground:  var(--muted-foreground);
+  --color-muted:             var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary:         var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary:           var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover:           var(--popover);
+  --color-card-foreground:   var(--card-foreground);
+  --color-card:              var(--card);
+  --color-background:        var(--background);
+  --color-foreground:        var(--foreground);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ───────── ベース ───────── */
+@layer base {
+  * { box-sizing: border-box; }
+
+  html, body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-base);
+    font-size: var(--font-md);
+    line-height: 1.6;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* shadcn のリセットを維持（border / outline トークン） */
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  table { border-collapse: collapse; width: 100%; }
+  th {
+    font-weight: 600;
+    font-size: var(--font-sm);
+    color: var(--color-text-sub);
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary);
+  }
+  td {
+    font-size: var(--font-md);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
 }

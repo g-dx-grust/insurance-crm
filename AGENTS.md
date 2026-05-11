@@ -1,5 +1,34 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# AGENTS.md — グラスト G-DX AIエージェント行動規範
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+本ファイルは、株式会社グラストのG-DXプロジェクト群において、Cursor、Cline、Manus、Claude Codeなどの**すべてのAIエージェントが自律的に行動する際の最上位の制約事項**を定義するものです。
+
+## 1. 絶対参照ルールの強制
+
+いかなるタスク（新規構築、機能追加、リファクタリング、バグ修正）においても、コードの生成や設計判断を行う前に、必ず以下の2つのドキュメントを読み込み、その内容を**厳格に遵守**しなければなりません。
+
+1. **`G-DX_Future_Design_Rules.md`**
+   - UI/UXの設計、コンポーネントのスタイリング、カラーテーマ、ローディング設計など、フロントエンドのすべての実装においてこのルールを絶対的な基準とします。
+   - 「生成AI感」を排除し、指定されたCSS変数（デザイントークン）のみを使用してください。
+
+2. **`G-DX_Lark_Integration_Rules.md`**
+   - Lark OAuth認証、Lark Base連携、Lark IM通知など、Larkに関連するすべての実装においてこのルールを絶対的な基準とします。
+   - IDのハードコード禁止、プロフィール画像の同期、非同期通知などのベストプラクティスを必ず適用してください。
+
+## 2. エージェントの行動原則
+
+- **勝手な推測の禁止**: 要件やデザインルールに明記されていない独自の解釈や「あった方が良さそう」という理由での機能追加、過剰なアニメーション・装飾の追加は絶対に行わないでください。
+- **単一情報源の原則**: UIデザインやLark連携に関する疑問が生じた場合は、必ず上記2つのMarkdownファイルを参照し、そこに記載されているルールを正としてください。
+- **既存アーキテクチャの尊重**: Next.js App Router、Tailwind CSS、Supabase、Lark OAuthという標準スタックから逸脱する技術選定を独断で行わないでください。
+
+この `AGENTS.md` と同階層にある `CLAUDE.md` および2つのルールMarkdownファイルは、G-DXプロジェクトにおける**憲法**です。エージェントはこれらに違反するコードを出力してはなりません。
+
+---
+
+## 3. フレームワーク固有の重要事項（Next.js 16）
+
+本プロジェクトは **Next.js 16** を採用しており、訓練データ時点（多くは Next.js 14/15）からの破壊的変更が含まれます。コード生成前に **必ず `AGENTS.nextjs.md`（Next.js 公式が同梱する警告）と `node_modules/next/dist/docs/` の関連ガイドを参照** してください。
+
+特に注意:
+- `searchParams` / `params` は Promise として渡される（`await` 必須）
+- Cache 関連 API・Server Actions の挙動・middleware の matcher 等の更新の可能性
+- 不明な挙動は推測せず、上記 docs を引いて確認すること
