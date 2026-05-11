@@ -16,6 +16,7 @@ import {
   renewalRecordSchema,
   type RenewalRecordFormValues,
 } from '@/lib/validations/renewal'
+import { toTokyoIsoFromDateTimeLocal } from '@/lib/utils/datetime'
 
 type ActionResult<T = void> =
   | { ok: true; data?: T }
@@ -201,7 +202,7 @@ export async function addRenewalRecord(
     customer_id: parsed.data.customer_id,
     type: '更改',
     content: lines,
-    contacted_at: new Date(`${parsed.data.renewal_date}T00:00:00`).toISOString(),
+    contacted_at: toTokyoIsoFromDateTimeLocal(`${parsed.data.renewal_date}T00:00`),
     recorded_by: parsed.data.assigned_to ?? user.id,
   })
   if (histErr) return { ok: false, error: histErr.message }

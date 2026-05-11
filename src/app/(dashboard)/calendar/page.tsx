@@ -5,6 +5,11 @@ import {
 } from '@/components/features/calendar/CalendarClient'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenantId } from '@/lib/auth/server'
+import {
+  currentTokyoYearMonth,
+  shiftTokyoYearMonth,
+  tokyoMonthRangeIso,
+} from '@/lib/utils/datetime'
 
 export const metadata = { title: 'カレンダー | N-LIC CRM' }
 
@@ -23,13 +28,15 @@ export default async function CalendarPage({
   const supabase = await createClient()
   const tenantId = await getCurrentTenantId()
 
-  const now = new Date()
-  const year = Number(sp.year ?? now.getFullYear())
-  const month = Number(sp.month ?? now.getMonth() + 1)
+  const now = currentTokyoYearMonth()
+  const year = Number(sp.year ?? now.year)
+  const month = Number(sp.month ?? now.month)
 
   // 表示月の前後 1 ヶ月分
-  const startDate = new Date(year, month - 2, 1).toISOString()
-  const endDate = new Date(year, month + 1, 0, 23, 59, 59).toISOString()
+  const rangeStart = shiftTokyoYearMonth(year, month, -1)
+  const rangeEnd = shiftTokyoYearMonth(year, month, 1)
+  const startDate = tokyoMonthRangeIso(rangeStart.year, rangeStart.month).startDate
+  const endDate = tokyoMonthRangeIso(rangeEnd.year, rangeEnd.month).endDate
 
   const [{ data: events, error }, { data: customers }, { data: users }] =
     await Promise.all([

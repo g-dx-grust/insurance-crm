@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { format } from 'date-fns'
 import { Pencil, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { StatusBadge, type StatusVariant } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { formatTokyoDateTime } from '@/lib/utils/datetime'
 import { StageProgressBar } from './StageProgressBar'
 import { ActivityModal } from './ActivityModal'
 import {
@@ -155,7 +155,7 @@ export function OpportunityDetailClient({
                   <div className="flex items-center justify-between text-xs text-text-muted">
                     <div className="flex items-center gap-2">
                       <StatusBadge variant="info">{a.type}</StatusBadge>
-                      <span>{format(new Date(a.activity_date), 'yyyy-MM-dd HH:mm')}</span>
+                      <span>{formatTokyoDateTime(a.activity_date)}</span>
                     </div>
                     <span>{a.user_profiles?.name ?? '—'}</span>
                   </div>

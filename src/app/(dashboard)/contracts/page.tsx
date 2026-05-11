@@ -5,6 +5,7 @@ import {
 } from '@/components/features/contracts/ContractListClient'
 import { createClient } from '@/lib/supabase/server'
 import { sanitizePostgrestSearch } from '@/lib/utils/escape'
+import { ymdAfterTokyoMonths } from '@/lib/utils/datetime'
 
 export const metadata = { title: '契約管理 | N-LIC CRM' }
 
@@ -51,9 +52,7 @@ export default async function ContractsPage({
   if (sp.expiry_within) {
     const months = Number(sp.expiry_within)
     if (Number.isFinite(months) && months > 0) {
-      const target = new Date()
-      target.setMonth(target.getMonth() + months)
-      query = query.lte('expiry_date', target.toISOString().split('T')[0])
+      query = query.lte('expiry_date', ymdAfterTokyoMonths(months))
     }
   }
 

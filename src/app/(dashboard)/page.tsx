@@ -12,6 +12,14 @@ import {
   past12MonthKeys,
   type PeriodKey,
 } from '@/lib/utils/period'
+import {
+  currentTokyoYearMonth,
+  formatTokyoMonthKey,
+  shiftTokyoYearMonth,
+  todayTokyoYmd,
+  tokyoMonthRangeIso,
+  ymdAfterTokyo,
+} from '@/lib/utils/datetime'
 
 export const metadata = { title: 'ダッシュボード | N-LIC CRM' }
 
@@ -20,20 +28,17 @@ type SearchParams = Promise<{ period?: string }>
 const VALID_PERIODS = Object.keys(PERIOD_LABELS) as PeriodKey[]
 
 function ymdAfter(days: number): string {
-  const d = new Date()
-  d.setDate(d.getDate() + days)
-  return d.toISOString().slice(0, 10)
+  return ymdAfterTokyo(days)
 }
 
 function todayYmd(): string {
-  return new Date().toISOString().slice(0, 10)
+  return todayTokyoYmd()
 }
 
 function thisMonthRange(): { start: string; end: string } {
-  const now = new Date()
-  const start = new Date(now.getFullYear(), now.getMonth(), 1)
-  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
-  return { start: start.toISOString(), end: end.toISOString() }
+  const now = currentTokyoYearMonth()
+  const range = tokyoMonthRangeIso(now.year, now.month)
+  return { start: range.startDate, end: range.endDate }
 }
 
 export default async function DashboardPage({
@@ -49,11 +54,12 @@ export default async function DashboardPage({
 
   const supabase = await createClient()
   const { startDate, endDate } = getPeriodRange(period)
-  const monthsStart = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() - 11,
-    1,
-  ).toISOString()
+  const now = currentTokyoYearMonth()
+  const monthsStartParts = shiftTokyoYearMonth(now.year, now.month, -11)
+  const monthsStart = tokyoMonthRangeIso(
+    monthsStartParts.year,
+    monthsStartParts.month,
+  ).startDate
   const tm = thisMonthRange()
 
   const [
@@ -115,8 +121,7 @@ export default async function DashboardPage({
   for (const m of past12MonthKeys()) monthlyMap.set(m, { count: 0, premium_total: 0 })
   for (const row of monthlyContracts ?? []) {
     const r = row as { created_at: string; premium: number | null }
-    const d = new Date(r.created_at)
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    const key = formatTokyoMonthKey(r.created_at)
     const cur = monthlyMap.get(key)
     if (cur) {
       cur.count++

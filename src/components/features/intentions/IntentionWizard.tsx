@@ -28,6 +28,7 @@ import {
 } from '@/lib/constants/intention'
 import { productCategories } from '@/lib/validations/contract'
 import type { IntentionWizardValues } from '@/lib/validations/intention'
+import { nowTokyoDateTimeLocal } from '@/lib/utils/datetime'
 import { createIntentionRecord } from '@/app/(dashboard)/intentions/actions'
 
 export interface ContractOption {
@@ -71,12 +72,6 @@ interface WizardState {
   approver_id: string | null
 }
 
-function nowLocalIso(): string {
-  const d = new Date()
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
-  return d.toISOString().slice(0, 16)
-}
-
 function buildInitialChecklist(): Record<string, boolean> {
   return INTENTION_CHECKLIST_ITEMS.reduce<Record<string, boolean>>((acc, item) => {
     acc[item.key] = false
@@ -108,7 +103,7 @@ export function IntentionWizard({
     customer_id: defaultCustomerId ?? initialContract?.customer_id ?? '',
     contract_id: initialContract?.id ?? null,
     initial_intention: '',
-    initial_recorded_at: nowLocalIso(),
+    initial_recorded_at: nowTokyoDateTimeLocal(),
 
     comparison_method: '',
     comparison_reason: '',
@@ -116,7 +111,7 @@ export function IntentionWizard({
 
     final_intention: '',
     final_change_note: '',
-    final_recorded_at: nowLocalIso(),
+    final_recorded_at: nowTokyoDateTimeLocal(),
 
     checklist: buildInitialChecklist(),
     approver_id: null,
@@ -669,7 +664,7 @@ function Step4({
             <SelectValue placeholder="承認者を選択" items={approvers} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__none__">承認なしで完了 (status='実施済')</SelectItem>
+            <SelectItem value="__none__">承認なしで完了 (status「実施済」)</SelectItem>
             {approvers.map((u) => (
               <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
             ))}

@@ -28,6 +28,7 @@ import {
   type RenewalRecordFormValues,
 } from '@/lib/validations/renewal'
 import { renewalStatuses } from '@/lib/validations/contract'
+import { todayTokyoYmd } from '@/lib/utils/datetime'
 import { addRenewalRecord } from '@/app/(dashboard)/contracts/actions'
 
 interface UserOption {
@@ -58,7 +59,7 @@ export function RenewalHistoryModal({
     defaultValues: {
       contract_id: contractId,
       customer_id: customerId,
-      renewal_date: new Date().toISOString().slice(0, 10),
+      renewal_date: todayTokyoYmd(),
       content: '',
       new_premium: null,
       assigned_to: null,
@@ -81,7 +82,7 @@ export function RenewalHistoryModal({
       form.reset({
         contract_id: contractId,
         customer_id: customerId,
-        renewal_date: new Date().toISOString().slice(0, 10),
+        renewal_date: todayTokyoYmd(),
         content: '',
         new_premium: null,
         assigned_to: null,

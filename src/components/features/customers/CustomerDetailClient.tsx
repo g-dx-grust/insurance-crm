@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { format } from 'date-fns'
 import { Pencil, Plus, AlertTriangle, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { formatTokyoDateTime } from '@/lib/utils/datetime'
 import {
   Tabs,
   TabsContent,
@@ -67,7 +67,7 @@ export interface OpportunityRow {
   expected_close_date: string | null
 }
 
-export interface FamilyRow extends FamilyMemberInitial {}
+export type FamilyRow = FamilyMemberInitial
 
 export function CustomerDetailClient({
   customer,
@@ -238,7 +238,7 @@ export function CustomerDetailClient({
                   <div className="flex items-center justify-between text-xs text-text-muted">
                     <div className="flex items-center gap-2">
                       <StatusBadge variant="info">{h.type}</StatusBadge>
-                      <span>{format(new Date(h.contacted_at), 'yyyy-MM-dd HH:mm')}</span>
+                      <span>{formatTokyoDateTime(h.contacted_at)}</span>
                     </div>
                     <span>{h.user_profiles?.name ?? '—'}</span>
                   </div>

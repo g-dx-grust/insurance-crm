@@ -5,6 +5,15 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { EVENT_CATEGORY_STYLE, type EventCategory } from '@/lib/constants/calendar'
+import {
+  currentTokyoYearMonth,
+  formatTokyoDate,
+  formatTokyoDateTimeLocalFromParts,
+  formatTokyoTime,
+  getTokyoDateTimeParts,
+  shiftTokyoYearMonth,
+  todayTokyoYmd,
+} from '@/lib/utils/datetime'
 import { EventSidePanel, type EventInitial } from './EventSidePanel'
 import type { CustomerOption } from '@/components/features/customers/CustomerCombobox'
 
@@ -49,13 +58,13 @@ export function CalendarClient({
 
   const [panelOpen, setPanelOpen] = useState(false)
   const [editing, setEditing] = useState<EventInitial | null>(null)
-  const [defaultStart, setDefaultStart] = useState<Date | undefined>(undefined)
+  const [defaultStart, setDefaultStart] = useState<string | undefined>(undefined)
 
   const navigate = (deltaMonth: number) => {
-    const d = new Date(year, month - 1 + deltaMonth, 1)
+    const d = shiftTokyoYearMonth(year, month, deltaMonth)
     const params = new URLSearchParams(sp.toString())
-    params.set('year', String(d.getFullYear()))
-    params.set('month', String(d.getMonth() + 1))
+    params.set('year', String(d.year))
+    params.set('month', String(d.month))
     router.push(`${pathname}?${params.toString()}`)
   }
 
@@ -65,7 +74,7 @@ export function CalendarClient({
     router.push(`${pathname}?${params.toString()}`)
   }
 
-  const openNew = (start?: Date) => {
+  const openNew = (start?: string) => {
     setEditing(null)
     setDefaultStart(start)
     setPanelOpen(true)
@@ -118,10 +127,10 @@ export function CalendarClient({
             variant="outline"
             size="sm"
             onClick={() => {
-              const now = new Date()
+              const now = currentTokyoYearMonth()
               const params = new URLSearchParams(sp.toString())
-              params.set('year', String(now.getFullYear()))
-              params.set('month', String(now.getMonth() + 1))
+              params.set('year', String(now.year))
+              params.set('month', String(now.month))
               router.push(`${pathname}?${params.toString()}`)
             }}
           >
@@ -211,7 +220,7 @@ function MonthView({
   month: number
   events: CalendarEventRow[]
   onEventClick: (e: CalendarEventRow) => void
-  onDayClick: (start: Date) => void
+  onDayClick: (start: string) => void
 }) {
   const cells = useMemo(() => buildMonthCells(year, month), [year, month])
   const eventsByDay = useMemo(() => groupEventsByDay(events), [events])
@@ -244,7 +253,16 @@ function MonthView({
             <button
               key={key}
               type="button"
-              onClick={() => onDayClick(new Date(cell.date.getFullYear(), cell.date.getMonth(), cell.date.getDate(), 9, 0))}
+              onClick={() =>
+                onDayClick(
+                  formatTokyoDateTimeLocalFromParts(
+                    cell.date.getFullYear(),
+                    cell.date.getMonth() + 1,
+                    cell.date.getDate(),
+                    9,
+                  ),
+                )
+              }
               className={`min-h-24 border-r border-b border-border p-1.5 text-left transition-colors hover:bg-[color:var(--color-bg-secondary)] ${
                 cell.inCurrentMonth ? 'bg-bg' : 'bg-[color:var(--color-bg-secondary)]'
               }`}
@@ -315,7 +333,7 @@ function WeekView({
   month: number
   events: CalendarEventRow[]
   onEventClick: (e: CalendarEventRow) => void
-  onSlotClick: (start: Date) => void
+  onSlotClick: (start: string) => void
 }) {
   // 表示週: 当月の 1 日を含む週 (今月でなければ 1 日基準)
   const weekDates = useMemo(() => {
@@ -373,14 +391,21 @@ function WeekView({
               const k = dateKey(d)
               const slotEvents = (eventsByDay.get(k) ?? []).filter((e) => {
                 if (e.all_day) return hour === 0
-                return new Date(e.start_at).getHours() === hour
+                return getTokyoDateTimeParts(e.start_at).hour === hour
               })
               return (
                 <button
                   key={`${k}-${hour}`}
                   type="button"
                   onClick={() =>
-                    onSlotClick(new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0))
+                    onSlotClick(
+                      formatTokyoDateTimeLocalFromParts(
+                        d.getFullYear(),
+                        d.getMonth() + 1,
+                        d.getDate(),
+                        hour,
+                      ),
+                    )
                   }
                   className="relative min-h-12 border-b border-r border-border p-1 transition-colors hover:bg-[color:var(--color-bg-secondary)]"
                 >
@@ -444,7 +469,7 @@ function groupEventsByDay(
 ): Map<string, CalendarEventRow[]> {
   const map = new Map<string, CalendarEventRow[]>()
   for (const e of events) {
-    const k = dateKey(new Date(e.start_at))
+    const k = formatTokyoDate(e.start_at)
     const arr = map.get(k) ?? []
     arr.push(e)
     map.set(k, arr)
@@ -460,10 +485,9 @@ function dateKey(d: Date): string {
 }
 
 function todayKey(): string {
-  return dateKey(new Date())
+  return todayTokyoYmd()
 }
 
 function formatHM(iso: string): string {
-  const d = new Date(iso)
-  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+  return formatTokyoTime(iso)
 }

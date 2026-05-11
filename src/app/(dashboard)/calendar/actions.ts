@@ -7,6 +7,7 @@ import {
   calendarEventSchema,
   type CalendarEventFormValues,
 } from '@/lib/validations/calendar-event'
+import { toTokyoIsoFromDateTimeLocal } from '@/lib/utils/datetime'
 
 type ActionResult<T = void> =
   | { ok: true; data?: T }
@@ -42,8 +43,8 @@ export async function createCalendarEvent(
       tenant_id: tenantId,
       title: v.title,
       type: v.type,
-      start_at: new Date(v.start_at).toISOString(),
-      end_at: new Date(v.end_at).toISOString(),
+      start_at: toTokyoIsoFromDateTimeLocal(v.start_at),
+      end_at: toTokyoIsoFromDateTimeLocal(v.end_at),
       all_day: v.all_day,
       related_customer_id: v.related_customer_id ?? null,
       related_opportunity_id: v.related_opportunity_id ?? null,
@@ -79,8 +80,8 @@ export async function updateCalendarEvent(
     .update({
       title: v.title,
       type: v.type,
-      start_at: new Date(v.start_at).toISOString(),
-      end_at: new Date(v.end_at).toISOString(),
+      start_at: toTokyoIsoFromDateTimeLocal(v.start_at),
+      end_at: toTokyoIsoFromDateTimeLocal(v.end_at),
       all_day: v.all_day,
       related_customer_id: v.related_customer_id ?? null,
       related_opportunity_id: v.related_opportunity_id ?? null,

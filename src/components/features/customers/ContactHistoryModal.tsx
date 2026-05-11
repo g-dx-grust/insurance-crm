@@ -29,14 +29,8 @@ import {
   contactHistoryTypes,
   type ContactHistoryFormValues,
 } from '@/lib/validations/contact-history'
+import { nowTokyoDateTimeLocal } from '@/lib/utils/datetime'
 import { addContactHistory } from '@/app/(dashboard)/customers/actions'
-
-function nowLocalIso(): string {
-  // datetime-local 用 (YYYY-MM-DDTHH:mm) の現在時刻
-  const d = new Date()
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
-  return d.toISOString().slice(0, 16)
-}
 
 export function ContactHistoryModal({
   open,
@@ -57,7 +51,7 @@ export function ContactHistoryModal({
       customer_id: customerId,
       type: '電話',
       content: '',
-      contacted_at: nowLocalIso(),
+      contacted_at: nowTokyoDateTimeLocal(),
       next_action: null,
       next_action_date: null,
     },
@@ -68,10 +62,7 @@ export function ContactHistoryModal({
   const onSubmit = (values: ContactHistoryFormValues) => {
     setServerError(null)
     startTransition(async () => {
-      const result = await addContactHistory({
-        ...values,
-        contacted_at: new Date(values.contacted_at).toISOString(),
-      })
+      const result = await addContactHistory(values)
       if (!result.ok) {
         setServerError(result.error)
         toast.error(result.error)
@@ -86,7 +77,7 @@ export function ContactHistoryModal({
         customer_id: customerId,
         type: '電話',
         content: '',
-        contacted_at: nowLocalIso(),
+        contacted_at: nowTokyoDateTimeLocal(),
         next_action: null,
         next_action_date: null,
       })

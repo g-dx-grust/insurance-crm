@@ -16,6 +16,7 @@ import {
   familyMemberSchema,
   type FamilyMemberFormValues,
 } from '@/lib/validations/family-member'
+import { toTokyoIsoFromDateTimeLocal } from '@/lib/utils/datetime'
 
 type ActionResult<T = void> =
   | { ok: true; data?: T }
@@ -123,7 +124,7 @@ export async function addContactHistory(
     customer_id: parsed.data.customer_id,
     type: parsed.data.type,
     content: parsed.data.content,
-    contacted_at: parsed.data.contacted_at,
+    contacted_at: toTokyoIsoFromDateTimeLocal(parsed.data.contacted_at),
     next_action: parsed.data.next_action ?? null,
     next_action_date: parsed.data.next_action_date ?? null,
     recorded_by: user.id,

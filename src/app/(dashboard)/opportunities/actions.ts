@@ -19,6 +19,7 @@ import {
   OPPORTUNITY_STAGES,
   type OpportunityStage,
 } from '@/lib/constants/opportunity'
+import { toTokyoIsoFromDateTimeLocal } from '@/lib/utils/datetime'
 import type { SuitabilityKey } from '@/lib/constants/suitability'
 
 type ActionResult<T = void> =
@@ -168,7 +169,7 @@ export async function addOpportunityActivity(
     opportunity_id: parsed.data.opportunity_id,
     type: parsed.data.type,
     content: parsed.data.content,
-    activity_date: new Date(parsed.data.activity_date).toISOString(),
+    activity_date: toTokyoIsoFromDateTimeLocal(parsed.data.activity_date),
     recorded_by: user.id,
   })
 

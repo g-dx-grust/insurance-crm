@@ -11,6 +11,7 @@ import {
   intentionWizardSchema,
   type IntentionWizardValues,
 } from '@/lib/validations/intention'
+import { toTokyoIsoFromDateTimeLocal } from '@/lib/utils/datetime'
 
 type ActionResult<T = void> =
   | { ok: true; data?: T }
@@ -52,11 +53,11 @@ export async function createIntentionRecord(
       customer_id: v.customer_id,
       contract_id: v.contract_id ?? null,
       initial_intention: v.initial_intention,
-      initial_recorded_at: new Date(v.initial_recorded_at).toISOString(),
+      initial_recorded_at: toTokyoIsoFromDateTimeLocal(v.initial_recorded_at),
       comparison_method: v.comparison_method,
       comparison_reason: v.comparison_reason ?? null,
       final_intention: v.final_intention,
-      final_recorded_at: new Date(v.final_recorded_at).toISOString(),
+      final_recorded_at: toTokyoIsoFromDateTimeLocal(v.final_recorded_at),
       checklist: { ...v.checklist, _change_note: v.final_change_note ?? null },
       status,
       approver_id: v.approver_id ?? null,

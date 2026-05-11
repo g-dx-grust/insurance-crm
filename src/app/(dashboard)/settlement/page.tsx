@@ -8,6 +8,7 @@ import type { MonthlyDatum } from '@/components/features/settlement/MonthlyFeeCh
 import { createClient } from '@/lib/supabase/server'
 import { currentMonth, past12MonthsStart } from '@/lib/constants/settlement'
 import { CSV_TEMPLATES } from '@/lib/settlement/csvTemplates'
+import { currentTokyoYearMonth } from '@/lib/utils/datetime'
 
 export const metadata = { title: '精算・MDRT管理 | N-LIC CRM' }
 
@@ -26,7 +27,7 @@ export default async function SettlementPage({
   const supabase = await createClient()
 
   const targetMonth = sp.month ?? currentMonth()
-  const currentYear = new Date().getFullYear()
+  const currentYear = currentTokyoYearMonth().year
 
   let listQuery = supabase
     .from('settlements')

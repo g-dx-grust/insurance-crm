@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { format } from 'date-fns'
 import { Pencil, Plus, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { StatusBadge, type StatusVariant } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { formatTokyoDate } from '@/lib/utils/datetime'
 import {
   Tabs,
   TabsContent,
@@ -44,7 +44,7 @@ export interface ContractDetail {
   user_profiles: { id: string; name: string } | null
 }
 
-export interface RiderRow extends RiderInitial {}
+export type RiderRow = RiderInitial
 
 export interface IntentionRow {
   id: string
@@ -255,7 +255,7 @@ export function ContractDetailClient({
                     <div className="flex items-center justify-between text-xs text-text-muted">
                       <div className="flex items-center gap-2">
                         <StatusBadge variant="info">更改</StatusBadge>
-                        <span>{format(new Date(h.contacted_at), 'yyyy-MM-dd')}</span>
+                        <span>{formatTokyoDate(h.contacted_at)}</span>
                       </div>
                       <span>{h.user_profiles?.name ?? '—'}</span>
                     </div>
@@ -284,7 +284,7 @@ export function ContractDetailClient({
                       <div>
                         <p className="text-sm text-text">{i.initial_intention}</p>
                         <p className="mt-1 text-xs text-text-muted">
-                          作成: {format(new Date(i.created_at), 'yyyy-MM-dd')}
+                          作成: {formatTokyoDate(i.created_at)}
                           {i.user_profiles?.name && ` ・ ${i.user_profiles.name}`}
                         </p>
                       </div>

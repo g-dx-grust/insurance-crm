@@ -7,22 +7,30 @@ import {
   type MonthlyContractDatum,
 } from '@/components/features/reports/ReportsClient'
 import { createClient } from '@/lib/supabase/server'
+import {
+  createTokyoDate,
+  formatTokyoMonthKey,
+  getTokyoDateTimeParts,
+  pastTokyoMonthKeys,
+  shiftTokyoYearMonth,
+  tokyoMonthRangeIso,
+} from '@/lib/utils/datetime'
 
 export const metadata = { title: 'レポート | N-LIC CRM' }
 
 type SearchParams = Promise<{ period?: string }>
 
 function getPeriodRange(period: string): { startDate: string; endDate: string } {
-  const now = new Date()
-  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
+  const now = getTokyoDateTimeParts()
+  const end = createTokyoDate(now.year, now.month, now.day, 23, 59, 59)
   let start: Date
   if (period === 'this_month') {
-    start = new Date(now.getFullYear(), now.getMonth(), 1)
+    start = createTokyoDate(now.year, now.month, 1)
   } else if (period === 'this_quarter') {
-    const q = Math.floor(now.getMonth() / 3)
-    start = new Date(now.getFullYear(), q * 3, 1)
+    const q = Math.floor((now.month - 1) / 3)
+    start = createTokyoDate(now.year, q * 3 + 1, 1)
   } else {
-    start = new Date(now.getFullYear(), 0, 1)
+    start = createTokyoDate(now.year, 1, 1)
   }
   return {
     startDate: start.toISOString(),
@@ -31,13 +39,7 @@ function getPeriodRange(period: string): { startDate: string; endDate: string } 
 }
 
 function past12MonthsKeys(): string[] {
-  const out: string[] = []
-  const now = new Date()
-  for (let i = 11; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
-    out.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
-  }
-  return out
+  return pastTokyoMonthKeys()
 }
 
 function ageBucket(age: number): string {
@@ -73,8 +75,12 @@ export default async function ReportsPage({
   const supabase = await createClient()
 
   // 過去 12 ヶ月の境界
-  const now = new Date()
-  const monthsStart = new Date(now.getFullYear(), now.getMonth() - 11, 1).toISOString()
+  const now = getTokyoDateTimeParts()
+  const monthsStartParts = shiftTokyoYearMonth(now.year, now.month, -11)
+  const monthsStart = tokyoMonthRangeIso(
+    monthsStartParts.year,
+    monthsStartParts.month,
+  ).startDate
 
   const [{ data: monthly }, { data: byUser }, { data: byCategory }, { data: ages }] =
     await Promise.all([
@@ -106,8 +112,7 @@ export default async function ReportsPage({
   for (const m of past12MonthsKeys()) monthlyMap.set(m, { count: 0, premium_total: 0 })
   for (const row of monthly ?? []) {
     const r = row as { created_at: string; premium: number | null }
-    const d = new Date(r.created_at)
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    const key = formatTokyoMonthKey(r.created_at)
     const cur = monthlyMap.get(key)
     if (cur) {
       cur.count++

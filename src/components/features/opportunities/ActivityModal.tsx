@@ -28,13 +28,8 @@ import {
   opportunityActivityTypes,
   type OpportunityActivityFormValues,
 } from '@/lib/validations/opportunity-activity'
+import { nowTokyoDateTimeLocal } from '@/lib/utils/datetime'
 import { addOpportunityActivity } from '@/app/(dashboard)/opportunities/actions'
-
-function nowLocalIso(): string {
-  const d = new Date()
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
-  return d.toISOString().slice(0, 16)
-}
 
 export function ActivityModal({
   open,
@@ -54,7 +49,7 @@ export function ActivityModal({
       opportunity_id: opportunityId,
       type: '電話',
       content: '',
-      activity_date: nowLocalIso(),
+      activity_date: nowTokyoDateTimeLocal(),
     },
   })
 
@@ -73,7 +68,7 @@ export function ActivityModal({
         opportunity_id: opportunityId,
         type: '電話',
         content: '',
-        activity_date: nowLocalIso(),
+        activity_date: nowTokyoDateTimeLocal(),
       })
     })
   }

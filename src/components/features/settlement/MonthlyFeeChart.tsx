@@ -11,6 +11,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { currentTokyoYearMonth } from '@/lib/utils/datetime'
 import { past12Months } from '@/lib/constants/settlement'
 
 type Period = 'month' | 'quarter' | 'year'
@@ -109,9 +110,9 @@ export function MonthlyFeeChart({ data }: { data: MonthlyDatum[] }) {
 }
 
 function filterMonths(months: string[], period: Period): string[] {
-  const now = new Date()
-  const cy = now.getFullYear()
-  const cm = now.getMonth() + 1
+  const now = currentTokyoYearMonth()
+  const cy = now.year
+  const cm = now.month
   const cq = Math.floor((cm - 1) / 3) // 0-3
 
   if (period === 'month') {

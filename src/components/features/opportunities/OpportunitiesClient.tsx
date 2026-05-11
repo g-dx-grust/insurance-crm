@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { format } from 'date-fns'
 import { LayoutGrid, List, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { StatusBadge, type StatusVariant } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { formatTokyoDate } from '@/lib/utils/datetime'
 import {
   Select,
   SelectContent,
@@ -309,7 +309,7 @@ function ListView({
               <td className="text-text-sub">{o.expected_close_date ?? '—'}</td>
               <td className="text-text-sub">{o.user_profiles?.name ?? '—'}</td>
               <td className="text-text-muted">
-                {format(new Date(o.updated_at), 'yyyy-MM-dd')}
+                {formatTokyoDate(o.updated_at)}
               </td>
             </tr>
           ))}

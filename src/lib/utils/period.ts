@@ -2,6 +2,13 @@
  * ダッシュボード・レポート共通の期間範囲計算。
  * 今年度 (this_year) は **保険業界の慣習で 4 月始まり** とする。
  */
+import {
+  currentTokyoYearMonth,
+  pastTokyoMonthKeys,
+  shiftTokyoYearMonth,
+  tokyoMonthRangeIso,
+} from '@/lib/utils/datetime'
+
 export type PeriodKey = 'this_month' | 'this_quarter' | 'this_year'
 
 export const PERIOD_LABELS: Record<PeriodKey, string> = {
@@ -14,25 +21,26 @@ export function getPeriodRange(period: PeriodKey | string): {
   startDate: string
   endDate: string
 } {
-  const now = new Date()
+  const now = currentTokyoYearMonth()
   switch (period) {
     case 'this_month': {
-      const start = new Date(now.getFullYear(), now.getMonth(), 1)
-      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
-      return { startDate: start.toISOString(), endDate: end.toISOString() }
+      return tokyoMonthRangeIso(now.year, now.month)
     }
     case 'this_quarter': {
-      const q = Math.floor(now.getMonth() / 3)
-      const start = new Date(now.getFullYear(), q * 3, 1)
-      const end = new Date(now.getFullYear(), q * 3 + 3, 0, 23, 59, 59)
-      return { startDate: start.toISOString(), endDate: end.toISOString() }
+      const q = Math.floor((now.month - 1) / 3)
+      const start = { year: now.year, month: q * 3 + 1 }
+      const end = shiftTokyoYearMonth(start.year, start.month, 2)
+      return {
+        startDate: tokyoMonthRangeIso(start.year, start.month).startDate,
+        endDate: tokyoMonthRangeIso(end.year, end.month).endDate,
+      }
     }
     case 'this_year': {
       // 保険業界の年度は 4 月始まり
-      const fy = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1
+      const fy = now.month >= 4 ? now.year : now.year - 1
       return {
-        startDate: new Date(fy, 3, 1).toISOString(),
-        endDate: new Date(fy + 1, 2, 31, 23, 59, 59).toISOString(),
+        startDate: tokyoMonthRangeIso(fy, 4).startDate,
+        endDate: tokyoMonthRangeIso(fy + 1, 3).endDate,
       }
     }
     default:
@@ -41,11 +49,5 @@ export function getPeriodRange(period: PeriodKey | string): {
 }
 
 export function past12MonthKeys(): string[] {
-  const out: string[] = []
-  const now = new Date()
-  for (let i = 11; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
-    out.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
-  }
-  return out
+  return pastTokyoMonthKeys()
 }

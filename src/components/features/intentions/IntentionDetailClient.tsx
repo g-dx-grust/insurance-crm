@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { format } from 'date-fns'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { ApprovalSection } from './ApprovalSection'
 import { INTENTION_CHECKLIST_ITEMS } from '@/lib/constants/intention'
+import { formatTokyoDateTime } from '@/lib/utils/datetime'
 
 export interface IntentionDetail {
   id: string
@@ -91,7 +91,7 @@ export function IntentionDetailClient({
               </>
             )}
             <span className="ml-2 text-text-muted">
-              作成: {format(new Date(intention.created_at), 'yyyy-MM-dd HH:mm')} (
+              作成: {formatTokyoDateTime(intention.created_at)} (
               {intention.creator?.name ?? '—'})
             </span>
           </p>
@@ -103,7 +103,7 @@ export function IntentionDetailClient({
           <p className="whitespace-pre-wrap text-sm text-text">{intention.initial_intention}</p>
           {intention.initial_recorded_at && (
             <p className="text-xs text-text-muted">
-              記録: {format(new Date(intention.initial_recorded_at), 'yyyy-MM-dd HH:mm')}
+              記録: {formatTokyoDateTime(intention.initial_recorded_at)}
             </p>
           )}
         </section>
@@ -172,7 +172,7 @@ export function IntentionDetailClient({
               <p className="whitespace-pre-wrap text-sm text-text">{intention.final_intention}</p>
               {intention.final_recorded_at && (
                 <p className="text-xs text-text-muted">
-                  記録: {format(new Date(intention.final_recorded_at), 'yyyy-MM-dd HH:mm')}
+                  記録: {formatTokyoDateTime(intention.final_recorded_at)}
                 </p>
               )}
               {changeNote && (

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { format } from 'date-fns'
 import { Send, Check, X, RotateCcw } from 'lucide-react'
 import { toast } from 'sonner'
 import {
@@ -29,6 +28,7 @@ import {
   rejectIntention,
   resubmitIntention,
 } from '@/app/(dashboard)/intentions/actions'
+import { formatTokyoDateTime } from '@/lib/utils/datetime'
 
 interface UserOption {
   id: string
@@ -204,7 +204,7 @@ export function ApprovalSection({
       {status === '承認済' && (
         <div className="rounded-sm bg-[color:var(--color-success)]/10 px-3 py-2 text-sm text-[color:var(--color-success)]">
           {approverName ?? '—'} さんが
-          {approvedAt && ` ${format(new Date(approvedAt), 'yyyy-MM-dd HH:mm')} に`}
+          {approvedAt && ` ${formatTokyoDateTime(approvedAt)} に`}
           承認しました
         </div>
       )}

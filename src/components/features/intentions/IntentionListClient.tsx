@@ -2,12 +2,12 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { format } from 'date-fns'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/ui/SearchInput'
 import { StatusBadge, type StatusVariant } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { formatTokyoDate } from '@/lib/utils/datetime'
 import {
   Select,
   SelectContent,
@@ -149,7 +149,7 @@ export function IntentionListClient({
                   <td className="max-w-xs truncate text-text-sub">{i.final_intention ?? '—'}</td>
                   <td className="text-text-sub">{i.comparison_method ?? '—'}</td>
                   <td className="text-text-muted">
-                    {format(new Date(i.created_at), 'yyyy-MM-dd')}
+                    {formatTokyoDate(i.created_at)}
                   </td>
                   <td className="text-text-sub">{i.user_profiles?.name ?? '—'}</td>
                   <td>

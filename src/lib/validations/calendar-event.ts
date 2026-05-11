@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { EVENT_CATEGORIES } from '@/lib/constants/calendar'
+import { parseTokyoDateTimeLocal } from '@/lib/utils/datetime'
 
 export const calendarEventSchema = z
   .object({
@@ -14,9 +15,14 @@ export const calendarEventSchema = z
     location: z.string().max(200).nullable().optional(),
     note: z.string().max(2000).nullable().optional(),
   })
-  .refine((d) => new Date(d.end_at).getTime() >= new Date(d.start_at).getTime(), {
-    message: '終了日時は開始日時以降にしてください',
-    path: ['end_at'],
-  })
+  .refine(
+    (d) =>
+      parseTokyoDateTimeLocal(d.end_at).getTime() >=
+      parseTokyoDateTimeLocal(d.start_at).getTime(),
+    {
+      message: '終了日時は開始日時以降にしてください',
+      path: ['end_at'],
+    },
+  )
 
 export type CalendarEventFormValues = z.infer<typeof calendarEventSchema>

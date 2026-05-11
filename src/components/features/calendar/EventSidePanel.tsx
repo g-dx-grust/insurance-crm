@@ -40,6 +40,11 @@ import {
   type CalendarEventFormValues,
 } from '@/lib/validations/calendar-event'
 import {
+  addMinutesToTokyoDateTimeLocal,
+  formatTokyoDateTimeLocal,
+  nowTokyoDateTimeLocal,
+} from '@/lib/utils/datetime'
+import {
   createCalendarEvent,
   deleteCalendarEvent,
   updateCalendarEvent,
@@ -63,12 +68,6 @@ export interface EventInitial {
   note: string | null
 }
 
-function toLocalIso(iso: string | undefined, fallback: Date): string {
-  const d = iso ? new Date(iso) : fallback
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
-  return d.toISOString().slice(0, 16)
-}
-
 export function EventSidePanel({
   open,
   onOpenChange,
@@ -80,7 +79,7 @@ export function EventSidePanel({
   open: boolean
   onOpenChange: (open: boolean) => void
   initial?: EventInitial | null
-  defaultStart?: Date
+  defaultStart?: string
   customers: CustomerOption[]
   users: UserOption[]
 }) {
@@ -281,16 +280,16 @@ export function EventSidePanel({
 
 function buildDefaults(
   initial?: EventInitial | null,
-  defaultStart?: Date,
+  defaultStart?: string,
 ): CalendarEventFormValues {
-  const now = defaultStart ?? new Date()
-  const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000)
+  const startAt = defaultStart ?? nowTokyoDateTimeLocal()
+  const endAt = addMinutesToTokyoDateTimeLocal(startAt, 60)
 
   return {
     title: initial?.title ?? '',
     type: ((initial?.type as EventCategory) ?? '訪問') as EventCategory,
-    start_at: toLocalIso(initial?.start_at, now),
-    end_at: toLocalIso(initial?.end_at, oneHourLater),
+    start_at: initial?.start_at ? formatTokyoDateTimeLocal(initial.start_at) : startAt,
+    end_at: initial?.end_at ? formatTokyoDateTimeLocal(initial.end_at) : endAt,
     all_day: initial?.all_day ?? false,
     related_customer_id: initial?.related_customer_id ?? null,
     related_opportunity_id: null,

@@ -3,11 +3,11 @@
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Plus, ChevronLeft, ChevronRight } from 'lucide-react'
-import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/ui/SearchInput'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { formatTokyoDate } from '@/lib/utils/datetime'
 import {
   Select,
   SelectContent,
@@ -174,7 +174,7 @@ export function CustomerListClient({
                   </td>
                   <td className="text-text-sub">{c.phone ?? c.email ?? '—'}</td>
                   <td className="text-text-sub">{c.user_profiles?.name ?? '—'}</td>
-                  <td className="text-text-muted">{format(new Date(c.updated_at), 'yyyy-MM-dd')}</td>
+                  <td className="text-text-muted">{formatTokyoDate(c.updated_at)}</td>
                 </tr>
               ))}
             </tbody>
