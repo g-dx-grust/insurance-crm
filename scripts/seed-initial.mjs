@@ -15,9 +15,9 @@ const TENANT = {
 }
 
 const ADMIN = {
-  email:    'r.tamaki@josho-group.com',
-  password: process.env.SEED_ADMIN_PASSWORD ?? 'Josho0315',
-  name:     '玉木亮司',
+  email:    process.env.SEED_ADMIN_EMAIL ?? 'demo@n-lic-crm.local',
+  password: process.env.SEED_ADMIN_PASSWORD ?? 'Nlic2026demo!',
+  name:     process.env.SEED_ADMIN_NAME ?? 'N-LIC デモ管理者',
 }
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -95,6 +95,20 @@ let userId
   if (existingUser) {
     userId = existingUser.id
     console.log(`  既存 Auth ユーザーを再利用: ${userId}`)
+    const { error: updateErr } = await admin.auth.admin.updateUserById(userId, {
+      password: ADMIN.password,
+      email_confirm: true,
+      user_metadata: {
+        ...existingUser.user_metadata,
+        source: existingUser.user_metadata?.source ?? 'seed-initial',
+        name: ADMIN.name,
+      },
+    })
+    if (updateErr) {
+      console.error('Auth ユーザー更新失敗:', updateErr.message)
+      process.exit(1)
+    }
+    console.log('  既存 Auth ユーザーのパスワード・メタデータを同期')
   } else {
     const { data: created, error: createErr } = await admin.auth.admin.createUser({
       email: ADMIN.email,
@@ -116,7 +130,7 @@ console.log(`[3/3] user_profiles を admin ロールで確認・作成`)
 {
   const { data: existing, error: selErr } = await admin
     .from('user_profiles')
-    .select('id, role, tenant_id')
+    .select('id, role, tenant_id, name, email, is_active')
     .eq('id', userId)
     .maybeSingle()
 
@@ -127,10 +141,22 @@ console.log(`[3/3] user_profiles を admin ロールで確認・作成`)
 
   if (existing) {
     console.log(`  既存プロファイル: role=${existing.role}, tenant_id=${existing.tenant_id}`)
-    if (existing.role !== 'admin' || existing.tenant_id !== tenantId) {
+    if (
+      existing.role !== 'admin' ||
+      existing.tenant_id !== tenantId ||
+      existing.name !== ADMIN.name ||
+      existing.email !== ADMIN.email ||
+      existing.is_active !== true
+    ) {
       const { error: updErr } = await admin
         .from('user_profiles')
-        .update({ role: 'admin', tenant_id: tenantId, name: ADMIN.name, is_active: true })
+        .update({
+          role: 'admin',
+          tenant_id: tenantId,
+          name: ADMIN.name,
+          email: ADMIN.email,
+          is_active: true,
+        })
         .eq('id', userId)
       if (updErr) {
         console.error('プロファイル更新失敗:', updErr.message)
