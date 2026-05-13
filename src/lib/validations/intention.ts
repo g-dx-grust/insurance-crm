@@ -41,6 +41,19 @@ export const intentionWizardSchema = z
     // Step 4
     checklist: z.record(z.string(), z.boolean()),
     approver_id: z.string().uuid().nullable().optional(),
+    signature_signer_name: z
+      .string()
+      .trim()
+      .min(1, '署名者名を入力してください')
+      .max(100, '100文字以内で入力してください'),
+    signature_data_url: z
+      .string()
+      .min(1, '電子サインを入力してください')
+      .max(800_000, '署名データが大きすぎます。サインをクリアして再入力してください')
+      .regex(/^data:image\/png;base64,[A-Za-z0-9+/=]+$/, '署名データの形式が不正です'),
+    signature_consent_confirmed: z
+      .boolean()
+      .refine((v) => v, '同意文言の確認が必要です'),
   })
   .refine(
     (d) => {

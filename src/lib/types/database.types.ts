@@ -587,6 +587,112 @@ export type Database = {
           },
         ]
       }
+      intention_signature_evidences: {
+        Row: {
+          client_ip: string | null
+          client_user_agent: string | null
+          consent_text: string
+          consent_version: string
+          created_at: string
+          created_by: string
+          evidence_manifest: Json
+          evidence_manifest_sha256: string
+          id: string
+          intention_record_id: string
+          manifest_storage_path: string
+          revision: number
+          server_seal: string
+          server_seal_algorithm: string
+          server_seal_key_id: string
+          signature_mime_type: string
+          signature_sha256: string
+          signature_size_bytes: number
+          signature_storage_path: string
+          signed_at: string
+          signer_name: string
+          tenant_id: string
+          trusted_timestamp_provider: string | null
+          trusted_timestamp_token: string | null
+          trusted_timestamped_at: string | null
+        }
+        Insert: {
+          client_ip?: string | null
+          client_user_agent?: string | null
+          consent_text: string
+          consent_version: string
+          created_at?: string
+          created_by: string
+          evidence_manifest: Json
+          evidence_manifest_sha256: string
+          id?: string
+          intention_record_id: string
+          manifest_storage_path: string
+          revision?: number
+          server_seal: string
+          server_seal_algorithm?: string
+          server_seal_key_id?: string
+          signature_mime_type?: string
+          signature_sha256: string
+          signature_size_bytes: number
+          signature_storage_path: string
+          signed_at?: string
+          signer_name: string
+          tenant_id: string
+          trusted_timestamp_provider?: string | null
+          trusted_timestamp_token?: string | null
+          trusted_timestamped_at?: string | null
+        }
+        Update: {
+          client_ip?: string | null
+          client_user_agent?: string | null
+          consent_text?: string
+          consent_version?: string
+          created_at?: string
+          created_by?: string
+          evidence_manifest?: Json
+          evidence_manifest_sha256?: string
+          id?: string
+          intention_record_id?: string
+          manifest_storage_path?: string
+          revision?: number
+          server_seal?: string
+          server_seal_algorithm?: string
+          server_seal_key_id?: string
+          signature_mime_type?: string
+          signature_sha256?: string
+          signature_size_bytes?: number
+          signature_storage_path?: string
+          signed_at?: string
+          signer_name?: string
+          tenant_id?: string
+          trusted_timestamp_provider?: string | null
+          trusted_timestamp_token?: string | null
+          trusted_timestamped_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intention_signature_evidences_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intention_signature_evidences_intention_record_id_fkey"
+            columns: ["intention_record_id"]
+            isOneToOne: false
+            referencedRelation: "intention_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intention_signature_evidences_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intention_records: {
         Row: {
           approved_at: string | null

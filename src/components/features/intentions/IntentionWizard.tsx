@@ -21,9 +21,11 @@ import {
   type CustomerOption,
 } from '@/components/features/customers/CustomerCombobox'
 import { StepIndicator } from './StepIndicator'
+import { SignaturePadField } from './SignaturePadField'
 import {
   COMPARISON_METHODS,
   INTENTION_CHECKLIST_ITEMS,
+  INTENTION_SIGNATURE_CONSENT_TEXT,
   type ComparisonMethod,
 } from '@/lib/constants/intention'
 import { productCategories } from '@/lib/validations/contract'
@@ -70,6 +72,9 @@ interface WizardState {
 
   checklist: Record<string, boolean>
   approver_id: string | null
+  signature_signer_name: string
+  signature_data_url: string
+  signature_consent_confirmed: boolean
 }
 
 function buildInitialChecklist(): Record<string, boolean> {
@@ -115,6 +120,9 @@ export function IntentionWizard({
 
     checklist: buildInitialChecklist(),
     approver_id: null,
+    signature_signer_name: '',
+    signature_data_url: '',
+    signature_consent_confirmed: false,
   })
 
   // 顧客に紐づく契約のみ
@@ -199,6 +207,18 @@ export function IntentionWizard({
       toast.error(`未チェック項目があります: ${missing[0].label}`)
       return
     }
+    if (!state.signature_signer_name.trim()) {
+      toast.error('署名者名を入力してください')
+      return
+    }
+    if (!state.signature_data_url) {
+      toast.error('電子サインを入力してください')
+      return
+    }
+    if (!state.signature_consent_confirmed) {
+      toast.error('同意文言を確認してください')
+      return
+    }
 
     const values: IntentionWizardValues = {
       customer_id: state.customer_id,
@@ -219,6 +239,9 @@ export function IntentionWizard({
       final_recorded_at: state.final_recorded_at,
       checklist: state.checklist,
       approver_id: state.approver_id,
+      signature_signer_name: state.signature_signer_name,
+      signature_data_url: state.signature_data_url,
+      signature_consent_confirmed: state.signature_consent_confirmed,
     }
 
     startTransition(async () => {
@@ -649,6 +672,39 @@ function Step4({
           </li>
         ))}
       </ul>
+
+      <div className="rounded-md border border-border bg-[color:var(--color-bg-secondary)] p-4">
+        <h3 className="text-xs font-semibold text-text-sub">電子サイン</h3>
+        <p className="mt-2 text-sm leading-6 text-text">{INTENTION_SIGNATURE_CONSENT_TEXT}</p>
+        <div className="mt-4 grid gap-4 lg:grid-cols-[240px_1fr]">
+          <Field label="署名者名 *">
+            <Input
+              value={state.signature_signer_name}
+              onChange={(e) => update('signature_signer_name', e.target.value)}
+              placeholder="顧客氏名"
+            />
+          </Field>
+          <div>
+            <Label className="mb-1 block text-xs font-medium text-text-sub">
+              直書きサイン *
+            </Label>
+            <SignaturePadField
+              value={state.signature_data_url}
+              onChange={(value) => update('signature_data_url', value)}
+            />
+          </div>
+        </div>
+        <label className="mt-3 flex cursor-pointer items-start gap-2 rounded-sm px-2 py-1.5 hover:bg-bg">
+          <Checkbox
+            checked={state.signature_consent_confirmed}
+            onCheckedChange={(v) =>
+              update('signature_consent_confirmed', Boolean(v))
+            }
+            className="mt-0.5"
+          />
+          <span className="text-sm text-text">上記内容を確認し、電子サインを証跡として保存することに同意しました</span>
+        </label>
+      </div>
 
       <div className="rounded-md border border-border bg-[color:var(--color-bg-secondary)] p-4">
         <Label className="mb-2 block text-xs font-medium text-text-sub">
