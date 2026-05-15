@@ -283,6 +283,7 @@ export async function createRemoteSignatureRequest(
   ).toISOString()
   const origin = resolveAppOrigin(requestHeaders)
   const signingUrl = `${origin}/sign/intention/${token}`
+  const signerEmail = parsed.data.signer_email ?? null
 
   const { data: request, error } = await supabase
     .from('intention_signature_requests')
@@ -290,11 +291,11 @@ export async function createRemoteSignatureRequest(
       tenant_id: tenantId,
       intention_record_id: intention.id,
       signer_name: parsed.data.signer_name,
-      signer_email: parsed.data.signer_email,
+      signer_email: signerEmail,
       token_hash: tokenHash,
-      status: '送信待ち',
+      status: 'リンク発行',
       expires_at: expiresAt,
-      sent_at: new Date().toISOString(),
+      sent_at: null,
       created_by: user.id,
     })
     .select('id')
@@ -305,20 +306,18 @@ export async function createRemoteSignatureRequest(
   }
 
   const admin = createAdminClient()
-  await admin.from('notification_logs').insert({
+  await admin.from('audit_logs').insert({
     tenant_id: tenantId,
-    channel: 'email',
-    target_type: 'email',
-    target_value: parsed.data.signer_email,
-    template_key: 'intention_remote_signature_request',
-    payload: {
-      intention_id: intention.id,
+    actor_id: user.id,
+    action: 'REMOTE_SIGNATURE_LINK_CREATED',
+    entity_type: 'intention_record',
+    entity_id: intention.id,
+    metadata: {
       signature_request_id: request.id,
       signer_name: parsed.data.signer_name,
-      signing_url: signingUrl,
+      signer_email: signerEmail,
       expires_at: expiresAt,
     },
-    status: 'pending',
   })
 
   revalidatePath(`/intentions/${intention.id}`)

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
-import { Copy, Mail, ShieldCheck } from 'lucide-react'
+import { Copy, Link2, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -85,7 +85,7 @@ export interface FinancialCheckDetail {
 export interface IntentionSignatureRequestRow {
   id: string
   signer_name: string
-  signer_email: string
+  signer_email: string | null
   status: string
   expires_at: string
   sent_at: string | null
@@ -382,7 +382,6 @@ export function IntentionDetailClient({
         <RemoteSignatureRequestPanel
           intentionId={intention.id}
           defaultSignerName={intention.customers?.name ?? ''}
-          defaultSignerEmail={intention.customers?.email ?? ''}
           requests={signatureRequests}
         />
       </aside>
@@ -393,16 +392,13 @@ export function IntentionDetailClient({
 function RemoteSignatureRequestPanel({
   intentionId,
   defaultSignerName,
-  defaultSignerEmail,
   requests,
 }: {
   intentionId: string
   defaultSignerName: string
-  defaultSignerEmail: string
   requests: IntentionSignatureRequestRow[]
 }) {
   const [signerName, setSignerName] = useState(defaultSignerName)
-  const [signerEmail, setSignerEmail] = useState(defaultSignerEmail)
   const [expiresInDays, setExpiresInDays] = useState(7)
   const [latestUrl, setLatestUrl] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
@@ -412,7 +408,7 @@ function RemoteSignatureRequestPanel({
       const result = await createRemoteSignatureRequest({
         intention_record_id: intentionId,
         signer_name: signerName,
-        signer_email: signerEmail,
+        signer_email: null,
         expires_in_days: expiresInDays,
       })
       if (!result.ok) {
@@ -420,9 +416,7 @@ function RemoteSignatureRequestPanel({
         return
       }
       setLatestUrl(result.data?.signingUrl ?? null)
-      toast.success('リモート署名依頼を作成しました', {
-        description: 'メール送信キューに登録しました。',
-      })
+      toast.success('署名リンクを発行しました')
     })
   }
 
@@ -435,21 +429,17 @@ function RemoteSignatureRequestPanel({
   return (
     <section className="rounded-md border border-border bg-bg p-4">
       <div className="flex items-center gap-2">
-        <Mail className="size-4 text-text-muted" />
+        <Link2 className="size-4 text-text-muted" />
         <h2 className="text-sm font-semibold text-text-sub">リモート署名</h2>
       </div>
+      <p className="mt-2 text-xs text-text-muted">
+        発行したリンクを任意の連絡手段で共有してください。リンクは発行時のみ表示されます。
+      </p>
       <div className="mt-3 space-y-3">
         <FieldInline label="署名者名">
           <Input
             value={signerName}
             onChange={(event) => setSignerName(event.target.value)}
-          />
-        </FieldInline>
-        <FieldInline label="メール">
-          <Input
-            type="email"
-            value={signerEmail}
-            onChange={(event) => setSignerEmail(event.target.value)}
           />
         </FieldInline>
         <FieldInline label="有効期限(日)">
@@ -463,9 +453,9 @@ function RemoteSignatureRequestPanel({
         <Button
           className="w-full"
           onClick={submit}
-          disabled={pending || !signerName.trim() || !signerEmail.trim()}
+          disabled={pending || !signerName.trim()}
         >
-          {pending ? '作成中…' : '署名リンクをメール送信'}
+          {pending ? '発行中…' : '署名リンクを発行'}
         </Button>
       </div>
 
@@ -502,7 +492,7 @@ function RemoteSignatureRequestPanel({
                 </StatusBadge>
               </div>
               <p className="mt-1 break-all text-xs text-text-muted">
-                {request.signer_email}
+                {formatTokyoDateTime(request.created_at)} 発行
               </p>
               <p className="mt-1 text-xs text-text-muted">
                 期限: {formatTokyoDateTime(request.expires_at)}
@@ -546,6 +536,7 @@ function signatureRequestVariant(status: string) {
     case '署名済': return 'success' as const
     case '期限切れ': return 'danger' as const
     case '取消': return 'muted' as const
+    case 'リンク発行': return 'info' as const
     default: return 'warning' as const
   }
 }

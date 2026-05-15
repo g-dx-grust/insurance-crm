@@ -16,7 +16,7 @@ export default async function RemoteSignaturePage({
   const { data: request, error } = await admin
     .from('intention_signature_requests')
     .select(
-      'id, signer_name, signer_email, status, expires_at, intention_record_id, intention_records!intention_record_id(id, customer_id, initial_intention, final_intention, customers!customer_id(name))',
+      'id, signer_name, signer_email, status, expires_at, intention_record_id, intention_records!intention_record_id(id, customer_id, initial_intention, final_intention, customers!customer_id(name, birth_date, phone))',
     )
     .eq('token_hash', tokenHash)
     .maybeSingle()
@@ -55,11 +55,44 @@ export default async function RemoteSignaturePage({
       token={token}
       signerName={request.signer_name}
       customerName={customer?.name ?? request.signer_name}
+      identityVerification={buildIdentityVerification(customer)}
       initialIntention={intention.initial_intention}
       finalIntention={intention.final_intention}
       products={products ?? []}
     />
   )
+}
+
+function buildIdentityVerification(
+  customer: { birth_date?: string | null; phone?: string | null } | null | undefined,
+) {
+  if (customer?.birth_date) {
+    return {
+      method: 'birth_date' as const,
+      label: '生年月日',
+      inputType: 'date' as const,
+      inputMode: 'text' as const,
+      placeholder: '',
+    }
+  }
+
+  if (customer?.phone) {
+    return {
+      method: 'phone_last4' as const,
+      label: '電話番号下4桁',
+      inputType: 'text' as const,
+      inputMode: 'numeric' as const,
+      placeholder: '1234',
+    }
+  }
+
+  return {
+    method: 'none' as const,
+    label: '本人確認',
+    inputType: 'text' as const,
+    inputMode: 'text' as const,
+    placeholder: '',
+  }
 }
 
 function Message({

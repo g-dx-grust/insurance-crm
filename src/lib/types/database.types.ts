@@ -789,7 +789,7 @@ export type Database = {
           intention_record_id: string
           sent_at: string | null
           signed_at: string | null
-          signer_email: string
+          signer_email: string | null
           signer_name: string
           status: string
           tenant_id: string
@@ -804,7 +804,7 @@ export type Database = {
           intention_record_id: string
           sent_at?: string | null
           signed_at?: string | null
-          signer_email: string
+          signer_email?: string | null
           signer_name: string
           status?: string
           tenant_id: string
@@ -819,7 +819,7 @@ export type Database = {
           intention_record_id?: string
           sent_at?: string | null
           signed_at?: string | null
-          signer_email?: string
+          signer_email?: string | null
           signer_name?: string
           status?: string
           tenant_id?: string

@@ -29,6 +29,12 @@ interface BuildManifestParams {
   clientUserAgent: string | null
   initialRecordedAt: string | null
   finalRecordedAt: string | null
+  identityVerification?: {
+    method: 'birth_date' | 'phone_last4' | 'none'
+    verified: boolean
+    checkedAt: string
+    valueSha256: string | null
+  }
 }
 
 export function decodePngDataUrl(dataUrl: string): Buffer {
@@ -67,6 +73,7 @@ export function buildIntentionSignatureManifest({
   clientUserAgent,
   initialRecordedAt,
   finalRecordedAt,
+  identityVerification,
 }: BuildManifestParams) {
   return {
     version: 1,
@@ -91,6 +98,7 @@ export function buildIntentionSignatureManifest({
       ip: clientIp,
       user_agent: clientUserAgent,
     },
+    identity_verification: identityVerification ?? null,
     signature_image: {
       storage_path: signatureStoragePath,
       sha256: signatureSha256,

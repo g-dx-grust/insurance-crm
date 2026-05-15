@@ -27,6 +27,7 @@ type ActionResult<T = void> =
 const remoteSignatureSubmitSchema = z.object({
   token: z.string().min(20),
   signer_name: z.string().trim().min(1, '署名者名を入力してください').max(100),
+  identity_value: z.string().trim().max(30).optional().default(''),
   signature_data_url: z
     .string()
     .min(1, '電子サインを入力してください')
@@ -63,11 +64,23 @@ export async function submitRemoteIntentionSignature(
 
   const { data: intention, error: intentionError } = await admin
     .from('intention_records')
-    .select('*')
+    .select('*, customers!customer_id(birth_date, phone)')
     .eq('id', request.intention_record_id)
     .single()
   if (intentionError || !intention) {
     return { ok: false, error: intentionError?.message ?? '意向把握記録が見つかりません。' }
+  }
+
+  const customer = Array.isArray(intention.customers)
+    ? intention.customers[0]
+    : intention.customers
+  const identityVerification = verifyIdentityValue(
+    customer,
+    parsed.data.identity_value,
+    signedNowIso(),
+  )
+  if (!identityVerification.ok) {
+    return { ok: false, error: identityVerification.error }
   }
 
   const [{ data: products }, { data: latestEvidence }, { data: financialChecks }] =
@@ -173,6 +186,7 @@ export async function submitRemoteIntentionSignature(
     clientUserAgent,
     initialRecordedAt: intention.initial_recorded_at,
     finalRecordedAt: intention.final_recorded_at,
+    identityVerification: identityVerification.data,
   })
   const canonicalManifest = canonicalJson(evidenceManifest)
   const evidenceManifestSha256 = sha256Hex(canonicalManifest)
@@ -240,6 +254,7 @@ export async function submitRemoteIntentionSignature(
       signer_email: request.signer_email,
       signature_sha256: signatureSha256,
       evidence_manifest_sha256: evidenceManifestSha256,
+      identity_verification_method: identityVerification.data.method,
       server_seal_algorithm: INTENTION_SIGNATURE_SEAL_ALGORITHM,
       server_seal_key_id: getSignatureSealKeyId(),
     },
@@ -248,6 +263,81 @@ export async function submitRemoteIntentionSignature(
   revalidatePath(`/intentions/${intention.id}`)
   revalidatePath('/intentions')
   return { ok: true }
+}
+
+function signedNowIso() {
+  return new Date().toISOString()
+}
+
+function verifyIdentityValue(
+  customer: { birth_date: string | null; phone: string | null } | null,
+  inputValue: string,
+  checkedAt: string,
+):
+  | {
+      ok: true
+      data: {
+        method: 'birth_date' | 'phone_last4' | 'none'
+        verified: boolean
+        checkedAt: string
+        valueSha256: string | null
+      }
+    }
+  | { ok: false; error: string } {
+  if (customer?.birth_date) {
+    const normalizedInput = normalizeBirthDate(inputValue)
+    if (!normalizedInput || normalizedInput !== customer.birth_date) {
+      return { ok: false, error: '本人確認情報が一致しません。' }
+    }
+    return {
+      ok: true,
+      data: {
+        method: 'birth_date',
+        verified: true,
+        checkedAt,
+        valueSha256: sha256Hex(normalizedInput),
+      },
+    }
+  }
+
+  const phoneLast4 = customer?.phone?.replace(/\D/g, '').slice(-4)
+  if (phoneLast4) {
+    const normalizedInput = inputValue.replace(/\D/g, '').slice(-4)
+    if (normalizedInput.length !== 4 || normalizedInput !== phoneLast4) {
+      return { ok: false, error: '本人確認情報が一致しません。' }
+    }
+    return {
+      ok: true,
+      data: {
+        method: 'phone_last4',
+        verified: true,
+        checkedAt,
+        valueSha256: sha256Hex(normalizedInput),
+      },
+    }
+  }
+
+  return {
+    ok: true,
+    data: {
+      method: 'none',
+      verified: false,
+      checkedAt,
+      valueSha256: null,
+    },
+  }
+}
+
+function normalizeBirthDate(value: string): string | null {
+  const trimmed = value.trim()
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed
+
+  const digits = trimmed.replace(/\D/g, '')
+  if (/^\d{8}$/.test(digits)) {
+    return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`
+  }
+
+  return null
 }
 
 function getClientIp(headersList: Headers): string | null {

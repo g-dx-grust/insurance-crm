@@ -20,10 +20,19 @@ interface ProductSummary {
   is_recommended: boolean
 }
 
+interface IdentityVerificationConfig {
+  method: 'birth_date' | 'phone_last4' | 'none'
+  label: string
+  inputType: 'date' | 'text'
+  inputMode: 'text' | 'numeric'
+  placeholder: string
+}
+
 export function RemoteSignatureClient({
   token,
   signerName,
   customerName,
+  identityVerification,
   initialIntention,
   finalIntention,
   products,
@@ -31,11 +40,13 @@ export function RemoteSignatureClient({
   token: string
   signerName: string
   customerName: string
+  identityVerification: IdentityVerificationConfig
   initialIntention: string
   finalIntention: string | null
   products: ProductSummary[]
 }) {
   const [name, setName] = useState(signerName)
+  const [identityValue, setIdentityValue] = useState('')
   const [signature, setSignature] = useState('')
   const [consent, setConsent] = useState(false)
   const [done, setDone] = useState(false)
@@ -46,6 +57,7 @@ export function RemoteSignatureClient({
       const result = await submitRemoteIntentionSignature({
         token,
         signer_name: name,
+        identity_value: identityValue,
         signature_data_url: signature,
         consent_confirmed: consent,
       })
@@ -82,6 +94,27 @@ export function RemoteSignatureClient({
       </div>
 
       <div className="mt-6 space-y-4">
+        {identityVerification.method !== 'none' && (
+          <section className="rounded-md border border-border bg-bg p-5">
+            <h2 className="text-sm font-semibold text-text-sub">本人確認</h2>
+            <div className="mt-4 max-w-sm">
+              <Label className="mb-1 block text-xs font-medium text-text-sub">
+                {identityVerification.label} *
+              </Label>
+              <Input
+                type={identityVerification.inputType}
+                inputMode={identityVerification.inputMode}
+                placeholder={identityVerification.placeholder}
+                maxLength={
+                  identityVerification.method === 'phone_last4' ? 4 : undefined
+                }
+                value={identityValue}
+                onChange={(event) => setIdentityValue(event.target.value)}
+              />
+            </div>
+          </section>
+        )}
+
         <section className="rounded-md border border-border bg-bg p-5">
           <h2 className="text-sm font-semibold text-text-sub">確認内容</h2>
           <div className="mt-3 space-y-3 text-sm">
@@ -156,7 +189,13 @@ export function RemoteSignatureClient({
         <div className="flex justify-end">
           <Button
             onClick={submit}
-            disabled={pending || !name.trim() || !signature || !consent}
+            disabled={
+              pending ||
+              !name.trim() ||
+              (identityVerification.method !== 'none' && !identityValue.trim()) ||
+              !signature ||
+              !consent
+            }
           >
             <Send className="size-4" />
             {pending ? '送信中…' : '電子サインを送信'}
