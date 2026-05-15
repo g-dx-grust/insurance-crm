@@ -28,6 +28,17 @@ interface IdentityVerificationConfig {
   placeholder: string
 }
 
+interface ChecklistDisplayItem {
+  key: string
+  label: string
+  checked: boolean
+}
+
+interface ChecklistGroups {
+  customerItems: ChecklistDisplayItem[]
+  internalOperationItems: ChecklistDisplayItem[]
+}
+
 export function RemoteSignatureClient({
   token,
   signerName,
@@ -35,6 +46,7 @@ export function RemoteSignatureClient({
   identityVerification,
   initialIntention,
   finalIntention,
+  checklistGroups,
   products,
 }: {
   token: string
@@ -43,14 +55,26 @@ export function RemoteSignatureClient({
   identityVerification: IdentityVerificationConfig
   initialIntention: string
   finalIntention: string | null
+  checklistGroups: ChecklistGroups
   products: ProductSummary[]
 }) {
   const [name, setName] = useState(signerName)
   const [identityValue, setIdentityValue] = useState('')
+  const [confirmedChecklistKeys, setConfirmedChecklistKeys] = useState<string[]>([])
   const [signature, setSignature] = useState('')
   const [consent, setConsent] = useState(false)
   const [done, setDone] = useState(false)
   const [pending, startTransition] = useTransition()
+  const allCustomerItemsConfirmed = checklistGroups.customerItems.every((item) =>
+    confirmedChecklistKeys.includes(item.key),
+  )
+
+  const toggleChecklistKey = (key: string, checked: boolean) => {
+    setConfirmedChecklistKeys((current) => {
+      if (checked) return current.includes(key) ? current : [...current, key]
+      return current.filter((item) => item !== key)
+    })
+  }
 
   const submit = () => {
     startTransition(async () => {
@@ -58,6 +82,7 @@ export function RemoteSignatureClient({
         token,
         signer_name: name,
         identity_value: identityValue,
+        confirmed_checklist_keys: confirmedChecklistKeys,
         signature_data_url: signature,
         consent_confirmed: consent,
       })
@@ -132,6 +157,22 @@ export function RemoteSignatureClient({
         </section>
 
         <section className="rounded-md border border-border bg-bg p-5">
+          <h2 className="text-sm font-semibold text-text-sub">確認事項</h2>
+          <div className="mt-4 space-y-4">
+            <CustomerChecklistGroup
+              items={checklistGroups.customerItems}
+              confirmedKeys={confirmedChecklistKeys}
+              onToggle={toggleChecklistKey}
+            />
+            {checklistGroups.internalOperationItems.length > 0 && (
+              <InternalChecklistGroup
+                items={checklistGroups.internalOperationItems}
+              />
+            )}
+          </div>
+        </section>
+
+        <section className="rounded-md border border-border bg-bg p-5">
           <h2 className="text-sm font-semibold text-text-sub">提案商品</h2>
           <div className="mt-3 overflow-hidden rounded-md border border-border">
             <table>
@@ -193,6 +234,7 @@ export function RemoteSignatureClient({
               pending ||
               !name.trim() ||
               (identityVerification.method !== 'none' && !identityValue.trim()) ||
+              !allCustomerItemsConfirmed ||
               !signature ||
               !consent
             }
@@ -202,6 +244,58 @@ export function RemoteSignatureClient({
           </Button>
         </div>
       </div>
+    </div>
+  )
+}
+
+function CustomerChecklistGroup({
+  items,
+  confirmedKeys,
+  onToggle,
+}: {
+  items: ChecklistDisplayItem[]
+  confirmedKeys: string[]
+  onToggle: (key: string, checked: boolean) => void
+}) {
+  return (
+    <div>
+      <p className="text-xs font-medium text-text-muted">お客様確認項目</p>
+      <ul className="mt-2 divide-y divide-border rounded-md border border-border">
+        {items.map((item) => (
+          <li key={item.key}>
+            <label className="flex cursor-pointer items-start gap-2 px-3 py-2">
+              <Checkbox
+                checked={confirmedKeys.includes(item.key)}
+                onCheckedChange={(value) => onToggle(item.key, Boolean(value))}
+                className="mt-0.5"
+              />
+              <span className="text-sm text-text">{item.label}</span>
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function InternalChecklistGroup({
+  items,
+}: {
+  items: ChecklistDisplayItem[]
+}) {
+  return (
+    <div>
+      <p className="text-xs font-medium text-text-muted">社内記録項目</p>
+      <ul className="mt-2 divide-y divide-border rounded-md border border-border">
+        {items.map((item) => (
+          <li key={item.key} className="flex items-center justify-between gap-3 px-3 py-2">
+            <span className="text-sm text-text">{item.label}</span>
+            <StatusBadge variant={item.checked ? 'success' : 'warning'}>
+              {item.checked ? '記録済' : '未記録'}
+            </StatusBadge>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

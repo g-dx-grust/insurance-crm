@@ -18,7 +18,12 @@ import {
   sha256Hex,
 } from '@/lib/security/intention-signature'
 import type { IntentionWizardValues } from '@/lib/validations/intention'
-import type { ComparisonMethod } from '@/lib/constants/intention'
+import {
+  CUSTOMER_CONFIRMATION_CHECKLIST_KEYS,
+  INTERNAL_OPERATION_CHECKLIST_KEYS,
+  INTENTION_CHECKLIST_ITEMS,
+  type ComparisonMethod,
+} from '@/lib/constants/intention'
 
 type ActionResult<T = void> =
   | { ok: true; data?: T }
@@ -28,6 +33,7 @@ const remoteSignatureSubmitSchema = z.object({
   token: z.string().min(20),
   signer_name: z.string().trim().min(1, '署名者名を入力してください').max(100),
   identity_value: z.string().trim().max(30).optional().default(''),
+  confirmed_checklist_keys: z.array(z.string().max(80)).default([]),
   signature_data_url: z
     .string()
     .min(1, '電子サインを入力してください')
@@ -74,10 +80,11 @@ export async function submitRemoteIntentionSignature(
   const customer = Array.isArray(intention.customers)
     ? intention.customers[0]
     : intention.customers
+  const signedAt = new Date().toISOString()
   const identityVerification = verifyIdentityValue(
     customer,
     parsed.data.identity_value,
-    signedNowIso(),
+    signedAt,
   )
   if (!identityVerification.ok) {
     return { ok: false, error: identityVerification.error }
@@ -121,7 +128,6 @@ export async function submitRemoteIntentionSignature(
 
   const revision = Number(latestEvidence?.revision ?? 0) + 1
   const revisionLabel = String(revision).padStart(3, '0')
-  const signedAt = new Date().toISOString()
   const requestHeaders = await headers()
   const clientIp = getClientIp(requestHeaders)
   const clientUserAgent = requestHeaders.get('user-agent')?.slice(0, 1000) ?? null
@@ -132,6 +138,15 @@ export async function submitRemoteIntentionSignature(
   const signatureSha256 = sha256Hex(signatureBuffer)
   const rawChecklist = normalizeChecklistSource(intention.checklist)
   const checklist = pickBooleanChecklist(rawChecklist)
+  const checklistConfirmation = buildChecklistConfirmation(
+    rawChecklist,
+    intention.comparison_method as ComparisonMethod,
+    new Set(parsed.data.confirmed_checklist_keys),
+    signedAt,
+  )
+  if (!checklistConfirmation.confirmed) {
+    return { ok: false, error: 'お客様確認項目をすべて確認してください。' }
+  }
   const financial = financialChecks?.[0]
 
   const manifestValues: IntentionWizardValues = {
@@ -187,6 +202,7 @@ export async function submitRemoteIntentionSignature(
     initialRecordedAt: intention.initial_recorded_at,
     finalRecordedAt: intention.final_recorded_at,
     identityVerification: identityVerification.data,
+    checklistConfirmation,
   })
   const canonicalManifest = canonicalJson(evidenceManifest)
   const evidenceManifestSha256 = sha256Hex(canonicalManifest)
@@ -255,6 +271,7 @@ export async function submitRemoteIntentionSignature(
       signature_sha256: signatureSha256,
       evidence_manifest_sha256: evidenceManifestSha256,
       identity_verification_method: identityVerification.data.method,
+      checklist_confirmed: checklistConfirmation.confirmed,
       server_seal_algorithm: INTENTION_SIGNATURE_SEAL_ALGORITHM,
       server_seal_key_id: getSignatureSealKeyId(),
     },
@@ -263,10 +280,6 @@ export async function submitRemoteIntentionSignature(
   revalidatePath(`/intentions/${intention.id}`)
   revalidatePath('/intentions')
   return { ok: true }
-}
-
-function signedNowIso() {
-  return new Date().toISOString()
 }
 
 function verifyIdentityValue(
@@ -325,6 +338,55 @@ function verifyIdentityValue(
       checkedAt,
       valueSha256: null,
     },
+  }
+}
+
+function buildChecklistConfirmation(
+  checklist: Record<string, unknown>,
+  comparisonMethod: ComparisonMethod,
+  confirmedKeys: Set<string>,
+  confirmedAt: string,
+) {
+  const groups = buildChecklistGroups(checklist, comparisonMethod)
+  const customerItems = groups.customerItems.map((item) => ({
+    key: item.key,
+    label: item.label,
+    recordedChecked: item.checked,
+    customerConfirmed: confirmedKeys.has(item.key),
+  }))
+  return {
+    confirmed: customerItems.every((item) => item.customerConfirmed),
+    confirmedAt,
+    customerItems,
+    internalOperationItems: groups.internalOperationItems.map((item) => ({
+      key: item.key,
+      label: item.label,
+      recordedChecked: item.checked,
+    })),
+  }
+}
+
+function buildChecklistGroups(
+  checklist: Record<string, unknown>,
+  comparisonMethod: ComparisonMethod,
+) {
+  const customerKeys = new Set<string>(CUSTOMER_CONFIRMATION_CHECKLIST_KEYS)
+  const internalKeys = new Set<string>(INTERNAL_OPERATION_CHECKLIST_KEYS)
+
+  const items = INTENTION_CHECKLIST_ITEMS.filter((item) => {
+    if ('requiresComparisonMode' in item && item.requiresComparisonMode) {
+      return comparisonMethod === item.requiresComparisonMode
+    }
+    return true
+  }).map((item) => ({
+    key: item.key,
+    label: item.label,
+    checked: Boolean(checklist[item.key]),
+  }))
+
+  return {
+    customerItems: items.filter((item) => customerKeys.has(item.key)),
+    internalOperationItems: items.filter((item) => internalKeys.has(item.key)),
   }
 }
 

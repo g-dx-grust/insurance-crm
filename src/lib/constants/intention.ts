@@ -41,3 +41,18 @@ export const INTENTION_CHECKLIST_ITEMS = [
 ] as const
 
 export type ChecklistKey = (typeof INTENTION_CHECKLIST_ITEMS)[number]['key']
+
+export const CUSTOMER_CONFIRMATION_CHECKLIST_KEYS = [
+  'intention_grasped',
+  'product_explained',
+  'comparison_explained',
+  'premium_confirmed',
+  'elderly_handled',
+  'consent_obtained',
+  'document_delivered',
+] as const satisfies readonly ChecklistKey[]
+
+export const INTERNAL_OPERATION_CHECKLIST_KEYS = [
+  'copy_kept',
+  'next_followup_set',
+] as const satisfies readonly ChecklistKey[]

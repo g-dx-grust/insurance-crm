@@ -35,6 +35,21 @@ interface BuildManifestParams {
     checkedAt: string
     valueSha256: string | null
   }
+  checklistConfirmation?: {
+    confirmed: boolean
+    confirmedAt: string
+    customerItems: {
+      key: string
+      label: string
+      recordedChecked: boolean
+      customerConfirmed: boolean
+    }[]
+    internalOperationItems: {
+      key: string
+      label: string
+      recordedChecked: boolean
+    }[]
+  }
 }
 
 export function decodePngDataUrl(dataUrl: string): Buffer {
@@ -74,6 +89,7 @@ export function buildIntentionSignatureManifest({
   initialRecordedAt,
   finalRecordedAt,
   identityVerification,
+  checklistConfirmation,
 }: BuildManifestParams) {
   return {
     version: 1,
@@ -99,6 +115,23 @@ export function buildIntentionSignatureManifest({
       user_agent: clientUserAgent,
     },
     identity_verification: identityVerification ?? null,
+    checklist_confirmation: checklistConfirmation
+      ? {
+          confirmed: checklistConfirmation.confirmed,
+          confirmed_at: checklistConfirmation.confirmedAt,
+          customer_items: checklistConfirmation.customerItems.map((item) => ({
+            key: item.key,
+            label: item.label,
+            recorded_checked: item.recordedChecked,
+            customer_confirmed: item.customerConfirmed,
+          })),
+          internal_operation_items: checklistConfirmation.internalOperationItems.map((item) => ({
+            key: item.key,
+            label: item.label,
+            recorded_checked: item.recordedChecked,
+          })),
+        }
+      : null,
     signature_image: {
       storage_path: signatureStoragePath,
       sha256: signatureSha256,
