@@ -17,10 +17,10 @@ export type IntentionStatus = (typeof INTENTION_STATUSES)[number]
 export const COMPARISON_METHODS = ['ロ方式', 'イ方式'] as const
 export type ComparisonMethod = (typeof COMPARISON_METHODS)[number]
 
-export const INTENTION_SIGNATURE_CONSENT_VERSION = '2026-05-13-v1'
+export const INTENTION_SIGNATURE_CONSENT_VERSION = '2026-05-15-v2'
 
 export const INTENTION_SIGNATURE_CONSENT_TEXT =
-  '私は、上記の意向把握内容、提案内容、確認事項の説明を受け、内容を確認しました。'
+  '私は、上記の意向内容および提案商品の内容を確認し、電子サインに同意します。'
 
 /**
  * Phase 6 doc §4ステップウィザード設計 §Step 4 のチェックリスト 9 項目。

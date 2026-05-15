@@ -1,11 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sha256Hex } from '@/lib/security/intention-signature'
-import {
-  CUSTOMER_CONFIRMATION_CHECKLIST_KEYS,
-  INTERNAL_OPERATION_CHECKLIST_KEYS,
-  INTENTION_CHECKLIST_ITEMS,
-  type ComparisonMethod,
-} from '@/lib/constants/intention'
 import { RemoteSignatureClient } from './RemoteSignatureClient'
 
 export const metadata = { title: '意向把握 電子サイン | HOKENA CRM' }
@@ -22,7 +16,7 @@ export default async function RemoteSignaturePage({
   const { data: request, error } = await admin
     .from('intention_signature_requests')
     .select(
-      'id, signer_name, signer_email, status, expires_at, intention_record_id, intention_records!intention_record_id(id, customer_id, initial_intention, final_intention, comparison_method, checklist, customers!customer_id(name, birth_date, phone))',
+      'id, signer_name, signer_email, status, expires_at, intention_record_id, intention_records!intention_record_id(id, customer_id, initial_intention, final_intention, customers!customer_id(name, birth_date, phone))',
     )
     .eq('token_hash', tokenHash)
     .maybeSingle()
@@ -64,41 +58,9 @@ export default async function RemoteSignaturePage({
       identityVerification={buildIdentityVerification(customer)}
       initialIntention={intention.initial_intention}
       finalIntention={intention.final_intention}
-      checklistGroups={buildChecklistGroups(
-        intention.checklist,
-        intention.comparison_method as ComparisonMethod,
-      )}
       products={products ?? []}
     />
   )
-}
-
-function buildChecklistGroups(
-  checklist: unknown,
-  comparisonMethod: ComparisonMethod,
-) {
-  const source =
-    checklist && typeof checklist === 'object'
-      ? checklist as Record<string, unknown>
-      : {}
-  const customerKeys = new Set<string>(CUSTOMER_CONFIRMATION_CHECKLIST_KEYS)
-  const internalKeys = new Set<string>(INTERNAL_OPERATION_CHECKLIST_KEYS)
-
-  const items = INTENTION_CHECKLIST_ITEMS.filter((item) => {
-    if ('requiresComparisonMode' in item && item.requiresComparisonMode) {
-      return comparisonMethod === item.requiresComparisonMode
-    }
-    return true
-  }).map((item) => ({
-    key: item.key,
-    label: item.label,
-    checked: Boolean(source[item.key]),
-  }))
-
-  return {
-    customerItems: items.filter((item) => customerKeys.has(item.key)),
-    internalOperationItems: items.filter((item) => internalKeys.has(item.key)),
-  }
 }
 
 function buildIdentityVerification(
