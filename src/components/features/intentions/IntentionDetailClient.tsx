@@ -525,6 +525,7 @@ function statusVariant(status: string) {
     case '承認済': return 'success' as const
     case '差戻':   return 'danger' as const
     case '承認待': return 'warning' as const
+    case '署名待ち': return 'warning' as const
     case '実施済': return 'info' as const
     case '未実施': return 'muted' as const
     default:       return 'default' as const

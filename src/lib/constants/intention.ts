@@ -5,6 +5,7 @@
 
 export const INTENTION_STATUSES = [
   '未実施',
+  '署名待ち',
   '実施済',
   '承認待',
   '承認済',

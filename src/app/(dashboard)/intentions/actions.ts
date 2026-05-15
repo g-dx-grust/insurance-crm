@@ -13,6 +13,8 @@ import {
 import {
   intentionWizardSchema,
   type IntentionWizardValues,
+  unsignedIntentionRecordSchema,
+  type UnsignedIntentionRecordValues,
 } from '@/lib/validations/intention'
 import {
   intentionSignatureRequestSchema,
@@ -131,68 +133,17 @@ export async function createIntentionRecord(
     return { ok: false, error: manifestUploadError.message }
   }
 
-  const { data: record, error } = await supabase
-    .from('intention_records')
-    .insert({
-      id: recordId,
-      tenant_id: tenantId,
-      customer_id: v.customer_id,
-      contract_id: v.contract_id ?? null,
-      initial_intention: v.initial_intention,
-      initial_recorded_at: initialRecordedAt,
-      comparison_method: v.comparison_method,
-      comparison_reason: v.comparison_reason ?? null,
-      final_intention: v.final_intention,
-      final_recorded_at: finalRecordedAt,
-      checklist: { ...v.checklist, _change_note: v.final_change_note ?? null },
-      status,
-      approver_id: v.approver_id ?? null,
-      created_by: user.id,
-    })
-    .select('id')
-    .single()
-
-  if (error || !record) {
-    return { ok: false, error: error?.message ?? '保存に失敗しました' }
-  }
-
-  if (v.products.length > 0) {
-    const { error: prodErr } = await supabase
-      .from('intention_products')
-      .insert(
-        v.products.map((p, index) => ({
-          intention_record_id: record.id,
-          tenant_id: tenantId,
-          insurance_company: p.insurance_company,
-          product_name: p.product_name,
-          product_category: p.product_category,
-          premium: p.premium,
-          is_recommended: p.is_recommended,
-          recommendation_reason: p.recommendation_reason ?? null,
-          sort_order: index,
-        })),
-      )
-    if (prodErr) return { ok: false, error: prodErr.message }
-  }
-
-  if (v.financial_situation) {
-    const { error: financialErr } = await supabase
-      .from('financial_situation_checks')
-      .insert({
-        tenant_id: tenantId,
-        customer_id: v.customer_id,
-        contract_id: v.contract_id ?? null,
-        intention_record_id: record.id,
-        source: 'intention',
-        annual_income: v.financial_situation.annual_income,
-        employer_name: v.financial_situation.employer_name,
-        investment_experience: v.financial_situation.investment_experience,
-        investment_knowledge: v.financial_situation.investment_knowledge,
-        note: v.financial_situation.note ?? null,
-        recorded_by: user.id,
-      })
-    if (financialErr) return { ok: false, error: financialErr.message }
-  }
+  const saved = await insertIntentionSnapshot({
+    supabase,
+    tenantId,
+    recordId,
+    createdBy: user.id,
+    values: v,
+    status,
+  })
+  if (!saved.ok) return saved
+  if (!saved.data) return { ok: false, error: '保存に失敗しました' }
+  const record = saved.data
 
   const { error: evidenceErr } = await supabase
     .from('intention_signature_evidences')
@@ -242,6 +193,139 @@ export async function createIntentionRecord(
   revalidatePath(`/customers/${v.customer_id}`)
   if (v.contract_id) revalidatePath(`/contracts/${v.contract_id}`)
   redirect(`/intentions/${record.id}`)
+}
+
+export async function createPendingSignatureIntentionRecord(
+  values: UnsignedIntentionRecordValues,
+): Promise<ActionResult<{ id: string }>> {
+  const parsed = unsignedIntentionRecordSchema.safeParse(emptyToNull(values))
+  if (!parsed.success) {
+    return {
+      ok: false,
+      error: '入力内容に誤りがあります。',
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    }
+  }
+
+  const supabase = await createClient()
+  const tenantId = await getCurrentTenantId()
+  const { user } = await getSessionUserOrRedirect()
+  const recordId = randomUUID()
+  const v = parsed.data
+
+  const saved = await insertIntentionSnapshot({
+    supabase,
+    tenantId,
+    recordId,
+    createdBy: user.id,
+    values: v,
+    status: '署名待ち',
+  })
+  if (!saved.ok) return saved
+  if (!saved.data) return { ok: false, error: '保存に失敗しました' }
+
+  const admin = createAdminClient()
+  await admin.from('audit_logs').insert({
+    tenant_id: tenantId,
+    actor_id: user.id,
+    action: 'CREATE_INTENTION_PENDING_SIGNATURE',
+    entity_type: 'intention_record',
+    entity_id: saved.data.id,
+    metadata: {
+      signature_channel: 'remote',
+      status: '署名待ち',
+    },
+  })
+
+  revalidatePath('/intentions')
+  revalidatePath('/financial-checks')
+  revalidatePath(`/customers/${v.customer_id}`)
+  if (v.contract_id) revalidatePath(`/contracts/${v.contract_id}`)
+  redirect(`/intentions/${saved.data.id}`)
+}
+
+async function insertIntentionSnapshot({
+  supabase,
+  tenantId,
+  recordId,
+  createdBy,
+  values,
+  status,
+}: {
+  supabase: Awaited<ReturnType<typeof createClient>>
+  tenantId: string
+  recordId: string
+  createdBy: string
+  values: UnsignedIntentionRecordValues
+  status: string
+}): Promise<ActionResult<{ id: string }>> {
+  const initialRecordedAt = toTokyoIsoFromDateTimeLocal(values.initial_recorded_at)
+  const finalRecordedAt = toTokyoIsoFromDateTimeLocal(values.final_recorded_at)
+
+  const { data: record, error } = await supabase
+    .from('intention_records')
+    .insert({
+      id: recordId,
+      tenant_id: tenantId,
+      customer_id: values.customer_id,
+      contract_id: values.contract_id ?? null,
+      initial_intention: values.initial_intention,
+      initial_recorded_at: initialRecordedAt,
+      comparison_method: values.comparison_method,
+      comparison_reason: values.comparison_reason ?? null,
+      final_intention: values.final_intention,
+      final_recorded_at: finalRecordedAt,
+      checklist: { ...values.checklist, _change_note: values.final_change_note ?? null },
+      status,
+      approver_id: values.approver_id ?? null,
+      created_by: createdBy,
+    })
+    .select('id')
+    .single()
+
+  if (error || !record) {
+    return { ok: false, error: error?.message ?? '保存に失敗しました' }
+  }
+
+  if (values.products.length > 0) {
+    const { error: prodErr } = await supabase
+      .from('intention_products')
+      .insert(
+        values.products.map((p, index) => ({
+          intention_record_id: record.id,
+          tenant_id: tenantId,
+          insurance_company: p.insurance_company,
+          product_name: p.product_name,
+          product_category: p.product_category,
+          premium: p.premium,
+          is_recommended: p.is_recommended,
+          recommendation_reason: p.recommendation_reason ?? null,
+          sort_order: index,
+        })),
+      )
+    if (prodErr) return { ok: false, error: prodErr.message }
+  }
+
+  if (values.financial_situation) {
+    const { error: financialErr } = await supabase
+      .from('financial_situation_checks')
+      .insert({
+        tenant_id: tenantId,
+        customer_id: values.customer_id,
+        contract_id: values.contract_id ?? null,
+        intention_record_id: record.id,
+        source: 'intention',
+        annual_income: values.financial_situation.annual_income,
+        employer_name: values.financial_situation.employer_name,
+        investment_experience: values.financial_situation.investment_experience,
+        investment_knowledge: values.financial_situation.investment_knowledge,
+        note: values.financial_situation.note ?? null,
+        recorded_by: createdBy,
+      })
+    if (financialErr) return { ok: false, error: financialErr.message }
+  }
+
+  return { ok: true, data: { id: record.id } }
 }
 
 function getClientIp(headersList: Headers): string | null {

@@ -37,7 +37,10 @@ import {
 import { productCategories } from '@/lib/validations/contract'
 import type { IntentionWizardValues } from '@/lib/validations/intention'
 import { nowTokyoDateTimeLocal } from '@/lib/utils/datetime'
-import { createIntentionRecord } from '@/app/(dashboard)/intentions/actions'
+import {
+  createIntentionRecord,
+  createPendingSignatureIntentionRecord,
+} from '@/app/(dashboard)/intentions/actions'
 
 export interface ContractOption {
   id: string
@@ -217,30 +220,84 @@ export function IntentionWizard({
     if (step > 1) setStep(((step - 1) as 1 | 2 | 3 | 4))
   }
 
-  const handleSave = () => {
-    // 全 4 ステップを再検証
+  const validateRecordBeforeSignature = ({
+    requireSignatureConsent,
+  }: {
+    requireSignatureConsent: boolean
+  }): boolean => {
     for (const s of [1, 2, 3] as const) {
       const err = validateStep(s)
       if (err) {
         toast.error(`Step ${s}: ${err}`)
         setStep(s)
-        return
+        return false
       }
     }
-    // 必須チェック項目 (条件に該当するもの) が全部 true か
     const required = INTENTION_CHECKLIST_ITEMS.filter((item) => {
       if ('requiresComparisonMode' in item && item.requiresComparisonMode) {
         return state.comparison_method === item.requiresComparisonMode
       }
       // requiresElderly のもの: ここでは顧客の年齢情報を持っていないので任意扱い (UI に注記)
       if ('requiresElderly' in item) return false
+      if (!requireSignatureConsent && item.key === 'consent_obtained') return false
       return true
     })
     const missing = required.filter((item) => !state.checklist[item.key])
     if (missing.length > 0) {
       toast.error(`未チェック項目があります: ${missing[0].label}`)
-      return
+      return false
     }
+    return true
+  }
+
+  const buildUnsignedValues = () => ({
+    customer_id: state.customer_id,
+    contract_id: state.contract_id ?? null,
+    initial_intention: state.initial_intention,
+    initial_recorded_at: state.initial_recorded_at,
+    comparison_method: state.comparison_method as ComparisonMethod,
+    comparison_reason: state.comparison_reason || null,
+    products: state.products.map(({ client_id, ...rest }) => {
+      void client_id
+      return {
+        ...rest,
+        recommendation_reason: rest.recommendation_reason || null,
+      }
+    }),
+    financial_situation: state.products.some((p) =>
+      isSavingsProductCategory(p.product_category),
+    )
+      ? {
+          annual_income: state.financial_situation.annual_income,
+          employer_name: state.financial_situation.employer_name,
+          investment_experience: state.financial_situation.investment_experience,
+          investment_knowledge: state.financial_situation.investment_knowledge,
+          note: state.financial_situation.note || null,
+        }
+      : null,
+    final_intention: state.final_intention,
+    final_change_note: state.final_change_note || null,
+    final_recorded_at: state.final_recorded_at,
+    checklist: state.checklist,
+    approver_id: state.approver_id,
+  })
+
+  const handleSaveForRemoteSignature = () => {
+    if (!validateRecordBeforeSignature({ requireSignatureConsent: false })) return
+
+    const values = buildUnsignedValues()
+
+    startTransition(async () => {
+      const result = await createPendingSignatureIntentionRecord(values)
+      if (result && !result.ok) {
+        toast.error(result.error)
+      }
+    })
+  }
+
+  const handleSave = () => {
+    if (!validateRecordBeforeSignature({ requireSignatureConsent: true })) return
+
     if (!state.signature_signer_name.trim()) {
       toast.error('署名者名を入力してください')
       return
@@ -255,35 +312,7 @@ export function IntentionWizard({
     }
 
     const values: IntentionWizardValues = {
-      customer_id: state.customer_id,
-      contract_id: state.contract_id ?? null,
-      initial_intention: state.initial_intention,
-      initial_recorded_at: state.initial_recorded_at,
-      comparison_method: state.comparison_method as ComparisonMethod,
-      comparison_reason: state.comparison_reason || null,
-      products: state.products.map(({ client_id, ...rest }) => {
-        void client_id
-        return {
-          ...rest,
-          recommendation_reason: rest.recommendation_reason || null,
-        }
-      }),
-      financial_situation: state.products.some((p) =>
-        isSavingsProductCategory(p.product_category),
-      )
-        ? {
-            annual_income: state.financial_situation.annual_income,
-            employer_name: state.financial_situation.employer_name,
-            investment_experience: state.financial_situation.investment_experience,
-            investment_knowledge: state.financial_situation.investment_knowledge,
-            note: state.financial_situation.note || null,
-          }
-        : null,
-      final_intention: state.final_intention,
-      final_change_note: state.final_change_note || null,
-      final_recorded_at: state.final_recorded_at,
-      checklist: state.checklist,
-      approver_id: state.approver_id,
+      ...buildUnsignedValues(),
       signature_signer_name: state.signature_signer_name,
       signature_data_url: state.signature_data_url,
       signature_consent_confirmed: state.signature_consent_confirmed,
@@ -334,9 +363,19 @@ export function IntentionWizard({
             <ChevronRight className="ml-1 size-4" />
           </Button>
         ) : (
-          <Button type="button" onClick={handleSave} disabled={pending}>
-            {pending ? '保存中…' : '意向把握を完了する'}
-          </Button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleSaveForRemoteSignature}
+              disabled={pending}
+            >
+              {pending ? '保存中…' : 'リモート署名用に保存'}
+            </Button>
+            <Button type="button" onClick={handleSave} disabled={pending}>
+              {pending ? '保存中…' : '対面サインで完了'}
+            </Button>
+          </div>
         )}
       </div>
     </div>

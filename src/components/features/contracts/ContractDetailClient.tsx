@@ -466,6 +466,7 @@ function intentionVariant(status: string): StatusVariant {
     case '承認済': return 'success'
     case '差戻':   return 'danger'
     case '承認待': return 'warning'
+    case '署名待ち': return 'warning'
     case '実施済': return 'info'
     default:       return 'default'
   }

@@ -258,6 +258,19 @@ export async function submitRemoteIntentionSignature(
     .update({ status: '署名済', signed_at: signedAt })
     .eq('id', request.id)
 
+  if (intention.status === '署名待ち' || intention.status === '未実施') {
+    await admin
+      .from('intention_records')
+      .update({
+        status: intention.approver_id ? '承認待' : '実施済',
+        checklist: {
+          ...rawChecklist,
+          consent_obtained: true,
+        },
+      })
+      .eq('id', intention.id)
+  }
+
   await admin.from('audit_logs').insert({
     tenant_id: request.tenant_id,
     actor_id: request.created_by,
