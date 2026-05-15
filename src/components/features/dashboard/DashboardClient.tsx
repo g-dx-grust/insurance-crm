@@ -125,7 +125,7 @@ export function DashboardClient({
               type="button"
               onClick={() => setPeriod(p)}
               className={
-                'px-3 py-1.5 text-xs first:rounded-l-sm last:rounded-r-sm ' +
+                'inline-flex h-control items-center px-4 text-[length:var(--font-md)] first:rounded-l-sm last:rounded-r-sm ' +
                 (p === period
                   ? 'bg-[color:var(--color-accent-tint)] text-[color:var(--color-accent)] font-medium'
                   : 'text-text-sub hover:bg-[color:var(--color-bg-secondary)]')
@@ -144,7 +144,7 @@ export function DashboardClient({
             <EmptyState title="データがありません" />
           ) : (
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} initialDimension={{ width: 1, height: 1 }}>
                 <BarChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                   <XAxis
@@ -177,7 +177,7 @@ export function DashboardClient({
             <EmptyState title="データがありません" />
           ) : (
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} initialDimension={{ width: 1, height: 1 }}>
                 <BarChart data={userPerformance} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                   <XAxis

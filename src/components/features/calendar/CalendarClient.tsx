@@ -142,7 +142,7 @@ export function CalendarClient({
             <button
               type="button"
               onClick={() => setView('month')}
-              className={`rounded-l-sm px-3 py-1.5 text-xs ${
+              className={`inline-flex h-control items-center rounded-l-sm px-4 text-[length:var(--font-md)] ${
                 view === 'month'
                   ? 'bg-[color:var(--color-accent-tint)] text-[color:var(--color-accent)] font-medium'
                   : 'text-text-sub hover:bg-[color:var(--color-bg-secondary)]'
@@ -154,7 +154,7 @@ export function CalendarClient({
             <button
               type="button"
               onClick={() => setView('week')}
-              className={`rounded-r-sm px-3 py-1.5 text-xs ${
+              className={`inline-flex h-control items-center rounded-r-sm px-4 text-[length:var(--font-md)] ${
                 view === 'week'
                   ? 'bg-[color:var(--color-accent-tint)] text-[color:var(--color-accent)] font-medium'
                   : 'text-text-sub hover:bg-[color:var(--color-bg-secondary)]'

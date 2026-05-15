@@ -320,7 +320,7 @@ function UsersTab({ users, disabled }: { users: UserRow[]; disabled: boolean }) 
                       value={u.role}
                       onValueChange={(v) => v && handleRoleChange(u.id, v)}
                     >
-                      <SelectTrigger className="h-7 w-32 text-xs">
+                      <SelectTrigger className="w-32 text-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -345,20 +345,20 @@ function UsersTab({ users, disabled }: { users: UserRow[]; disabled: boolean }) 
                         type="button"
                         onClick={() => setConfirmId(u.id)}
                         disabled={pending}
-                        className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)]"
+                        className="inline-flex size-control items-center justify-center rounded-sm text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)]"
                         title="無効化"
                       >
-                        <Trash2 className="size-3.5" />
+                        <Trash2 className="size-4" />
                       </button>
                     ) : (
                       <button
                         type="button"
                         onClick={() => handleActivate(u.id)}
                         disabled={pending}
-                        className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-success)]/10 hover:text-[color:var(--color-success)]"
+                        className="inline-flex size-control items-center justify-center rounded-sm text-text-muted hover:bg-[color:var(--color-success)]/10 hover:text-[color:var(--color-success)]"
                         title="有効化"
                       >
-                        <X className="size-3.5 rotate-45" />
+                        <X className="size-4 rotate-45" />
                       </button>
                     ))}
                 </td>
@@ -476,7 +476,7 @@ function DaysList({
                 const n = Number(e.target.value)
                 onChange(days.map((x, j) => (i === j ? (Number.isFinite(n) ? n : 0) : x)))
               }}
-              className="h-8 w-20"
+              className="w-20"
               disabled={disabled}
             />
             <span className="text-xs text-text-muted">日前</span>
@@ -484,10 +484,10 @@ function DaysList({
               type="button"
               onClick={() => onChange(days.filter((_, j) => j !== i))}
               disabled={disabled || days.length <= 1}
-              className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)] disabled:opacity-30"
+              className="inline-flex size-control items-center justify-center rounded-sm text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)] disabled:opacity-30"
               aria-label="削除"
             >
-              <X className="size-3.5" />
+              <X className="size-4" />
             </button>
           </div>
         ))}
@@ -775,21 +775,21 @@ function TemplatesTab({
                     type="button"
                     onClick={() => startEdit(template)}
                     disabled={disabled}
-                    className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-bg-secondary)] hover:text-text disabled:opacity-30"
+                    className="inline-flex size-control items-center justify-center rounded-sm text-text-muted hover:bg-[color:var(--color-bg-secondary)] hover:text-text disabled:opacity-30"
                     aria-label="編集"
                     title="編集"
                   >
-                    <Save className="size-3.5" />
+                    <Save className="size-4" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setConfirmId(template.id)}
                     disabled={disabled}
-                    className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)] disabled:opacity-30"
+                    className="inline-flex size-control items-center justify-center rounded-sm text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)] disabled:opacity-30"
                     aria-label="削除"
                     title="削除"
                   >
-                    <Trash2 className="size-3.5" />
+                    <Trash2 className="size-4" />
                   </button>
                 </td>
               </tr>

@@ -541,10 +541,10 @@ function Step2({
                   <button
                     type="button"
                     onClick={() => removeProduct(p.client_id)}
-                    className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)]"
+                    className="inline-flex size-control items-center justify-center rounded-sm text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)]"
                     aria-label="削除"
                   >
-                    <Trash2 className="size-3.5" />
+                    <Trash2 className="size-4" />
                   </button>
                 </div>
                 <div className="grid grid-cols-2 gap-3">

@@ -124,20 +124,20 @@ export function OpportunitiesClient({
             <button
               type="button"
               onClick={() => setViewPersisted('kanban')}
-              className={`rounded-l-sm px-3 py-1.5 text-xs ${
+              className={`inline-flex h-control items-center rounded-l-sm px-4 text-[length:var(--font-md)] ${
                 view === 'kanban'
                   ? 'bg-[color:var(--color-accent-tint)] text-[color:var(--color-accent)] font-medium'
                   : 'text-text-sub hover:bg-[color:var(--color-bg-secondary)]'
               }`}
               aria-pressed={view === 'kanban'}
             >
-              <LayoutGrid className="size-3.5 inline mr-1" />
+              <LayoutGrid className="mr-1 inline size-4" />
               カンバン
             </button>
             <button
               type="button"
               onClick={() => setViewPersisted('list')}
-              className={`rounded-r-sm px-3 py-1.5 text-xs ${
+              className={`inline-flex h-control items-center rounded-r-sm px-4 text-[length:var(--font-md)] ${
                 view === 'list'
                   ? 'bg-[color:var(--color-accent-tint)] text-[color:var(--color-accent)] font-medium'
                   : 'text-text-sub hover:bg-[color:var(--color-bg-secondary)]'

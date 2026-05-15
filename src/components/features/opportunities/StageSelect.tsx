@@ -49,7 +49,7 @@ export function StageSelect({
       onValueChange={handleChange}
       disabled={pending}
     >
-      <SelectTrigger className={size === 'sm' ? 'h-7 text-xs' : ''}>
+      <SelectTrigger className={size === 'sm' ? 'w-36 text-sm' : ''}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

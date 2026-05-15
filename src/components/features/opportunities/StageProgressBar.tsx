@@ -53,7 +53,7 @@ export function StageProgressBar({
               onClick={() => handleClick(stage)}
               disabled={pending}
               className={cn(
-                'flex-1 border-b-2 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1',
+                'flex min-h-control flex-1 items-center justify-center gap-1 border-b-2 py-2 text-sm font-medium transition-colors',
                 isCurrent
                   ? 'border-[color:var(--color-accent)] text-[color:var(--color-accent)]'
                   : isPast
@@ -61,7 +61,7 @@ export function StageProgressBar({
                     : 'border-border text-text-muted hover:text-text',
               )}
             >
-              {isPast && <Check className="size-3" aria-hidden />}
+              {isPast && <Check className="size-4" aria-hidden />}
               {stage}
             </button>
           )

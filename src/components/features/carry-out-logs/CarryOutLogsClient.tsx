@@ -173,11 +173,11 @@ export function CarryOutLogsClient({
                         setEditing(log)
                         setOpen(true)
                       }}
-                      className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-bg-secondary)] hover:text-text"
+                      className="inline-flex size-control items-center justify-center rounded-sm text-text-muted hover:bg-[color:var(--color-bg-secondary)] hover:text-text"
                       aria-label="編集"
                       title="編集"
                     >
-                      <Pencil className="size-3.5" />
+                      <Pencil className="size-4" />
                     </button>
                   </td>
                 </tr>
