@@ -214,7 +214,7 @@ function UsersTab({ users, disabled }: { users: UserRow[]; disabled: boolean }) 
 
   const handleRoleChange = (userId: string, role: string) => {
     startTransition(async () => {
-      const result = await setUserRole(userId, role as 'admin' | 'agent' | 'staff')
+      const result = await setUserRole(userId, role as 'admin' | 'agent' | 'staff' | 'viewer')
       if (!result.ok) {
         toast.error(result.error)
         return
@@ -282,6 +282,7 @@ function UsersTab({ users, disabled }: { users: UserRow[]; disabled: boolean }) 
                 <SelectItem value="admin">admin (管理者)</SelectItem>
                 <SelectItem value="agent">agent (募集人)</SelectItem>
                 <SelectItem value="staff">staff (事務)</SelectItem>
+                <SelectItem value="viewer">viewer (閲覧者)</SelectItem>
               </SelectContent>
             </Select>
           </Field>
@@ -327,6 +328,7 @@ function UsersTab({ users, disabled }: { users: UserRow[]; disabled: boolean }) 
                         <SelectItem value="admin">admin</SelectItem>
                         <SelectItem value="agent">agent</SelectItem>
                         <SelectItem value="staff">staff</SelectItem>
+                        <SelectItem value="viewer">viewer</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -387,6 +389,7 @@ function roleVariant(role: string): StatusVariant {
     case 'admin': return 'info'
     case 'staff': return 'default'
     case 'agent': return 'success'
+    case 'viewer': return 'muted'
     default:      return 'default'
   }
 }

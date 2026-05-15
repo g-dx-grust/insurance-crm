@@ -9,6 +9,7 @@
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "docs:export": "node scripts/export-docs.mjs",
+    "demo:accounts": "node scripts/ensure-demo-accounts.mjs --yes",
     "demo:reset": "node scripts/reset-demo-data.mjs --yes",
     "db:types": "supabase gen types typescript --linked > src/lib/types/database.types.ts",
     "db:migrate": "supabase db push",

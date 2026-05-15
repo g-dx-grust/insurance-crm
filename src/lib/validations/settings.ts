@@ -41,7 +41,7 @@ export type ComplianceSettingsValues = z.infer<typeof complianceSettingsSchema>
 export const inviteUserSchema = z.object({
   email: z.string().email('メールアドレスの形式が正しくありません'),
   name: z.string().min(1, '氏名は必須です').max(50),
-  role: z.enum(['admin', 'agent', 'staff']),
+  role: z.enum(['admin', 'agent', 'staff', 'viewer']),
 })
 
 export type InviteUserValues = z.infer<typeof inviteUserSchema>

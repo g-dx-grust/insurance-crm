@@ -228,7 +228,7 @@ export async function inviteUser(
 
 export async function setUserRole(
   userId: string,
-  role: 'admin' | 'agent' | 'staff',
+  role: 'admin' | 'agent' | 'staff' | 'viewer',
 ): Promise<ActionResult> {
   const auth = await ensureAdmin()
   if ('error' in auth) return { ok: false, error: auth.error }
