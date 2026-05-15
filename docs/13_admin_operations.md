@@ -143,4 +143,4 @@ LIMIT 100;
 ## 連絡先（運用窓口）
 
 > 開発・運用窓口情報をここに記載してください。
-> 例: `support@grust.jp` / Lark Group: `N-LIC CRM 運用` / 緊急時: `XX-XXXX-XXXX`
+> 例: `support@grust.jp` / Lark Group: `HOKENA CRM 運用` / 緊急時: `XX-XXXX-XXXX`

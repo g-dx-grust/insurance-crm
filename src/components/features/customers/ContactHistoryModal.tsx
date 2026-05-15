@@ -32,14 +32,24 @@ import {
 import { nowTokyoDateTimeLocal } from '@/lib/utils/datetime'
 import { addContactHistory } from '@/app/(dashboard)/customers/actions'
 
+interface MeetingTemplateOption {
+  id: string
+  title: string
+  type: string
+  content: string
+  next_action: string | null
+}
+
 export function ContactHistoryModal({
   open,
   onOpenChange,
   customerId,
+  templates,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   customerId: string
+  templates: MeetingTemplateOption[]
 }) {
   const [pending, startTransition] = useTransition()
   const [serverError, setServerError] = useState<string | null>(null)
@@ -58,6 +68,10 @@ export function ContactHistoryModal({
   })
 
   const nextDate = form.watch('next_action_date')
+  const templateItems = templates.map((template) => ({
+    id: template.id,
+    name: template.title,
+  }))
 
   const onSubmit = (values: ContactHistoryFormValues) => {
     setServerError(null)
@@ -126,6 +140,34 @@ export function ContactHistoryModal({
               <Input type="datetime-local" {...form.register('contacted_at')} />
             </Field>
           </div>
+
+          {templates.length > 0 && (
+            <Field label="テンプレート">
+              <Select
+                value="__none__"
+                onValueChange={(id) => {
+                  if (!id || id === '__none__') return
+                  const template = templates.find((item) => item.id === id)
+                  if (!template) return
+                  form.setValue('type', template.type as ContactHistoryFormValues['type'])
+                  form.setValue('content', template.content)
+                  form.setValue('next_action', template.next_action)
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="テンプレートを選択" items={templateItems} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">選択しない</SelectItem>
+                  {templates.map((template) => (
+                    <SelectItem key={template.id} value={template.id}>
+                      {template.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+          )}
 
           <Field label="対応内容 *" error={errors.content?.message}>
             <Textarea rows={4} {...form.register('content')} placeholder="例: 満期更改のご相談を受けた…" />

@@ -463,6 +463,102 @@ export type Database = {
           },
         ]
       }
+      document_carry_out_logs: {
+        Row: {
+          carried_out_at: string
+          carried_out_by: string
+          created_at: string
+          created_by: string
+          customer_id: string | null
+          destination: string | null
+          document_title: string
+          document_type: string
+          expected_return_at: string | null
+          id: string
+          loss_reported_at: string | null
+          note: string | null
+          purpose: string
+          returned_at: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          carried_out_at?: string
+          carried_out_by: string
+          created_at?: string
+          created_by: string
+          customer_id?: string | null
+          destination?: string | null
+          document_title: string
+          document_type: string
+          expected_return_at?: string | null
+          id?: string
+          loss_reported_at?: string | null
+          note?: string | null
+          purpose: string
+          returned_at?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          carried_out_at?: string
+          carried_out_by?: string
+          created_at?: string
+          created_by?: string
+          customer_id?: string | null
+          destination?: string | null
+          document_title?: string
+          document_type?: string
+          expected_return_at?: string | null
+          id?: string
+          loss_reported_at?: string | null
+          note?: string | null
+          purpose?: string
+          returned_at?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_carry_out_logs_carried_out_by_fkey"
+            columns: ["carried_out_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_carry_out_logs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_carry_out_logs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_carry_out_logs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers_with_age"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_carry_out_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       family_members: {
         Row: {
           birth_date: string | null
@@ -530,6 +626,103 @@ export type Database = {
           },
         ]
       }
+      financial_situation_checks: {
+        Row: {
+          annual_income: string
+          contract_id: string | null
+          created_at: string
+          customer_id: string
+          employer_name: string | null
+          id: string
+          intention_record_id: string | null
+          investment_experience: string
+          investment_knowledge: string
+          note: string | null
+          recorded_at: string
+          recorded_by: string
+          source: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          annual_income: string
+          contract_id?: string | null
+          created_at?: string
+          customer_id: string
+          employer_name?: string | null
+          id?: string
+          intention_record_id?: string | null
+          investment_experience: string
+          investment_knowledge: string
+          note?: string | null
+          recorded_at?: string
+          recorded_by: string
+          source?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          annual_income?: string
+          contract_id?: string | null
+          created_at?: string
+          customer_id?: string
+          employer_name?: string | null
+          id?: string
+          intention_record_id?: string | null
+          investment_experience?: string
+          investment_knowledge?: string
+          note?: string | null
+          recorded_at?: string
+          recorded_by?: string
+          source?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_situation_checks_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_situation_checks_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_situation_checks_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers_with_age"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_situation_checks_intention_record_id_fkey"
+            columns: ["intention_record_id"]
+            isOneToOne: false
+            referencedRelation: "intention_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_situation_checks_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_situation_checks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intention_products: {
         Row: {
           created_at: string
@@ -587,6 +780,76 @@ export type Database = {
           },
         ]
       }
+      intention_signature_requests: {
+        Row: {
+          created_at: string
+          created_by: string
+          expires_at: string
+          id: string
+          intention_record_id: string
+          sent_at: string | null
+          signed_at: string | null
+          signer_email: string
+          signer_name: string
+          status: string
+          tenant_id: string
+          token_hash: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          expires_at: string
+          id?: string
+          intention_record_id: string
+          sent_at?: string | null
+          signed_at?: string | null
+          signer_email: string
+          signer_name: string
+          status?: string
+          tenant_id: string
+          token_hash: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          expires_at?: string
+          id?: string
+          intention_record_id?: string
+          sent_at?: string | null
+          signed_at?: string | null
+          signer_email?: string
+          signer_name?: string
+          status?: string
+          tenant_id?: string
+          token_hash?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intention_signature_requests_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intention_signature_requests_intention_record_id_fkey"
+            columns: ["intention_record_id"]
+            isOneToOne: false
+            referencedRelation: "intention_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intention_signature_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intention_signature_evidences: {
         Row: {
           client_ip: string | null
@@ -604,11 +867,14 @@ export type Database = {
           server_seal: string
           server_seal_algorithm: string
           server_seal_key_id: string
+          signature_channel: string
           signature_mime_type: string
+          signature_request_id: string | null
           signature_sha256: string
           signature_size_bytes: number
           signature_storage_path: string
           signed_at: string
+          signer_email: string | null
           signer_name: string
           tenant_id: string
           trusted_timestamp_provider: string | null
@@ -631,11 +897,14 @@ export type Database = {
           server_seal: string
           server_seal_algorithm?: string
           server_seal_key_id?: string
+          signature_channel?: string
           signature_mime_type?: string
+          signature_request_id?: string | null
           signature_sha256: string
           signature_size_bytes: number
           signature_storage_path: string
           signed_at?: string
+          signer_email?: string | null
           signer_name: string
           tenant_id: string
           trusted_timestamp_provider?: string | null
@@ -658,11 +927,14 @@ export type Database = {
           server_seal?: string
           server_seal_algorithm?: string
           server_seal_key_id?: string
+          signature_channel?: string
           signature_mime_type?: string
+          signature_request_id?: string | null
           signature_sha256?: string
           signature_size_bytes?: number
           signature_storage_path?: string
           signed_at?: string
+          signer_email?: string | null
           signer_name?: string
           tenant_id?: string
           trusted_timestamp_provider?: string | null
@@ -682,6 +954,13 @@ export type Database = {
             columns: ["intention_record_id"]
             isOneToOne: false
             referencedRelation: "intention_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intention_signature_evidences_signature_request_id_fkey"
+            columns: ["signature_request_id"]
+            isOneToOne: false
+            referencedRelation: "intention_signature_requests"
             referencedColumns: ["id"]
           },
           {
@@ -795,6 +1074,63 @@ export type Database = {
           },
           {
             foreignKeyName: "intention_records_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meeting_record_templates: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          id: string
+          is_active: boolean
+          next_action: string | null
+          sort_order: number
+          tenant_id: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_active?: boolean
+          next_action?: string | null
+          sort_order?: number
+          tenant_id: string
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_active?: boolean
+          next_action?: string | null
+          sort_order?: number
+          tenant_id?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_record_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meeting_record_templates_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"

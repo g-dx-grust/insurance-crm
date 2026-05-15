@@ -1,9 +1,10 @@
 import 'server-only'
 
+import { cache } from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-export async function getSessionUserOrRedirect() {
+export const getSessionUserOrRedirect = cache(async function getSessionUserOrRedirect() {
   const supabase = await createClient()
   const {
     data: { user },
@@ -18,9 +19,9 @@ export async function getSessionUserOrRedirect() {
 
   if (!profile) redirect('/login?error=no_profile')
   return { user, profile }
-}
+})
 
-export async function getCurrentTenantId() {
+export const getCurrentTenantId = cache(async function getCurrentTenantId() {
   const { profile } = await getSessionUserOrRedirect()
   return profile.tenant_id
-}
+})

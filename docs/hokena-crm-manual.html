@@ -1,0 +1,1277 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HOKENA CRM 説明書</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap');
+
+    :root {
+      --color-bg: #FFFFFF;
+      --color-bg-secondary: #F5F5F5;
+      --color-text: #111111;
+      --color-text-sub: #374151;
+      --color-text-muted: #6B7280;
+      --color-border: #E5E5E5;
+      --color-border-strong: #D1D5DB;
+      --color-accent: #1A56DB;
+      --color-accent-tint: rgba(26, 86, 219, 0.08);
+      --color-warning: #CA8A04;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --font-base: 'Noto Sans JP', sans-serif;
+      --font-xs: 11px;
+      --font-sm: 12px;
+      --font-md: 14px;
+      --font-lg: 16px;
+      --font-xl: 20px;
+      --font-2xl: 24px;
+      --line: 1.78;
+      --page-width: 1080px;
+    }
+
+    @page {
+      size: A4;
+      margin: 14mm 12mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--color-bg-secondary);
+      color: var(--color-text);
+      font-family: var(--font-base);
+      font-size: var(--font-md);
+      line-height: var(--line);
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-bg);
+    }
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .cover {
+      border-bottom: 1px solid var(--color-border);
+      padding: 48px 40px 32px;
+    }
+
+    .cover-inner,
+    .content {
+      margin: 0 auto;
+      max-width: var(--page-width);
+    }
+
+    .doc-label {
+      color: var(--color-text-muted);
+      font-size: var(--font-sm);
+      font-weight: 500;
+      letter-spacing: 0;
+      margin: 0 0 14px;
+    }
+
+    .cover h1 {
+      font-size: 30px;
+      line-height: 1.35;
+      margin: 0 0 8px;
+      font-weight: 600;
+    }
+
+    .cover p {
+      color: var(--color-text-sub);
+      margin: 0;
+    }
+
+    .meta {
+      color: var(--color-text-muted);
+      font-size: var(--font-sm);
+      margin-top: 18px;
+    }
+
+    .toc {
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+      padding: 24px 40px;
+    }
+
+    .toc h2 {
+      font-size: var(--font-lg);
+      margin: 0 0 12px;
+    }
+
+    .toc-grid {
+      display: grid;
+      gap: 6px 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 0 auto;
+      max-width: var(--page-width);
+    }
+
+    .toc-grid a {
+      align-items: baseline;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text);
+      display: flex;
+      gap: 10px;
+      min-height: 36px;
+      padding: 6px 10px;
+      text-decoration: none;
+    }
+
+    .toc-grid span {
+      color: var(--color-text-muted);
+      font-size: var(--font-xs);
+      min-width: 22px;
+    }
+
+    .content {
+      padding: 24px 40px 56px;
+    }
+
+    .chapter {
+      break-before: page;
+      padding-top: 8px;
+    }
+
+    .chapter:first-child {
+      break-before: auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      color: var(--color-text);
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.45;
+    }
+
+    h1 {
+      border-bottom: 1px solid var(--color-border-strong);
+      font-size: var(--font-2xl);
+      margin: 20px 0 18px;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: var(--font-xl);
+      margin: 28px 0 12px;
+    }
+
+    h3 {
+      font-size: var(--font-lg);
+      margin: 22px 0 8px;
+    }
+
+    h4 {
+      font-size: var(--font-md);
+      margin: 18px 0 6px;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote,
+    table,
+    pre,
+    figure {
+      margin: 0 0 14px;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.45em;
+    }
+
+    li + li {
+      margin-top: 4px;
+    }
+
+    blockquote {
+      background: var(--color-accent-tint);
+      border-left: 4px solid var(--color-accent);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-sub);
+      padding: 10px 12px;
+    }
+
+    table {
+      border-collapse: collapse;
+      font-size: var(--font-sm);
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--color-border);
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--color-bg-secondary);
+      font-weight: 600;
+      text-align: left;
+    }
+
+    code {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-base);
+      font-size: 0.92em;
+      padding: 0.08em 0.32em;
+    }
+
+    pre {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      padding: 12px;
+      white-space: pre-wrap;
+    }
+
+    pre code {
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+
+    figure {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      padding: 10px;
+    }
+
+    img {
+      display: block;
+      height: auto;
+      max-width: 100%;
+    }
+
+    figcaption {
+      color: var(--color-text-muted);
+      font-size: var(--font-xs);
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid var(--color-border);
+      margin: 24px 0;
+    }
+
+    .status-table td:first-child,
+    .status-table th:first-child {
+      white-space: nowrap;
+    }
+
+    @media screen and (max-width: 760px) {
+      .cover,
+      .toc,
+      .content {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      html,
+      body {
+        background: var(--color-bg);
+      }
+
+      .cover {
+        padding-top: 0;
+      }
+
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      a {
+        color: var(--color-text);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="cover">
+    <div class="cover-inner">
+      <p class="doc-label">HOKENA CRM / GRUST G-DX</p>
+      <h1>HOKENA CRM 説明書</h1>
+      <p>管理者・選定担当者向け 画面付き手順書</p>
+      <p class="meta">生成日時: 2026年5月15日 12:03</p>
+    </div>
+  </header>
+  <nav class="toc" aria-label="目次">
+    <div class="cover-inner">
+      <h2>目次</h2>
+      <div class="toc-grid">
+        <a href="#README"><span>01</span>HOKENA CRM 説明書</a>
+<a href="#01_overview"><span>02</span>01. システム概要</a>
+<a href="#02_getting_started"><span>03</span>02. はじめに — ログインと共通操作</a>
+<a href="#03_customers"><span>04</span>03. 顧客管理</a>
+<a href="#04_contracts"><span>05</span>04. 契約管理</a>
+<a href="#05_opportunities"><span>06</span>05. 案件管理</a>
+<a href="#06_intentions"><span>07</span>06. 意向把握（保険業法対応）</a>
+<a href="#07_settlement"><span>08</span>07. 精算・MDRT 管理</a>
+<a href="#08_calendar"><span>09</span>08. カレンダー</a>
+<a href="#09_reports"><span>10</span>09. レポート</a>
+<a href="#10_dashboard"><span>11</span>10. ダッシュボード</a>
+<a href="#11_settings"><span>12</span>11. 設定</a>
+<a href="#12_lark_integration"><span>13</span>12. Lark 連携</a>
+<a href="#13_admin_operations"><span>14</span>13. 管理者運用</a>
+<a href="#14_security_compliance"><span>15</span>14. セキュリティとコンプライアンス</a>
+      </div>
+    </div>
+  </nav>
+  <main class="content">
+    
+        <section class="chapter" id="README">
+          <h1 id="README">HOKENA CRM 説明書</h1>
+<p>保険代理店業務を止めずに回すための業務 CRM、HOKENA CRM の利用マニュアルです。 <strong>管理者・選定担当者の方</strong> が、機能・運用・コンプライアンス対応を把握し、現場への導入判断や運用設計を行うことを想定しています。</p>
+<hr>
+<h2 id="README-目次">目次</h2>
+<table>
+    <thead><tr><th>#</th><th>文書</th><th>内容</th></tr></thead>
+    <tbody><tr><td>01</td><td><a href="#01_overview">システム概要</a></td><td>何のためのシステムか／全体像・技術構成</td></tr><tr><td>02</td><td><a href="#02_getting_started">はじめに（ログインと共通操作）</a></td><td>ログイン・画面構成・キーボード操作</td></tr><tr><td>03</td><td><a href="#03_customers">顧客管理</a></td><td>顧客の検索・登録・詳細・家族構成</td></tr><tr><td>04</td><td><a href="#04_contracts">契約管理</a></td><td>契約の登録・特約・更改</td></tr><tr><td>05</td><td><a href="#05_opportunities">案件管理</a></td><td>カンバン／一覧／案件詳細</td></tr><tr><td>06</td><td><a href="#06_intentions">意向把握</a></td><td>保険業法対応（4 ステップウィザード／承認フロー）</td></tr><tr><td>07</td><td><a href="#07_settlement">精算・MDRT 管理</a></td><td>月次精算・CSV インポート・MDRT 進捗</td></tr><tr><td>08</td><td><a href="#08_calendar">カレンダー</a></td><td>月／週ビュー・予定管理</td></tr><tr><td>09</td><td><a href="#09_reports">レポート</a></td><td>月次推移・担当者別・商品別・年代別</td></tr><tr><td>10</td><td><a href="#10_dashboard">ダッシュボード</a></td><td>KPI・満期アラート</td></tr><tr><td>11</td><td><a href="#11_settings">設定</a></td><td>組織情報・通知・コンプライアンス・ユーザー管理</td></tr><tr><td>12</td><td><a href="#12_lark_integration">Lark 連携</a></td><td>SSO・Base・Calendar・Approval・Bot・通知テンプレ</td></tr><tr><td>13</td><td><a href="#13_admin_operations">管理者運用</a></td><td>招待・ロール変更・パスワード再発行・バックアップ</td></tr><tr><td>14</td><td><a href="#14_security_compliance">セキュリティとコンプライアンス</a></td><td>RLS・監査ログ・保険業法・データ保持</td></tr></tbody>
+  </table>
+<p>スクリーンショットは <a href="assets/"><code>assets/</code></a> に配置されています。</p>
+<h2 id="README-配布用ファイル">配布用ファイル</h2>
+<p>Markdown を開かなくても共有できるように、説明書と打ち合わせ用サマリーを HTML / PDF で出力しています。</p>
+<table>
+    <thead><tr><th>文書</th><th>HTML</th><th>PDF</th></tr></thead>
+    <tbody><tr><td>HOKENA CRM 説明書</td><td><a href="./hokena-crm-manual.html">hokena-crm-manual.html</a></td><td><a href="./hokena-crm-manual.pdf">hokena-crm-manual.pdf</a></td></tr><tr><td>現状報告・打ち合わせ確認事項</td><td><a href="./customer-meeting-brief.html">customer-meeting-brief.html</a></td><td><a href="./customer-meeting-brief.pdf">customer-meeting-brief.pdf</a></td></tr></tbody>
+  </table>
+<p>再生成する場合はリポジトリルートで <code>pnpm docs:export</code> を実行します。</p>
+<hr>
+<h2 id="README-読み方のヒント">読み方のヒント</h2>
+<ul><li><strong>新しく評価する方</strong> は <code>01 → 02 → 10</code>（概要 → 共通操作 → ダッシュボード）の順で読むと全体像が掴めます。</li><li><strong>現場運用に向けた検証</strong> は <code>03 → 04 → 06 → 07</code> の業務フロー順に読むと業務適合性を確認できます。</li><li><strong>管理者の方</strong> は <code>11 → 12 → 13 → 14</code> で運用 / 連携 / 統制を確認できます。</li></ul>
+<h2 id="README-表記ルール">表記ルール</h2>
+<ul><li>画面上のクリック対象は <strong>［新規登録］</strong> のように <strong>隅付き括弧</strong> で示します（ボタン・タブ・メニュー）。</li><li>パス・URL・スキーマ名は <code>等幅</code> で示します。</li><li>注意は次の形式で表示します。</li></ul>
+<blockquote><p>⚠️ 物理削除はできません。意向把握記録は保険業法対応のため論理削除（<code>deleted_at</code>）のみ。</p></blockquote>
+<h2 id="README-用語">用語</h2>
+<table>
+    <thead><tr><th>用語</th><th>意味</th></tr></thead>
+    <tbody><tr><td>テナント</td><td>1 つの代理店組織。データ・設定はテナント単位で完全に分離されます (RLS)</td></tr><tr><td>ロール</td><td><code>admin</code> / <code>agent</code> / <code>staff</code> の 3 種。権限と画面表示が変わります</td></tr><tr><td>高齢者</td><td>設定 &gt; コンプライアンスで定めた年齢以上の顧客。意向把握フローで追加対応が必要</td></tr><tr><td>意向把握</td><td>保険業法に基づくニーズヒアリング記録。物理削除禁止</td></tr><tr><td>MDRT</td><td>Million Dollar Round Table。生命保険業界の年間実績指標</td></tr></tbody>
+  </table>
+        </section>
+      
+
+        <section class="chapter" id="01_overview">
+          <h1 id="01_overview">01. システム概要</h1>
+<h2 id="01_overview-何のためのシステムか">何のためのシステムか</h2>
+<p><strong>HOKENA CRM</strong> は、生命保険・損害保険代理店の業務オペレーションを止めずに、コンプライアンス要件を満たしながら回すための業務 CRM です。 グラスト G-DX 共通ルール（業務 SaaS としての落ち着いた UI / 監査ログ重視 / 運用負荷優先）に従って実装されています。</p>
+<p>主なゴール：</p>
+<ol><li><strong>顧客と契約の一元管理</strong> — 顧客マスタ・家族構成・契約・特約・更改履歴を一画面でたどれる</li><li><strong>保険業法対応の証跡化</strong> — 意向把握記録は承認フロー付きで物理削除禁止</li><li><strong>満期・タスク漏れの防止</strong> — 満期 60 日前アラート、ダッシュボード／レポート／通知連携</li><li><strong>代理店経営の見える化</strong> — 月次推移・担当者別実績・MDRT 進捗・商品カテゴリ別構成</li><li><strong>Lark 連携前提の運用</strong> — SSO、承認フロー、通知 Bot、Base 同期を将来一体運用</li></ol>
+<h2 id="01_overview-全体像">全体像</h2>
+<h3 id="01_overview-機能カテゴリ">機能カテゴリ</h3>
+<pre><code class="language-">┌─ ホーム ────────────────┐
+│  ダッシュボード         │  KPI / 満期アラート
+└─────────────────────────┘
+
+┌─ 顧客・契約 ────────────┐
+│  顧客管理               │  検索 / 登録 / 家族構成 / 高齢者フラグ
+│  契約管理               │  特約 / 更改履歴 / 満期管理
+└─────────────────────────┘
+
+┌─ 案件・活動 ────────────┐
+│  案件管理               │  カンバン (ステージ別) / 活動履歴
+│  カレンダー             │  月・週ビュー
+└─────────────────────────┘
+
+┌─ 保険業法対応 ──────────┐
+│  意向把握               │  4 ステップウィザード / 承認 / 論理削除のみ
+└─────────────────────────┘
+
+┌─ 精算・成績 ────────────┐
+│  精算・MDRT 管理         │  CSV インポート / 月次精算 / 目標進捗
+└─────────────────────────┘
+
+┌─ 分析・設定 ────────────┐
+│  レポート               │  月次・担当者・商品カテゴリ・年代分布
+│  Lark 連携              │  SSO / Base / Calendar / Approval / Bot
+│  設定                   │  組織 / ユーザー / 通知 / コンプラ
+└─────────────────────────┘</code></pre>
+<h3 id="01_overview-ロール-権限-と画面アクセス">ロール (権限) と画面アクセス</h3>
+<table>
+    <thead><tr><th>ロール</th><th>主な役割</th><th>画面アクセス</th></tr></thead>
+    <tbody><tr><td><code>admin</code></td><td>代理店オーナー・管理者</td><td>すべて。設定 / ユーザー招待 / Lark 連携 / 監査ログ</td></tr><tr><td><code>agent</code></td><td>代理店所属の担当者</td><td>自分担当の顧客・契約・案件・意向把握。レポート閲覧可</td></tr><tr><td><code>staff</code></td><td>事務スタッフ</td><td>顧客・契約の検索／登録／編集。意向把握の承認は不可</td></tr></tbody>
+  </table>
+<blockquote><p>⚠️ ロール別の表示制御は UI ガード（画面側）と RLS（DB 側）の二重で行われます。仮に URL を直叩きされてもサーバー側で拒否されます。詳細は <a href="#14_security_compliance">14. セキュリティ</a> を参照。</p></blockquote>
+<h2 id="01_overview-技術構成">技術構成</h2>
+<p>エンドユーザー向けのドキュメントとして、設定や運用に関わる範囲のみ記載します。</p>
+<table>
+    <thead><tr><th>レイヤー</th><th>採用技術</th></tr></thead>
+    <tbody><tr><td>フレームワーク</td><td>Next.js 16 (App Router, Turbopack)</td></tr><tr><td>言語</td><td>TypeScript (strict)</td></tr><tr><td>UI / デザイン</td><td>React 19 + Tailwind CSS v4 + shadcn/ui (base-nova)</td></tr><tr><td>フォント</td><td>Noto Sans JP</td></tr><tr><td>アイコン</td><td>Lucide React</td></tr><tr><td>データベース</td><td>Supabase (PostgreSQL) — テナント単位の Row Level Security</td></tr><tr><td>認証</td><td>ID + パスワード（Supabase Auth） / Lark OAuth（準備中）</td></tr><tr><td>通知</td><td>Lark Bot（準備中） / メール（準備中）</td></tr><tr><td>デプロイ</td><td>Vercel（想定）</td></tr></tbody>
+  </table>
+<p>実装上の重要な特徴：</p>
+<ul><li><strong>論理削除（<code>deleted_at</code>）</strong> が基本。顧客・契約・案件は復元可能、意向把握は復元すら原則しません。</li><li><strong><code>tenants.settings</code></strong> に JSONB で代理店ごとの設定を保持。Lark 連携設定もすべて DB 管理（ハードコード禁止）。</li><li><strong><code>updated_at</code> 自動更新トリガー</strong> が主要テーブルに設定済み。</li></ul>
+<h2 id="01_overview-このシステムが-やらないこと">このシステムが「やらないこと」</h2>
+<p>導入検討時の判断材料として、明示的に対象外としているスコープを示します。</p>
+<ul><li>保険会社の見積もり機能・申込書作成は <strong>行いません</strong>（外部の保険会社システム想定）</li><li>顧客との直接的なメッセージング機能は <strong>行いません</strong>（Lark / メール / 電話を運用で使う想定）</li><li>会計・税務処理は <strong>行いません</strong>（精算データのエクスポートまで）</li></ul>
+        </section>
+      
+
+        <section class="chapter" id="02_getting_started">
+          <h1 id="02_getting_started">02. はじめに — ログインと共通操作</h1>
+<h2 id="02_getting_started-ログイン">ログイン</h2>
+<figure><img src="assets/02-01-login.png" alt="ログイン画面"><figcaption>ログイン画面</figcaption></figure>
+<ol><li>ブラウザで <code>https://&lt;代理店ドメイン&gt;/login</code> にアクセスします。</li><li><strong>［ID／パスワード］</strong> にメールアドレスとパスワードを入力し、<strong>［ログイン］</strong> をクリックします。</li><li>ログインに成功するとダッシュボードに遷移します。</li></ol>
+<blockquote><p>⚠️ <strong>［Lark アカウントでログイン］</strong> ボタンは現状無効化されています。Lark Developer Console での登録と環境変数設定が完了すると有効化されます（<a href="#12_lark_integration">12. Lark 連携</a> 参照）。</p></blockquote>
+<h3 id="02_getting_started-初回ログイン">初回ログイン</h3>
+<ul><li>管理者が招待メールを送ると、招待リンク経由でパスワード設定後に通常ログインが可能になります。</li><li>パスワードを忘れた場合は管理者に再発行を依頼してください。</li></ul>
+<h3 id="02_getting_started-ログインできない場合">ログインできない場合</h3>
+<table>
+    <thead><tr><th>症状</th><th>原因の例</th><th>対応</th></tr></thead>
+    <tbody><tr><td>「ログインに失敗しました」</td><td>パスワード誤り／メールアドレス誤り</td><td>入力内容を再確認</td></tr><tr><td>「このユーザーにはプロファイルが登録されていません」</td><td>Supabase Auth は通ったが <code>user_profiles</code> が未作成</td><td>管理者に連絡</td></tr><tr><td>ログイン後すぐにログイン画面に戻る</td><td>セッション Cookie がブロックされている／別ドメインで保存されている</td><td>ブラウザの Cookie 設定を確認、シークレットウィンドウで再試行</td></tr></tbody>
+  </table>
+<h2 id="02_getting_started-画面構成">画面構成</h2>
+<p>ログイン後の画面は <strong>サイドバー + ヘッダー + メインエリア</strong> の 3 領域で構成されます。</p>
+<figure><img src="assets/02-02-layout.png" alt="画面構成"><figcaption>画面構成</figcaption></figure>
+<h3 id="02_getting_started-①-サイドバー">① サイドバー</h3>
+<ul><li>グループ単位でナビゲーションが整理されています：</li><li>ホーム / 顧客・契約 / 案件・活動 / 保険業法対応 / 精算・成績 / 分析・設定</li><li>左下のアイコンで <strong>開閉トグル</strong> ができます。折りたたみ状態はブラウザに記憶されます (<code>hokena_sidebar_collapsed</code>)。</li></ul>
+<h3 id="02_getting_started-②-ヘッダー">② ヘッダー</h3>
+<p>ヘッダー右側には以下が並びます。</p>
+<table>
+    <thead><tr><th>アイコン</th><th>機能</th><th>説明</th></tr></thead>
+    <tbody><tr><td><strong>A</strong></td><td>フォントサイズ</td><td>小 (90%) / 標準 (100%) / 大 (110%) を切替</td></tr><tr><td><strong>☾／☀</strong></td><td>テーマ切替</td><td>ホワイト ↔ ブラックテーマ</td></tr></tbody>
+  </table>
+<h3 id="02_getting_started-③-メインエリア">③ メインエリア</h3>
+<p>すべての画面に <strong>ページヘッダー（タイトル + 説明）</strong> が表示され、その下にコンテンツが続きます。</p>
+<h2 id="02_getting_started-共通の操作パターン">共通の操作パターン</h2>
+<p>業務システムとして同じ操作感を全画面で揃えています。</p>
+<h3 id="02_getting_started-検索とフィルター">検索とフィルター</h3>
+<figure><img src="assets/02-03-filters.png" alt="検索とフィルター"><figcaption>検索とフィルター</figcaption></figure>
+<ul><li>一覧画面の上部に検索ボックスとフィルター（状態・担当者など）があります。</li><li>入力した瞬間に URL のクエリパラメーターに反映され、<strong>ブックマーク・ブラウザ戻る</strong> に対応します。</li><li>検索クエリは <strong>氏名 / フリガナ</strong> の部分一致で評価されます（<code>name.ilike</code> + <code>name_kana.ilike</code>）。</li></ul>
+<h3 id="02_getting_started-ステータスバッジ">ステータスバッジ</h3>
+<p>ステータスは色で意味を区別しています。以下が代表的な対応です。</p>
+<table>
+    <thead><tr><th>表示</th><th>バリアント</th><th>主な意味</th></tr></thead>
+    <tbody><tr><td>緑</td><td><code>success</code></td><td>既存／有効／承認済／完了</td></tr><tr><td>黄</td><td><code>warning</code></td><td>注意／満期間近／対応中</td></tr><tr><td>赤</td><td><code>danger</code></td><td>期限切れ／差戻し</td></tr><tr><td>青</td><td><code>info</code></td><td>進行中</td></tr><tr><td>グレー</td><td><code>muted</code></td><td>休眠／辞退／対象外</td></tr></tbody>
+  </table>
+<h3 id="02_getting_started-行クリックで詳細へ">行クリックで詳細へ</h3>
+<p>一覧の行はクリックで詳細画面へ遷移します。詳細画面では <strong>［編集］</strong> ／ <strong>［削除］</strong> など、その対象に対する操作が右上に集まっています。</p>
+<h3 id="02_getting_started-モーダル">モーダル</h3>
+<p>家族構成・契約特約・対応履歴・案件活動の登録などは、画面遷移ではなく <strong>モーダル</strong> で行います。<strong>Esc</strong> で閉じられます。</p>
+<h3 id="02_getting_started-保存とトースト">保存とトースト</h3>
+<p>保存操作の結果は画面右下の <strong>トースト通知</strong> で表示されます。</p>
+<ul><li>成功時：緑のトースト（例：「契約を登録しました」）</li><li>エラー時：赤のトースト（バリデーションエラーはフィールド横にも表示）</li></ul>
+<h2 id="02_getting_started-ショートカット">ショートカット</h2>
+<table>
+    <thead><tr><th>キー</th><th>操作</th></tr></thead>
+    <tbody><tr><td><code>Esc</code></td><td>モーダルを閉じる</td></tr><tr><td><code>Tab</code></td><td>次のフィールドへフォーカス移動</td></tr><tr><td><code>Shift + Tab</code></td><td>前のフィールドへ</td></tr><tr><td><code>Enter</code></td><td>フォーカス中のボタンを押下</td></tr></tbody>
+  </table>
+<blockquote><p>💡 検索フィールドは URL クエリと同期しています。<code>?q=...&amp;status=...</code> をブックマークすれば、よく使うフィルターを保存できます。</p></blockquote>
+        </section>
+      
+
+        <section class="chapter" id="03_customers">
+          <h1 id="03_customers">03. 顧客管理</h1>
+<blockquote><p>顧客マスタとして、契約・案件・意向把握のすべての出発点になる画面です。 サイドバー <strong>［顧客管理］</strong> から開きます。</p></blockquote>
+<h2 id="03_customers-顧客一覧">顧客一覧</h2>
+<figure><img src="assets/03-01-customers-list.png" alt="顧客一覧"><figcaption>顧客一覧</figcaption></figure>
+<h3 id="03_customers-主な機能">主な機能</h3>
+<table>
+    <thead><tr><th>エリア</th><th>機能</th></tr></thead>
+    <tbody><tr><td>上部の検索ボックス</td><td><strong>氏名 / フリガナ</strong> の部分一致検索（URL クエリ <code>q</code>）</td></tr><tr><td>状態フィルター</td><td><code>見込</code> / <code>既存</code> / <code>休眠</code> を絞り込み</td></tr><tr><td>担当フィルター</td><td>担当者で絞り込み</td></tr><tr><td>右上 <strong>［新規登録］</strong></td><td>新しい顧客の登録画面へ</td></tr><tr><td>一覧の行</td><td>クリックで顧客詳細へ</td></tr></tbody>
+  </table>
+<h3 id="03_customers-一覧に表示される項目">一覧に表示される項目</h3>
+<table>
+    <thead><tr><th>列</th><th>内容</th></tr></thead>
+    <tbody><tr><td>顧客名</td><td>フルネーム</td></tr><tr><td>カナ</td><td>フリガナ</td></tr><tr><td>ステータス</td><td>見込／既存／休眠（色付きバッジ）</td></tr><tr><td>年齢</td><td>生年月日から自動算出（<code>customers_with_age</code> ビュー）。設定の閾値を超えると <strong>黄色</strong> で「(高齢者)」と表示</td></tr><tr><td>連絡先</td><td>電話 → なければメール</td></tr><tr><td>担当</td><td>担当者氏名</td></tr><tr><td>更新</td><td>最終更新日</td></tr></tbody>
+  </table>
+<p>ページ送りは下部 <strong>全 N 件 / X / Y ページ</strong> とページャーで行います。1 ページあたり 20 件。</p>
+<h2 id="03_customers-顧客を新規登録する">顧客を新規登録する</h2>
+<p>サイドバー <strong>［顧客管理］</strong> → 一覧右上の <strong>［新規登録］</strong> で進みます。</p>
+<figure><img src="assets/03-02-customer-new.png" alt="顧客新規登録"><figcaption>顧客新規登録</figcaption></figure>
+<h3 id="03_customers-入力項目">入力項目</h3>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>形式・制限</th></tr></thead>
+    <tbody><tr><td>氏名</td><td>✓</td><td>50 文字以内</td></tr><tr><td>フリガナ</td><td>✓</td><td>カタカナ／全角スペース／長音のみ</td></tr><tr><td>生年月日</td><td></td><td><code>YYYY-MM-DD</code></td></tr><tr><td>性別</td><td></td><td>男性 / 女性 / その他</td></tr><tr><td>郵便番号</td><td></td><td><code>150-0001</code> 形式</td></tr><tr><td>電話番号</td><td></td><td>数字 / <code>-</code> / <code>+</code> / <code>()</code> のみ、30 文字以内</td></tr><tr><td>住所</td><td></td><td>200 文字以内</td></tr><tr><td>メールアドレス</td><td></td><td>RFC 準拠のメール形式</td></tr><tr><td>ステータス</td><td>✓</td><td>見込 / 既存 / 休眠</td></tr><tr><td>担当者</td><td></td><td>在籍中のユーザーから選択（未割当のままも可）</td></tr><tr><td>備考</td><td></td><td>1000 文字以内</td></tr></tbody>
+  </table>
+<p>入力後 <strong>［登録する］</strong> で保存します。バリデーションエラーは各項目の下に表示されます。</p>
+<blockquote><p>⚠️ 空欄で送信した任意項目は内部的に <code>null</code> に正規化されます（<code>normalizeCustomerForm</code>）。空文字として残ることはありません。</p></blockquote>
+<h2 id="03_customers-顧客詳細">顧客詳細</h2>
+<p>一覧で行をクリックすると顧客詳細画面が開きます。</p>
+<figure><img src="assets/03-03-customer-detail.png" alt="顧客詳細"><figcaption>顧客詳細</figcaption></figure>
+<h3 id="03_customers-ヘッダー">ヘッダー</h3>
+<ul><li>氏名と現在のステータスバッジ</li><li>高齢者対応が必要な顧客の場合、<strong>注意バナー</strong> が出ます</li></ul>
+<blockquote><p>⚠️ 高齢者対応が必要です。保険業法に基づき、意向把握・高齢者確認フローを実施してください。家族同席または録音・録画を推奨します。</p></blockquote>
+<ul><li>右上に <strong>［編集］</strong> ／ <strong>［削除］</strong> が並びます。</li></ul>
+<h3 id="03_customers-タブ構成">タブ構成</h3>
+<table>
+    <thead><tr><th>タブ</th><th>内容</th></tr></thead>
+    <tbody><tr><td>基本情報</td><td>氏名・連絡先・住所・備考・担当</td></tr><tr><td>契約</td><td>この顧客の契約一覧（証券番号・商品・保険料・満期日）</td></tr><tr><td>対応履歴</td><td>連絡記録（電話・面談・メール）。次回アクションと日付を残せる</td></tr><tr><td>案件</td><td>進行中／過去の提案案件</td></tr><tr><td>家族</td><td>家族構成（続柄・生年月日・被保険者／受取人フラグ）</td></tr></tbody>
+  </table>
+<h3 id="03_customers-家族構成-家族タブ">家族構成 (家族タブ)</h3>
+<figure><img src="assets/03-04-customer-family.png" alt="家族タブ"><figcaption>家族タブ</figcaption></figure>
+<ul><li><strong>家族カバレッジバー</strong> で世帯メンバーのうち被保険／受取人になっている人数の比率が見えます。</li><li>右上 <strong>［家族を追加］</strong> で続柄・氏名・性別・生年月日・被保険者・受取人を入力。</li><li>行右の鉛筆アイコンで編集、ゴミ箱アイコンで削除（論理削除ではなく実削除）。</li></ul>
+<h3 id="03_customers-対応履歴-対応履歴タブ">対応履歴 (対応履歴タブ)</h3>
+<ul><li><strong>［対応履歴を追加］</strong> から「電話／面談／メール／その他」を選んで内容を記録します。</li><li><strong>次回アクション + 期日</strong> を入力しておくと、案件管理やレポートで活用できます。</li><li>履歴は最新 20 件まで表示。</li></ul>
+<h2 id="03_customers-顧客を編集する-削除する">顧客を編集する／削除する</h2>
+<h3 id="03_customers-編集">編集</h3>
+<p>詳細画面右上の <strong>［編集］</strong> から入ります。入力フォームは新規登録と同じ項目です。</p>
+<h3 id="03_customers-削除">削除</h3>
+<p>詳細画面右上の <strong>［削除］</strong> から論理削除します。</p>
+<ul><li>削除すると一覧から非表示になります（<code>deleted_at</code> がセットされる）。</li><li>データ自体は残るため、技術担当の操作で復元が可能です。</li><li>削除した顧客に紐付く契約・案件・対応履歴・家族・意向把握は <strong>そのまま残ります</strong>（参照関係は維持）。</li></ul>
+<blockquote><p>⚠️ 削除は確認モーダルで承認が必要です。誤操作防止のため、削除直前に顧客名を再表示します。</p></blockquote>
+<h2 id="03_customers-業務フロー例">業務フロー例</h2>
+<h3 id="03_customers-新規見込み客を登録して案件を作るまで">新規見込み客を登録して案件を作るまで</h3>
+<ol><li><strong>［顧客管理］</strong> → <strong>［新規登録］</strong> → 氏名・フリガナ・連絡先・ステータス＝ <code>見込</code> で保存</li><li>顧客詳細 → <strong>［対応履歴を追加］</strong> で初回連絡を記録</li><li><strong>［案件］</strong> タブ → <strong>［案件を追加］</strong> で提案テーマと予想保険料を登録（<a href="#05_opportunities">05. 案件管理</a> 参照）</li><li>提案受領後は <strong>［意向把握］</strong> ウィザードを起動して保険業法対応の記録を作成（<a href="#06_intentions">06. 意向把握</a> 参照）</li></ol>
+<h3 id="03_customers-既存顧客に契約を追加する">既存顧客に契約を追加する</h3>
+<ol><li>一覧で顧客を検索 → 詳細へ</li><li><strong>［契約］</strong> タブ → <strong>［契約を追加］</strong> → 商品情報・特約・保険料・満期日を入力（<a href="#04_contracts">04. 契約管理</a> 参照）</li></ol>
+<h2 id="03_customers-トラブルシュート">トラブルシュート</h2>
+<table>
+    <thead><tr><th>症状</th><th>原因の例</th><th>対応</th></tr></thead>
+    <tbody><tr><td>「フリガナはカタカナで入力してください」</td><td>半角カナや漢字が混入</td><td>全角カタカナのみで入力</td></tr><tr><td>高齢者の警告が出ない</td><td>設定の閾値が高い／生年月日未入力</td><td><a href="#11_settings">11. 設定</a> のコンプライアンスタブで <code>elderly_age_threshold</code> を確認</td></tr><tr><td>担当者リストに自分が出ない</td><td><code>is_active = false</code></td><td>管理者にアカウント有効化を依頼</td></tr></tbody>
+  </table>
+        </section>
+      
+
+        <section class="chapter" id="04_contracts">
+          <h1 id="04_contracts">04. 契約管理</h1>
+<blockquote><p>顧客に紐づく保険契約を管理します。証券番号・特約・満期日・更改履歴を一画面で扱います。 サイドバー <strong>［契約管理］</strong> から開きます。</p></blockquote>
+<h2 id="04_contracts-契約一覧">契約一覧</h2>
+<figure><img src="assets/04-01-contracts-list.png" alt="契約一覧"><figcaption>契約一覧</figcaption></figure>
+<h3 id="04_contracts-検索とフィルター">検索とフィルター</h3>
+<table>
+    <thead><tr><th>エリア</th><th>機能</th></tr></thead>
+    <tbody><tr><td>検索ボックス</td><td><strong>証券番号 / 保険会社 / 商品名</strong> の部分一致検索</td></tr><tr><td>状態フィルター</td><td><code>有効</code> / <code>満期</code> / <code>解約</code> / <code>更改中</code></td></tr><tr><td>カテゴリフィルター</td><td><code>生命保険</code> / <code>損害保険</code> / <code>医療保険</code> / <code>介護保険</code> / <code>年金保険</code></td></tr><tr><td>満期内フィルター</td><td>1ヶ月 / 3ヶ月 / 6ヶ月以内など、満期が近い契約を絞り込み</td></tr><tr><td>右上 <strong>［新規登録］</strong></td><td>契約の新規登録画面へ</td></tr></tbody>
+  </table>
+<h3 id="04_contracts-一覧の項目">一覧の項目</h3>
+<table>
+    <thead><tr><th>列</th><th>内容</th></tr></thead>
+    <tbody><tr><td>顧客</td><td>紐付く顧客名</td></tr><tr><td>証券番号</td><td>一意の証券番号</td></tr><tr><td>保険会社</td><td>引受会社</td></tr><tr><td>商品</td><td>商品名 + カテゴリバッジ</td></tr><tr><td>保険料</td><td>月額／年額（登録時に区別）</td></tr><tr><td>状態</td><td>有効 / 満期 / 解約 / 更改中</td></tr><tr><td>満期日</td><td>残日数バッジ付き</td></tr><tr><td>担当</td><td>担当者氏名</td></tr></tbody>
+  </table>
+<p>満期日は <strong>昇順</strong> で並びます。満期が近い契約から上に来ます。</p>
+<h2 id="04_contracts-契約を新規登録する">契約を新規登録する</h2>
+<p>サイドバー <strong>［契約管理］</strong> → <strong>［新規登録］</strong> で進みます。</p>
+<figure><img src="assets/04-02-contract-new.png" alt="契約新規登録"><figcaption>契約新規登録</figcaption></figure>
+<h3 id="04_contracts-入力項目">入力項目</h3>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>制限</th></tr></thead>
+    <tbody><tr><td>顧客</td><td>✓</td><td>既存顧客から選択 (<code>customer_id</code>)</td></tr><tr><td>証券番号</td><td>✓</td><td>50 文字以内</td></tr><tr><td>保険会社</td><td>✓</td><td>100 文字以内</td></tr><tr><td>商品名</td><td>✓</td><td>100 文字以内</td></tr><tr><td>商品カテゴリ</td><td>✓</td><td>上記 5 種から選択</td></tr><tr><td>保険料</td><td>✓</td><td>0 〜 1 億円</td></tr><tr><td>契約開始日</td><td>✓</td><td><code>YYYY-MM-DD</code></td></tr><tr><td>満期日</td><td></td><td>契約開始日より後</td></tr><tr><td>状態</td><td>✓</td><td>有効 / 満期 / 解約 / 更改中</td></tr><tr><td>更改状況</td><td>✓</td><td>未対応 / 対応中 / 更改中 / 完了 / 辞退</td></tr><tr><td>担当者</td><td></td><td>ユーザー選択</td></tr><tr><td>備考</td><td></td><td>1000 文字以内</td></tr></tbody>
+  </table>
+<blockquote><p>⚠️ <strong>満期日 ≦ 契約開始日</strong> で送信するとバリデーションエラーになります。</p></blockquote>
+<h3 id="04_contracts-顧客詳細経由での登録">顧客詳細経由での登録</h3>
+<p>顧客詳細 → <strong>［契約］</strong> タブ → <strong>［契約を追加］</strong> からも、customer_id をプリセットした状態で登録できます。</p>
+<h2 id="04_contracts-契約詳細">契約詳細</h2>
+<figure><img src="assets/04-03-contract-detail.png" alt="契約詳細"><figcaption>契約詳細</figcaption></figure>
+<p>ヘッダーには <strong>証券番号</strong> ・ <strong>状態バッジ</strong> ・ <strong>満期残日数</strong> が表示されます。 右上に <strong>［編集］</strong> ／ <strong>［削除］</strong>（論理削除）が並びます。</p>
+<h3 id="04_contracts-タブ構成">タブ構成</h3>
+<table>
+    <thead><tr><th>タブ</th><th>内容</th></tr></thead>
+    <tbody><tr><td>特約</td><td>主契約に紐づく特約（複数登録可）</td></tr><tr><td>保険料内訳</td><td>月額／年額の換算、特約合計を含む</td></tr><tr><td>更改履歴</td><td>更改ごとの内容・保険料変更・Lark 承認 ID</td></tr><tr><td>関連意向把握書</td><td>この契約締結に紐づく意向把握記録</td></tr></tbody>
+  </table>
+<h3 id="04_contracts-特約タブ">特約タブ</h3>
+<figure><img src="assets/04-04-contract-riders.png" alt="契約 — 特約タブ"><figcaption>契約 — 特約タブ</figcaption></figure>
+<p><strong>［特約を追加］</strong> から特約を登録。</p>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>制限</th></tr></thead>
+    <tbody><tr><td>特約名</td><td>✓</td><td>100 文字以内</td></tr><tr><td>補償内容</td><td></td><td>500 文字以内</td></tr><tr><td>保険料</td><td></td><td>0 〜 1 億円</td></tr><tr><td>満期日</td><td></td><td><code>YYYY-MM-DD</code></td></tr><tr><td>有効フラグ</td><td>✓</td><td>解約された特約は無効化</td></tr></tbody>
+  </table>
+<p>特約は <strong>論理削除（is_active = false）</strong> で運用されます。完全に消したい場合は技術担当に依頼してください。</p>
+<h3 id="04_contracts-更改履歴タブ">更改履歴タブ</h3>
+<figure><img src="assets/04-05-contract-renewals.png" alt="契約 — 更改履歴"><figcaption>契約 — 更改履歴</figcaption></figure>
+<p>満期 60 日前になるとダッシュボードと一覧で警告表示されます。更改が発生したら <strong>［更改履歴を追加］</strong> で記録します。</p>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>内容</th></tr></thead>
+    <tbody><tr><td>更改日</td><td>✓</td><td>契約継続日</td></tr><tr><td>内容</td><td>✓</td><td>2000 文字以内</td></tr><tr><td>新保険料</td><td></td><td>変更後の月額／年額</td></tr><tr><td>担当者</td><td></td><td></td></tr><tr><td>Lark 承認 ID</td><td></td><td>連携時の承認チケット番号</td></tr><tr><td>次の更改ステータス</td><td>✓</td><td>上記 5 種</td></tr></tbody>
+  </table>
+<blockquote><p>📝 更改記録は 1 契約に何件でも登録できます。履歴を残すことで、保険料変動・対応経緯を後追いできます。</p></blockquote>
+<h3 id="04_contracts-関連意向把握書タブ">関連意向把握書タブ</h3>
+<p>この契約が、どの意向把握記録に基づいて締結されたかを表示します。意向把握 → 提案 → 契約 のトレースが取れます。</p>
+<h2 id="04_contracts-業務フロー例">業務フロー例</h2>
+<h3 id="04_contracts-新規契約を入れるとき">新規契約を入れるとき</h3>
+<ol><li>顧客詳細 → <strong>［契約］</strong> タブ → <strong>［契約を追加］</strong></li><li>商品・保険料・契約期間を入力 → <strong>［登録する］</strong></li><li>特約があれば契約詳細 → <strong>［特約］</strong> タブから追加</li><li>意向把握書がある場合は <a href="#06_intentions">06. 意向把握</a> で関連付け</li></ol>
+<h3 id="04_contracts-満期更改の流れ">満期更改の流れ</h3>
+<ol><li>ダッシュボード or 契約一覧 → 満期 60 日以内の警告が出ている契約をクリック</li><li>契約詳細 → 更改状況を「対応中」に更新</li><li>顧客と面談 → 新しい商品で <strong>［契約を追加］</strong>（新契約）</li><li>旧契約の詳細 → <strong>［更改履歴を追加］</strong> で経緯と Lark 承認 ID を記録</li><li>旧契約の状態を「満期」or「解約」に変更</li></ol>
+<h2 id="04_contracts-トラブルシュート">トラブルシュート</h2>
+<table>
+    <thead><tr><th>症状</th><th>原因</th><th>対応</th></tr></thead>
+    <tbody><tr><td>満期日が入力できない</td><td>契約開始日より前</td><td>開始日を確認</td></tr><tr><td>「顧客を選択してください」</td><td>UUID が未選択</td><td>コンボボックスで顧客を選び直す</td></tr><tr><td>保険料が大きすぎるエラー</td><td>1 億円超</td><td>入力値を確認（円単位・税込み）</td></tr></tbody>
+  </table>
+        </section>
+      
+
+        <section class="chapter" id="05_opportunities">
+          <h1 id="05_opportunities">05. 案件管理</h1>
+<blockquote><p>提案フェーズの活動を、カンバン／リストで一元管理します。 サイドバー <strong>［案件管理］</strong> から開きます。</p></blockquote>
+<h2 id="05_opportunities-ステージ定義">ステージ定義</h2>
+<p>案件は以下の <strong>7 ステージ</strong> で管理します。</p>
+<table>
+    <thead><tr><th>#</th><th>ステージ</th><th>内容</th></tr></thead>
+    <tbody><tr><td>1</td><td>初回接触</td><td>顧客との最初のコンタクト</td></tr><tr><td>2</td><td>ニーズ把握</td><td>ヒアリング・課題抽出</td></tr><tr><td>3</td><td>提案中</td><td>商品提案・比較</td></tr><tr><td>4</td><td>見積提出</td><td>見積もり提示</td></tr><tr><td>5</td><td>クロージング</td><td>締結合意の最終段階</td></tr><tr><td>6</td><td>成約</td><td>契約締結（<a href="#04_contracts">04. 契約管理</a> に契約を登録）</td></tr><tr><td>7</td><td>失注</td><td>失注理由を記録</td></tr></tbody>
+  </table>
+<p>カンバンビューには <strong>進行中の 5 ステージ</strong> のみが列として表示され、成約・失注はリストビューでのみ確認できます。</p>
+<h2 id="05_opportunities-案件一覧">案件一覧</h2>
+<h3 id="05_opportunities-カンバンビュー-標準">カンバンビュー（標準）</h3>
+<figure><img src="assets/05-01-opportunities-kanban.png" alt="案件カンバン"><figcaption>案件カンバン</figcaption></figure>
+<p>各列に該当ステージの案件カードが並びます。</p>
+<table>
+    <thead><tr><th>エリア</th><th>機能</th></tr></thead>
+    <tbody><tr><td>上部 <strong>［カンバン / リスト］</strong></td><td>ビュー切替（ブラウザに記憶）</td></tr><tr><td>ステージフィルター</td><td>特定ステージのみ表示</td></tr><tr><td>担当者フィルター</td><td>担当者で絞り込み</td></tr><tr><td>右上 <strong>［新規作成］</strong></td><td>案件登録モーダルを開く</td></tr></tbody>
+  </table>
+<p>カードには <strong>案件タイトル / 顧客名 / 想定保険料 / 期日</strong> が表示されます。クリックで案件詳細へ。</p>
+<h3 id="05_opportunities-リストビュー">リストビュー</h3>
+<figure><img src="assets/05-02-opportunities-list.png" alt="案件リスト"><figcaption>案件リスト</figcaption></figure>
+<p>成約・失注も含めて表形式で確認できます。</p>
+<table>
+    <thead><tr><th>列</th><th>内容</th></tr></thead>
+    <tbody><tr><td>案件</td><td>タイトル</td></tr><tr><td>顧客</td><td>顧客名</td></tr><tr><td>ステージ</td><td>ステージバッジ</td></tr><tr><td>想定保険料</td><td>万円表示</td></tr><tr><td>期日</td><td>期待クロージング日</td></tr><tr><td>担当</td><td>担当者</td></tr><tr><td>更新</td><td>最終更新日</td></tr></tbody>
+  </table>
+<h2 id="05_opportunities-案件を新規作成する">案件を新規作成する</h2>
+<figure><img src="assets/05-03-opportunity-new.png" alt="案件新規作成モーダル"><figcaption>案件新規作成モーダル</figcaption></figure>
+<p><strong>［新規作成］</strong> でモーダルが開きます。</p>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>制限</th></tr></thead>
+    <tbody><tr><td>顧客</td><td>✓</td><td>既存顧客から選択（コンボボックス検索可）</td></tr><tr><td>案件タイトル</td><td>✓</td><td>100 文字以内</td></tr><tr><td>ステージ</td><td>✓</td><td>上記 7 ステージ</td></tr><tr><td>想定保険料</td><td></td><td>月額・年額の単位は運用で統一</td></tr><tr><td>期待クロージング日</td><td></td><td><code>YYYY-MM-DD</code></td></tr><tr><td>担当者</td><td></td><td></td></tr><tr><td>備考</td><td></td><td>1000 文字以内</td></tr><tr><td>失注理由</td><td></td><td>ステージが「失注」のときのみ入力可（500 文字以内）</td></tr></tbody>
+  </table>
+<blockquote><p>💡 顧客詳細 → <strong>［案件］</strong> タブ → <strong>［案件を追加］</strong> からは、顧客がプリセットされた状態でモーダルが開きます。</p></blockquote>
+<h2 id="05_opportunities-案件詳細">案件詳細</h2>
+<figure><img src="assets/05-04-opportunity-detail.png" alt="案件詳細"><figcaption>案件詳細</figcaption></figure>
+<p>ヘッダーには <strong>タイトル / ステージバッジ / 想定保険料</strong> が並びます。</p>
+<h3 id="05_opportunities-ステージ進行">ステージ進行</h3>
+<p>ステージは <strong>詳細画面のステージピル</strong> をクリックして進めます。前のステージに戻すこともできます。</p>
+<h3 id="05_opportunities-活動履歴タブ">活動履歴タブ</h3>
+<p>提案活動の経過を時系列で記録します。</p>
+<table>
+    <thead><tr><th>種別</th><th>用途</th></tr></thead>
+    <tbody><tr><td>電話</td><td>顧客への架電</td></tr><tr><td>訪問</td><td>対面面談</td></tr><tr><td>メール</td><td>メール送付・受信</td></tr><tr><td>Lark</td><td>Lark での連絡</td></tr><tr><td>提案書送付</td><td>提案書送付の記録</td></tr><tr><td>その他</td><td>その他</td></tr></tbody>
+  </table>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>内容</th></tr></thead>
+    <tbody><tr><td>種別</td><td>✓</td><td>上記から選択</td></tr><tr><td>内容</td><td>✓</td><td>2000 文字以内</td></tr><tr><td>活動日時</td><td>✓</td><td><code>YYYY-MM-DDTHH:mm</code></td></tr></tbody>
+  </table>
+<p>活動を入れていくことで、レポート画面で「平均ヒアリング回数」「成約までの活動数」などの分析が可能になります（将来拡張）。</p>
+<h3 id="05_opportunities-失注処理">失注処理</h3>
+<p>ステージを「失注」に変更すると <strong>失注理由</strong> の入力が必須になります。</p>
+<blockquote><p>💡 失注理由はレポートで「失注分析」として再利用できる（将来拡張）。<strong>価格 / 商品 / 競合 / タイミング</strong> など、定型化して入れる運用を推奨します。</p></blockquote>
+<h2 id="05_opportunities-業務フロー例">業務フロー例</h2>
+<h3 id="05_opportunities-見込み客の提案案件を成約まで持っていく">見込み客の提案案件を成約まで持っていく</h3>
+<ol><li>顧客詳細 → <strong>［案件］</strong> タブ → <strong>［案件を追加］</strong> → タイトル＋ステージ「初回接触」で登録</li><li>ヒアリング後にステージを「ニーズ把握」へ → 活動履歴に記録</li><li><strong>［提案中］</strong> で提案資料送付 → 活動履歴に「提案書送付」記録</li><li><strong>［見積提出］</strong> → <strong>［クロージング］</strong> に進める</li><li>契約締結 → ステージを「成約」へ → <a href="#04_contracts">04. 契約管理</a> で契約を登録</li></ol>
+<h3 id="05_opportunities-失注のとき">失注のとき</h3>
+<ol><li>ステージを「失注」へ</li><li><strong>失注理由</strong> を記入（必須）</li><li>顧客のステータスは「休眠」に変更しておくと再アプローチ時に整理しやすい</li></ol>
+        </section>
+      
+
+        <section class="chapter" id="06_intentions">
+          <h1 id="06_intentions">06. 意向把握（保険業法対応）</h1>
+<blockquote><p><strong>保険業法に基づく意向把握記録</strong> を作成・承認・保管します。 当システムの中で <strong>コンプライアンス上もっとも重要</strong> な機能です。物理削除は技術的にも禁止されています。</p></blockquote>
+<p>サイドバー <strong>［意向把握］</strong> から開きます。</p>
+<h2 id="06_intentions-重要な性質">重要な性質</h2>
+<table>
+    <thead><tr><th>項目</th><th>内容</th></tr></thead>
+    <tbody><tr><td>物理削除</td><td>不可（<code>deleted_at</code> 論理削除のみ。技術担当でも復元できる仕様）</td></tr><tr><td>編集</td><td>承認済の記録は編集不可。差戻し後のみ再編集可</td></tr><tr><td>承認</td><td>管理者ロールが承認／差戻しを実行</td></tr><tr><td>保管年数</td><td>設定 &gt; コンプライアンス &gt; <code>data_retention_years</code> で定義（既定 10 年）</td></tr><tr><td>監査ログ</td><td>作成・承認・差戻し・編集はすべて <code>audit_logs</code> に記録</td></tr></tbody>
+  </table>
+<h2 id="06_intentions-意向把握-一覧">意向把握 一覧</h2>
+<figure><img src="assets/06-01-intentions-list.png" alt="意向把握一覧"><figcaption>意向把握一覧</figcaption></figure>
+<table>
+    <thead><tr><th>エリア</th><th>機能</th></tr></thead>
+    <tbody><tr><td>検索</td><td>顧客名・契約番号で検索</td></tr><tr><td>ステータスフィルター</td><td>未実施 / 実施済 / 承認待 / 承認済 / 差戻</td></tr><tr><td>比較方式フィルター</td><td>イ方式 / ロ方式</td></tr><tr><td>担当者フィルター</td><td></td></tr><tr><td>右上 <strong>［新規作成］</strong></td><td>4 ステップウィザードを開始</td></tr></tbody>
+  </table>
+<h3 id="06_intentions-ステータス遷移">ステータス遷移</h3>
+<pre><code class="language-">未実施 → 実施済 → 承認待 → 承認済
+                       ↘  差戻 → (再編集) → 承認待</code></pre>
+<table>
+    <thead><tr><th>ステータス</th><th>意味</th></tr></thead>
+    <tbody><tr><td>未実施</td><td>作成中（ウィザード途中保存）</td></tr><tr><td>実施済</td><td>4 ステップ完了。承認に上げる前の状態</td></tr><tr><td>承認待</td><td>管理者の承認待ち</td></tr><tr><td>承認済</td><td>承認完了。編集不可になる</td></tr><tr><td>差戻</td><td>管理者が差戻し。担当者が修正して再提出可</td></tr></tbody>
+  </table>
+<h2 id="06_intentions-4-ステップウィザード">4 ステップウィザード</h2>
+<p>新規作成は <strong>［新規作成］</strong> で 4 ステップウィザードが開きます。</p>
+<figure><img src="assets/06-02-intention-step1.png" alt="意向把握ウィザード Step 1"><figcaption>意向把握ウィザード Step 1</figcaption></figure>
+<h3 id="06_intentions-step-1-当初意向">Step 1: 当初意向</h3>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>内容</th></tr></thead>
+    <tbody><tr><td>顧客</td><td>✓</td><td>既存顧客から選択</td></tr><tr><td>関連契約</td><td></td><td>既存契約に紐づける場合</td></tr><tr><td>当初意向</td><td>✓</td><td>2000 文字以内。顧客が最初に表明した意向</td></tr><tr><td>記録日時</td><td>✓</td><td>面談日時</td></tr></tbody>
+  </table>
+<h3 id="06_intentions-step-2-比較推奨">Step 2: 比較推奨</h3>
+<figure><img src="assets/06-03-intention-step2.png" alt="意向把握ウィザード Step 2"><figcaption>意向把握ウィザード Step 2</figcaption></figure>
+<p>商品を追加すると、商品カードに入力フィールドが展開されます。</p>
+<figure><img src="assets/06-04-intention-step2-products.png" alt="Step 2 商品カード"><figcaption>Step 2 商品カード</figcaption></figure>
+<h4 id="06_intentions-比較方式">比較方式</h4>
+<table>
+    <thead><tr><th>方式</th><th>説明</th><th>商品数</th><th>推奨商品</th><th>推奨理由</th></tr></thead>
+    <tbody><tr><td><strong>イ方式</strong></td><td>単一商品のみを提案</td><td><strong>1 件のみ</strong></td><td>必須</td><td>必須</td></tr><tr><td><strong>ロ方式</strong></td><td>複数比較から推奨</td><td><strong>1 件以上</strong></td><td>推奨 1 件以上 必須</td><td>推奨商品ごとに必須</td></tr></tbody>
+  </table>
+<h4 id="06_intentions-商品ごとの項目">商品ごとの項目</h4>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>制限</th></tr></thead>
+    <tbody><tr><td>保険会社</td><td>✓</td><td>100 文字以内</td></tr><tr><td>商品名</td><td>✓</td><td>100 文字以内</td></tr><tr><td>商品カテゴリ</td><td>✓</td><td>生命/損害/医療/介護/年金</td></tr><tr><td>保険料</td><td>✓</td><td>0 〜 1 億円</td></tr><tr><td>推奨フラグ</td><td></td><td>チェック時、推奨理由が必須</td></tr><tr><td>推奨理由</td><td>条件次第</td><td>1000 文字以内</td></tr></tbody>
+  </table>
+<h3 id="06_intentions-step-3-最終意向">Step 3: 最終意向</h3>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>内容</th></tr></thead>
+    <tbody><tr><td>最終意向</td><td>✓</td><td>2000 文字以内</td></tr><tr><td>当初意向との差異メモ</td><td></td><td>1000 文字以内。当初と最終で意向が変わった場合に記録</td></tr><tr><td>記録日時</td><td>✓</td><td>最終面談日時</td></tr></tbody>
+  </table>
+<h3 id="06_intentions-step-4-チェックリスト">Step 4: チェックリスト</h3>
+<p>保険業法に基づく <strong>9 項目</strong> のチェックリスト。</p>
+<table>
+    <thead><tr><th>#</th><th>項目</th><th>必須条件</th></tr></thead>
+    <tbody><tr><td>1</td><td>顧客の意向を正確に把握した</td><td>常時必須</td></tr><tr><td>2</td><td>商品内容を十分に説明した</td><td>常時必須</td></tr><tr><td>3</td><td>比較推奨の説明を行った（ロ方式の場合）</td><td>ロ方式時のみ必須</td></tr><tr><td>4</td><td>保険料・保障内容を確認した</td><td>常時必須</td></tr><tr><td>5</td><td>高齢者対応を実施した（対象者のみ）</td><td>顧客が高齢者の場合のみ必須</td></tr><tr><td>6</td><td>顧客の署名・同意を得た</td><td>常時必須</td></tr><tr><td>7</td><td>意向把握書を顧客に交付した</td><td>常時必須</td></tr><tr><td>8</td><td>控えを保管した</td><td>常時必須</td></tr><tr><td>9</td><td>次回フォロー日程を設定した</td><td>常時必須</td></tr></tbody>
+  </table>
+<p>Step 4 では電子サイン欄も表示されます。顧客がタッチパネルに直書きした署名画像、署名時点の意向把握内容、チェックリスト、提案商品を証跡 manifest として固定し、SHA-256 とサーバー封印値を保存します。</p>
+<p>承認者（管理者）を選択して <strong>［承認に提出］</strong> で <code>承認待</code> 状態になります。</p>
+<blockquote><p>⚠️ ステップ間は <strong>下書き保存</strong> されます。途中で離脱しても再開できます。</p></blockquote>
+<h2 id="06_intentions-意向把握-詳細">意向把握 詳細</h2>
+<figure><img src="assets/06-06-intention-detail.png" alt="意向把握詳細"><figcaption>意向把握詳細</figcaption></figure>
+<p>承認待／承認済／差戻 すべての記録を表示します。</p>
+<h3 id="06_intentions-承認操作-管理者">承認操作（管理者）</h3>
+<p>承認待ち状態の記録には <strong>［承認］</strong> と <strong>［差戻し］</strong> ボタンが表示されます。</p>
+<ul><li><strong>［承認］</strong> → ステータスが <code>承認済</code> に。以降編集不可。承認ログ（actor / 日時）を記録</li><li><strong>［差戻し］</strong> → 差戻し理由を入力（必須） → ステータス <code>差戻</code> に。担当者が修正してから再提出可能</li></ul>
+<h3 id="06_intentions-監査履歴">監査履歴</h3>
+<p>ページ下部に <strong>作成 / 編集 / 承認 / 差戻し</strong> の履歴が表示されます。誰がいつ何をしたかが確認できます。</p>
+<h2 id="06_intentions-業務フロー例">業務フロー例</h2>
+<h3 id="06_intentions-新規提案-意向把握-契約までの一連の流れ">新規提案 → 意向把握 → 契約までの一連の流れ</h3>
+<ol><li>顧客詳細 → <strong>［案件］</strong> タブから案件を作成（<a href="#05_opportunities">05. 案件管理</a>）</li><li>提案資料送付後、サイドバー <strong>［意向把握］</strong> → <strong>［新規作成］</strong></li><li><strong>Step 1</strong> で当初意向を記録 → Step 2 で比較方式と提案商品 → Step 3 で最終意向 → Step 4 でチェックリストと承認者選択 → <strong>［承認に提出］</strong></li><li>管理者が <strong>承認待ち</strong> から <strong>［承認］</strong> → 承認済になる</li><li>承認済の記録に基づき <a href="#04_contracts">04. 契約管理</a> で契約を登録 → 関連意向把握書として自動紐付け</li></ol>
+<h3 id="06_intentions-差戻し時">差戻し時</h3>
+<ol><li>管理者が <strong>［差戻し］</strong> + 理由記入</li><li>担当者は意向把握詳細から <strong>［編集］</strong> → 4 ステップを修正 → 再度 <strong>［承認に提出］</strong></li></ol>
+<h2 id="06_intentions-トラブルシュート">トラブルシュート</h2>
+<table>
+    <thead><tr><th>症状</th><th>原因</th><th>対応</th></tr></thead>
+    <tbody><tr><td>「ロ方式では推奨商品を1件以上選び、推奨理由を必ず入力してください」</td><td>推奨チェックがない/理由が空</td><td>推奨フラグと理由を入力</td></tr><tr><td>「イ方式では商品を1件のみ提案し...」</td><td>商品が 0 件 or 2 件以上</td><td>イ方式は厳密に 1 件</td></tr><tr><td>「次回フォロー日程を設定した」がチェックできない</td><td>顧客が高齢者でない場合の高齢者対応項目など、適用外項目はグレーアウト</td><td>該当外項目は無視で可</td></tr><tr><td>承認画面に <strong>［承認］</strong> が出ない</td><td>管理者ロールでない／自分が作成した記録は承認できない（運用統制次第）</td><td>管理者でログインし直す</td></tr></tbody>
+  </table>
+<blockquote><p>📚 <strong>法令適用</strong> はリスクが高い領域です。実運用に乗せる前に、社内のコンプライアンス担当と必ずフローを摺り合わせてください。</p></blockquote>
+        </section>
+      
+
+        <section class="chapter" id="07_settlement">
+          <h1 id="07_settlement">07. 精算・MDRT 管理</h1>
+<blockquote><p>保険会社からの手数料明細（精算データ）を取り込み、月次照合・MDRT 進捗確認・差異検出を行います。 サイドバー <strong>［精算・MDRT管理］</strong> から開きます。</p></blockquote>
+<h2 id="07_settlement-画面構成">画面構成</h2>
+<figure><img src="assets/07-01-settlement.png" alt="精算・MDRT 画面"><figcaption>精算・MDRT 画面</figcaption></figure>
+<table>
+    <thead><tr><th>ブロック</th><th>内容</th></tr></thead>
+    <tbody><tr><td>上部</td><td>MDRT 進捗（年度累計／目標バー／達成率）</td></tr><tr><td>中段</td><td>月次手数料推移グラフ（過去 12 ヶ月）</td></tr><tr><td>下段</td><td>月次精算明細テーブル＋ CSV インポート</td></tr></tbody>
+  </table>
+<h2 id="07_settlement-mdrt-進捗">MDRT 進捗</h2>
+<p>MDRT（Million Dollar Round Table）の <strong>3 段階目標</strong> に対する進捗を表示します。</p>
+<table>
+    <thead><tr><th>称号</th><th>既定の年間目標</th><th>説明</th></tr></thead>
+    <tbody><tr><td>MDRT</td><td>600 万円</td><td>スタンダード</td></tr><tr><td>COT (Court of the Table)</td><td>1,200 万円</td><td>MDRT の 3 倍水準</td></tr><tr><td>TOT (Top of the Table)</td><td>1,800 万円</td><td>MDRT の 6 倍水準</td></tr></tbody>
+  </table>
+<blockquote><p>💡 目標値は <code>mdrt_targets</code> テーブルで年度ごとに管理されます。年度初めに管理者が更新できる UI を将来追加予定です（現状は技術担当が SQL で初期化）。</p></blockquote>
+<p>担当者ごとに <strong>実績／目標バー</strong> が表示されます。</p>
+<h2 id="07_settlement-月次精算">月次精算</h2>
+<h3 id="07_settlement-月を切り替える">月を切り替える</h3>
+<p>画面中央の月セレクタで対象月を変更します。URL クエリは <code>?month=YYYY-MM</code>。</p>
+<h3 id="07_settlement-一覧の項目">一覧の項目</h3>
+<table>
+    <thead><tr><th>列</th><th>内容</th></tr></thead>
+    <tbody><tr><td>証券番号</td><td>契約の証券番号</td></tr><tr><td>顧客名</td><td>CSV 上の契約者名</td></tr><tr><td>保険会社</td><td>引受会社</td></tr><tr><td>計上月</td><td>YYYY-MM</td></tr><tr><td>請求額</td><td>保険会社請求</td></tr><tr><td>入金額</td><td>実入金</td></tr><tr><td>手数料額</td><td>代理店受取手数料</td></tr><tr><td>手数料率</td><td>(任意)</td></tr><tr><td>状態</td><td>未精算 / 照合中 / 完了 / 差異あり</td></tr></tbody>
+  </table>
+<h3 id="07_settlement-ステータス">ステータス</h3>
+<table>
+    <thead><tr><th>ステータス</th><th>意味</th></tr></thead>
+    <tbody><tr><td>未精算</td><td>CSV 取り込み直後の初期状態</td></tr><tr><td>照合中</td><td>担当者が確認作業中</td></tr><tr><td>完了</td><td>入金と一致し、精算完了</td></tr><tr><td>差異あり</td><td>請求額・入金額・手数料額に齟齬がある</td></tr></tbody>
+  </table>
+<p>差異ありの行は <strong>赤色</strong> で強調表示されます。</p>
+<h2 id="07_settlement-csv-インポート">CSV インポート</h2>
+<figure><img src="assets/07-02-settlement-import.png" alt="CSV インポートモーダル"><figcaption>CSV インポートモーダル</figcaption></figure>
+<p>各保険会社の CSV テンプレートに合わせて、明細データを取り込めます。</p>
+<h3 id="07_settlement-対応保険会社-暫定">対応保険会社（暫定）</h3>
+<ul><li>日本生命（Shift_JIS）</li><li>東京海上日動（UTF-8）</li><li>アフラック（Shift_JIS）</li><li>第一生命 / 損保ジャパン など（順次追加予定）</li></ul>
+<blockquote><p>⚠️ <strong>列名と文字コードは保険会社ごとに異なります</strong>。テンプレートは <code>src/lib/settlement/csvTemplates.ts</code> で集中管理されています。新しい保険会社を追加する場合は、技術担当に依頼してください。</p></blockquote>
+<h3 id="07_settlement-取り込み手順">取り込み手順</h3>
+<ol><li><strong>［CSV インポート］</strong> → 取り込みたい保険会社を選択</li><li>ファイル選択画面で CSV をアップロード</li><li><strong>プレビュー</strong> で列マッピング・行件数を確認</li><li><strong>［確定］</strong> で <code>settlements</code> テーブルに登録</li><li>失敗行は <code>settlement_imports</code> テーブルに記録（後追い修正可能）</li></ol>
+<h3 id="07_settlement-重複検知">重複検知</h3>
+<p>同じ <strong>証券番号 + 計上月</strong> の行が既存にある場合：</p>
+<ul><li>完全一致 → スキップ</li><li>金額違い → <strong>差異あり</strong> ステータスで上書き登録（旧データは履歴として保持）</li></ul>
+<h2 id="07_settlement-月次推移チャート">月次推移チャート</h2>
+<p>過去 12 ヶ月の手数料合計を棒グラフで表示します。状態（完了 / 差異あり / 未精算）で色分けされ、ステータスの累積も把握できます。</p>
+<h2 id="07_settlement-業務フロー例">業務フロー例</h2>
+<h3 id="07_settlement-月初の精算作業">月初の精算作業</h3>
+<ol><li><strong>［精算・MDRT管理］</strong> を開き、対象月を当月に設定</li><li><strong>［CSV インポート］</strong> → 保険会社ごとに CSV をアップロード</li><li><strong>差異あり</strong> の行を順に開き、保険会社に確認</li><li>確認済みの行は <strong>［完了］</strong> にステータス変更</li><li>MDRT 進捗バーを確認、目標との乖離を共有</li></ol>
+<h3 id="07_settlement-担当者の-mdrt-進捗確認">担当者の MDRT 進捗確認</h3>
+<ol><li>上部 MDRT 進捗ブロックで担当別バーを確認</li><li>達成見込みの低い担当者にフォロー</li><li>レポート画面（<a href="#09_reports">09. レポート</a>）と組み合わせて月次計画を立案</li></ol>
+<h2 id="07_settlement-トラブルシュート">トラブルシュート</h2>
+<table>
+    <thead><tr><th>症状</th><th>原因</th><th>対応</th></tr></thead>
+    <tbody><tr><td>CSV 取り込み時に文字化け</td><td>文字コード設定が違う</td><td>保険会社テンプレートと一致しているか確認</td></tr><tr><td>差異あり が大量に出る</td><td>取り込んだ月と CSV の計上月がずれている</td><td>上部の月セレクタが正しいか確認</td></tr><tr><td>MDRT 目標値が古い</td><td><code>mdrt_targets</code> の年度設定が未更新</td><td>技術担当に年度更新を依頼</td></tr></tbody>
+  </table>
+        </section>
+      
+
+        <section class="chapter" id="08_calendar">
+          <h1 id="08_calendar">08. カレンダー</h1>
+<blockquote><p>顧客訪問・電話・社内会議など、業務予定を月／週ビューで管理します。 サイドバー <strong>［カレンダー］</strong> から開きます。</p></blockquote>
+<h2 id="08_calendar-画面構成">画面構成</h2>
+<figure><img src="assets/08-01-calendar-month.png" alt="カレンダー — 月ビュー"><figcaption>カレンダー — 月ビュー</figcaption></figure>
+<table>
+    <thead><tr><th>エリア</th><th>機能</th></tr></thead>
+    <tbody><tr><td>上部ナビ</td><td>◀ / 今日 / ▶ で月（または週）を移動</td></tr><tr><td>ビュー切替</td><td><strong>［月］</strong> / <strong>［週］</strong></td></tr><tr><td>右上 <strong>［新規予定］</strong></td><td>予定登録モーダル</td></tr></tbody>
+  </table>
+<p>URL クエリで状態を保持：<code>?year=2026&amp;month=5&amp;view=month</code>。ブックマークで特定月を保存できます。</p>
+<h2 id="08_calendar-イベント種別">イベント種別</h2>
+<table>
+    <thead><tr><th>種別</th><th>用途</th></tr></thead>
+    <tbody><tr><td>訪問</td><td>顧客先への訪問</td></tr><tr><td>電話</td><td>電話面談</td></tr><tr><td>Web会議</td><td>オンライン面談</td></tr><tr><td>書類作業</td><td>申込書・更改書類作成</td></tr><tr><td>社内会議</td><td>朝礼・打ち合わせ</td></tr><tr><td>研修</td><td>社内外研修</td></tr><tr><td>その他</td><td></td></tr></tbody>
+  </table>
+<p>種別ごとに <strong>色</strong> が変わります（G-DX デザイントークン準拠）。</p>
+<h2 id="08_calendar-月ビュー">月ビュー</h2>
+<p>各セルにその日の予定が積み上がります。1 セルあたり最大表示は概ね 3 件。 セルをクリックすると、その日に新規予定を作成するモーダルが開きます。</p>
+<p>予定をクリックすると <strong>右側サイドパネル</strong> が開き、詳細を表示・編集できます。</p>
+<h2 id="08_calendar-週ビュー">週ビュー</h2>
+<figure><img src="assets/08-02-calendar-week.png" alt="カレンダー — 週ビュー"><figcaption>カレンダー — 週ビュー</figcaption></figure>
+<p>時間軸（0:00 〜 24:00）を縦に表示。予定の長さは時間に応じて伸びます。 ドラッグで予定の開始・終了を変更できます（現状はモーダル経由の編集を推奨）。</p>
+<h2 id="08_calendar-予定を登録する">予定を登録する</h2>
+<p><strong>［新規予定］</strong> または日付セルクリックでモーダルが開きます。</p>
+<figure><img src="assets/08-03-calendar-modal.png" alt="カレンダー — 予定モーダル"><figcaption>カレンダー — 予定モーダル</figcaption></figure>
+<h3 id="08_calendar-入力項目">入力項目</h3>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>制限</th></tr></thead>
+    <tbody><tr><td>タイトル</td><td>✓</td><td>100 文字以内</td></tr><tr><td>種別</td><td>✓</td><td>上記 7 種から選択</td></tr><tr><td>開始日時</td><td>✓</td><td><code>YYYY-MM-DDTHH:mm</code></td></tr><tr><td>終了日時</td><td>✓</td><td>開始日時以降</td></tr><tr><td>終日フラグ</td><td></td><td>終日予定にする場合</td></tr><tr><td>関連顧客</td><td></td><td>顧客を紐付け（後で顧客ページから参照可能）</td></tr><tr><td>関連案件</td><td></td><td>案件を紐付け</td></tr><tr><td>担当者</td><td></td><td></td></tr><tr><td>場所</td><td></td><td>200 文字以内</td></tr><tr><td>メモ</td><td></td><td>2000 文字以内</td></tr></tbody>
+  </table>
+<blockquote><p>⚠️ 終了日時 &lt; 開始日時 は登録不可。</p></blockquote>
+<h2 id="08_calendar-サイドパネル">サイドパネル</h2>
+<p>予定をクリックして開く詳細パネル。</p>
+<table>
+    <thead><tr><th>エリア</th><th>内容</th></tr></thead>
+    <tbody><tr><td>ヘッダー</td><td>タイトル + 種別バッジ</td></tr><tr><td>詳細</td><td>日時、場所、関連顧客／案件</td></tr><tr><td>メモ</td><td>自由記述</td></tr><tr><td>操作</td><td>編集 / 削除</td></tr></tbody>
+  </table>
+<h2 id="08_calendar-lark-calendar-連携-準備中">Lark Calendar 連携（準備中）</h2>
+<p><a href="#12_lark_integration">12. Lark 連携</a> &gt; Calendar タブで <code>calendar_id</code> を設定すると、HOKENA CRM の予定が Lark Calendar へ自動同期されます（実装は準備中）。</p>
+<h2 id="08_calendar-業務フロー例">業務フロー例</h2>
+<h3 id="08_calendar-顧客訪問の予定管理">顧客訪問の予定管理</h3>
+<ol><li>顧客詳細 → <strong>［対応履歴を追加］</strong> で次回アクションを <code>2026-05-20</code> で記録</li><li>サイドバー <strong>［カレンダー］</strong> → 該当日付セル → <strong>［新規予定］</strong></li><li>種別「訪問」、関連顧客を紐付け、場所を入力</li><li>翌週はじめに週ビューで予定一覧を確認、訪問前に <a href="#03_customers">顧客詳細</a> で過去履歴を再確認</li></ol>
+<h2 id="08_calendar-トラブルシュート">トラブルシュート</h2>
+<table>
+    <thead><tr><th>症状</th><th>原因</th><th>対応</th></tr></thead>
+    <tbody><tr><td>予定が他人のと同じ色</td><td>種別ごとの色分けで、担当者別の色分けは現状なし</td><td>担当者でフィルター（将来実装予定）</td></tr><tr><td>月をまたぐ予定が片方にしか表示されない</td><td>月単位で取得しているため</td><td>開始日が表示中の月にある月で確認</td></tr><tr><td>Web会議 URL が入らない</td><td>専用フィールド未実装、メモ欄に貼ってください</td><td>運用回避</td></tr></tbody>
+  </table>
+        </section>
+      
+
+        <section class="chapter" id="09_reports">
+          <h1 id="09_reports">09. レポート</h1>
+<blockquote><p>代理店全体の業績・顧客構成を 4 つの観点で可視化します。 サイドバー <strong>［レポート］</strong> から開きます。</p></blockquote>
+<h2 id="09_reports-画面構成">画面構成</h2>
+<figure><img src="assets/09-01-reports.png" alt="レポート画面"><figcaption>レポート画面</figcaption></figure>
+<table>
+    <thead><tr><th>ブロック</th><th>グラフ</th><th>集計対象</th></tr></thead>
+    <tbody><tr><td>① 月次新規契約推移</td><td>棒グラフ</td><td>過去 12 ヶ月（期間設定の影響なし）</td></tr><tr><td>② 担当者別実績</td><td>横棒グラフ</td><td>期間設定に依存</td></tr><tr><td>③ 商品カテゴリ別構成</td><td>円グラフ + 表</td><td>期間設定に依存</td></tr><tr><td>④ 顧客年代分布</td><td>棒グラフ</td><td>全顧客（期間に依存しない）</td></tr></tbody>
+  </table>
+<h2 id="09_reports-期間切替">期間切替</h2>
+<p>画面右上で集計期間を切り替えます。</p>
+<table>
+    <thead><tr><th>ボタン</th><th>範囲</th></tr></thead>
+    <tbody><tr><td><strong>今月</strong></td><td>当月の 1 日〜今日</td></tr><tr><td><strong>今四半期</strong></td><td>当四半期の開始〜今日</td></tr><tr><td><strong>今年度</strong></td><td>当年の 1 月 1 日〜今日</td></tr></tbody>
+  </table>
+<p>URL クエリ <code>?period=this_month</code> / <code>this_quarter</code> / <code>this_year</code>。ブックマーク可。</p>
+<h2 id="09_reports-各グラフの読み方">各グラフの読み方</h2>
+<h3 id="09_reports-①-月次新規契約推移">① 月次新規契約推移</h3>
+<p>過去 12 ヶ月の <strong>新規契約件数</strong> を月単位で表示。トレンド把握用。</p>
+<blockquote><p>💡 件数だけでなく <strong>保険料合計</strong> をマウスオーバーで確認できます。</p></blockquote>
+<h3 id="09_reports-②-担当者別実績">② 担当者別実績</h3>
+<p>期間内に <strong>登録された契約</strong> を担当者ごとに集計。</p>
+<table>
+    <thead><tr><th>列 / 棒</th><th>内容</th></tr></thead>
+    <tbody><tr><td>件数</td><td>担当した契約の件数</td></tr><tr><td>保険料合計</td><td>同期間の保険料総額</td></tr></tbody>
+  </table>
+<p>降順で並び、件数の多い担当者が上に表示されます。未割当の契約は「未割当」としてまとめられます。</p>
+<h3 id="09_reports-③-商品カテゴリ別構成">③ 商品カテゴリ別構成</h3>
+<p>| カテゴリ | |---| | 生命保険 | | 損害保険 | | 医療保険 | | 介護保険 | | 年金保険 |</p>
+<p>円グラフ＋表で <strong>件数 / 保険料合計 / 占有率</strong> を表示。代理店の商品構成バランスを把握できます。</p>
+<h3 id="09_reports-④-顧客年代分布">④ 顧客年代分布</h3>
+<p>顧客マスタの生年月日から自動算出 (<code>customers_with_age</code> ビュー) し、以下の年代区分で集計。</p>
+<p>| バケット | |---| | 〜10代 / 20代 / 30代 / 40代 / 50代 / 60代 / 70代 / 80代以上 |</p>
+<blockquote><p>💡 高齢者対応が必要な顧客の割合を可視化するのに有用。70 代以上の比率が大きい代理店は、コンプライアンス強化や家族同席運用を検討。</p></blockquote>
+<h2 id="09_reports-csv-エクスポート-将来">CSV エクスポート（将来）</h2>
+<p>現状はグラフ閲覧のみ。CSV / PDF エクスポートは将来追加予定です。</p>
+<h2 id="09_reports-業務フロー例">業務フロー例</h2>
+<h3 id="09_reports-月次定例での振り返り">月次定例での振り返り</h3>
+<ol><li>期間を <strong>今月</strong> に設定</li><li>担当者別実績で個別バランスを確認</li><li>カテゴリ別構成で偏りを確認（例：生命保険ばかり → 損保提案を強化）</li><li>月次推移と組み合わせて、年間目標との乖離を見る</li></ol>
+<h3 id="09_reports-mdrt-期初目標の設定">MDRT 期初目標の設定</h3>
+<ol><li>期間を <strong>今年度</strong> に設定</li><li>担当者別保険料合計の上位を把握 → MDRT 達成圏内を確認</li><li><a href="#07_settlement">07. 精算・MDRT 管理</a> と組み合わせて目標値を逆算</li></ol>
+<h2 id="09_reports-注意点">注意点</h2>
+<ul><li>レポートは <strong>論理削除されていない契約</strong> のみを対象にします。削除済み契約は集計対象外。</li><li>データのリアルタイム性は <strong>数秒</strong> 程度（Server Components の SSR）。直近に登録した契約はリロードで反映されます。</li><li>期間集計の境界は <strong>契約の <code>created_at</code></strong>（登録日）です。<strong>契約開始日 (<code>start_date</code>)</strong> ではない点に注意。</li></ul>
+        </section>
+      
+
+        <section class="chapter" id="10_dashboard">
+          <h1 id="10_dashboard">10. ダッシュボード</h1>
+<blockquote><p>ログイン後の最初の画面。代理店全体の <strong>健全性 / 注意すべき契約</strong> を一覧できます。 サイドバー <strong>［ダッシュボード］</strong> から開きます。</p></blockquote>
+<h2 id="10_dashboard-画面構成">画面構成</h2>
+<figure><img src="assets/10-01-dashboard.png" alt="ダッシュボード"><figcaption>ダッシュボード</figcaption></figure>
+<table>
+    <thead><tr><th>ブロック</th><th>内容</th></tr></thead>
+    <tbody><tr><td>① KPI カード × 4</td><td>総顧客数 / 有効契約数 / 今月新規契約 / 承認待ち意向把握</td></tr><tr><td>② 期間フィルター</td><td>月次推移／担当者別実績の集計期間</td></tr><tr><td>③ 月次新規契約推移</td><td>過去 12 ヶ月</td></tr><tr><td>④ 担当者別実績</td><td>期間設定に依存</td></tr><tr><td>⑤ 満期アラート</td><td>60 日以内に満期の有効契約</td></tr></tbody>
+  </table>
+<h2 id="10_dashboard-kpi-カード">KPI カード</h2>
+<table>
+    <thead><tr><th>カード</th><th>集計</th><th>リンク先</th></tr></thead>
+    <tbody><tr><td>総顧客数</td><td>削除されていない顧客</td><td><strong>［顧客管理］</strong></td></tr><tr><td>有効契約数</td><td><code>status=&#39;有効&#39;</code> の契約</td><td><strong>［契約管理］</strong> (<code>?status=有効</code>)</td></tr><tr><td>今月新規契約</td><td>当月作成の契約</td><td><strong>［契約管理］</strong></td></tr><tr><td>承認待ち意向把握</td><td><code>承認待</code> ステータスの記録（あれば <strong>黄色強調</strong>）</td><td><strong>［意向把握］</strong> (<code>?status=承認待</code>)</td></tr></tbody>
+  </table>
+<p>カードをクリックすると、関連画面へフィルター付きで遷移します。</p>
+<h2 id="10_dashboard-期間フィルター">期間フィルター</h2>
+<p>3 つのプリセット：</p>
+<table>
+    <thead><tr><th>ボタン</th><th>範囲</th></tr></thead>
+    <tbody><tr><td>今月</td><td>当月の 1 日〜今日</td></tr><tr><td>今四半期</td><td>当四半期の開始〜今日</td></tr><tr><td>今年度</td><td>当年の 1 月 1 日〜今日</td></tr></tbody>
+  </table>
+<p>URL クエリ <code>?period=this_month</code> 等で保持。</p>
+<h2 id="10_dashboard-月次新規契約推移">月次新規契約推移</h2>
+<p>過去 12 ヶ月の <strong>新規契約件数</strong> を棒グラフで表示します（期間フィルターの影響なし）。 レポート画面の同名グラフと同じデータ。</p>
+<h2 id="10_dashboard-担当者別実績">担当者別実績</h2>
+<p>期間内の <strong>新規契約数</strong> を担当者ごとに集計します。 件数の多い担当者から横棒で表示。</p>
+<h2 id="10_dashboard-満期アラート">満期アラート</h2>
+<figure><img src="assets/10-02-dashboard-expiry.png" alt="満期アラート"><figcaption>満期アラート</figcaption></figure>
+<p><strong>60 日以内</strong> に満期を迎える <code>有効</code> 契約を一覧します。</p>
+<table>
+    <thead><tr><th>列</th><th>内容</th></tr></thead>
+    <tbody><tr><td>顧客</td><td>顧客名</td></tr><tr><td>証券番号</td><td></td></tr><tr><td>保険会社</td><td></td></tr><tr><td>満期日</td><td><code>YYYY-MM-DD</code></td></tr><tr><td>残日数</td><td>0 〜 60 日 (バッジ色：30 日以下で赤、60 日以下で黄)</td></tr><tr><td>更改状況</td><td>未対応 / 対応中 等のバッジ</td></tr><tr><td>担当</td><td>担当者氏名</td></tr></tbody>
+  </table>
+<p>行クリックで契約詳細へ移動。</p>
+<h2 id="10_dashboard-業務フロー例">業務フロー例</h2>
+<h3 id="10_dashboard-朝のチェックインルーチン">朝のチェックインルーチン</h3>
+<ol><li><strong>ダッシュボード</strong> を開く</li><li><strong>承認待ち意向把握</strong> が 0 でなければ確認・承認</li><li><strong>満期アラート</strong> を上から処理（残日数が少ない順）</li><li>期間を「今月」に設定し、担当者別実績を確認</li></ol>
+<h3 id="10_dashboard-月次定例-管理者">月次定例（管理者）</h3>
+<ol><li>期間を <strong>今年度</strong> に設定</li><li>月次推移と担当者別実績を確認</li><li>詳細分析は <a href="#09_reports">09. レポート</a> へ</li></ol>
+<h2 id="10_dashboard-注意点">注意点</h2>
+<ul><li>ダッシュボードは <strong>テナント単位</strong> で表示されます。他代理店のデータは見えません（RLS で制御）。</li><li>担当者ロール (<code>agent</code>) でログインした場合、KPI と満期アラートは <strong>自分の担当分のみ</strong> を表示する仕様への拡張余地あり（現状は全件表示）。</li><li>データは Server Components で SSR されるため、ページリロードで最新化されます。</li></ul>
+        </section>
+      
+
+        <section class="chapter" id="11_settings">
+          <h1 id="11_settings">11. 設定</h1>
+<blockquote><p>代理店情報、ユーザー管理、通知、コンプライアンス設定。 サイドバー <strong>［設定］</strong> から開きます。 <strong>管理者ロール (<code>admin</code>)</strong> のみ編集可能。それ以外のロールは閲覧のみ（フィールドはグレーアウト）。</p></blockquote>
+<h2 id="11_settings-タブ構成">タブ構成</h2>
+<table>
+    <thead><tr><th>タブ</th><th>内容</th><th>操作</th></tr></thead>
+    <tbody><tr><td>代理店情報</td><td>代理店名・代表者・住所・連絡先・登録番号</td><td>admin のみ編集可</td></tr><tr><td>ユーザー管理</td><td>アカウント招待、ロール変更、有効/無効</td><td>admin のみ操作可</td></tr><tr><td>通知設定</td><td>満期アラート日数、通知方法</td><td>admin のみ編集可</td></tr><tr><td>コンプライアンス</td><td>高齢者閾値、意向把握必須化、データ保持年数</td><td>admin のみ編集可</td></tr></tbody>
+  </table>
+<h2 id="11_settings-代理店情報">代理店情報</h2>
+<figure><img src="assets/11-01-settings-org.png" alt="代理店情報"><figcaption>代理店情報</figcaption></figure>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>説明</th></tr></thead>
+    <tbody><tr><td>代理店名</td><td>✓</td><td>100 文字以内。保存すると <code>tenants.name</code> も同期</td></tr><tr><td>代表者名</td><td></td><td>50 文字以内</td></tr><tr><td>住所</td><td></td><td>200 文字以内</td></tr><tr><td>電話番号</td><td></td><td>数字／<code>- + ( )</code> のみ、30 文字以内</td></tr><tr><td>メールアドレス</td><td></td><td>RFC 準拠</td></tr><tr><td>登録番号</td><td></td><td>50 文字以内（保険代理店登録番号）</td></tr><tr><td>ロゴ URL</td><td></td><td>URL 形式（ヘッダー・印刷物で利用予定）</td></tr></tbody>
+  </table>
+<h2 id="11_settings-ユーザー管理">ユーザー管理</h2>
+<figure><img src="assets/11-02-settings-users.png" alt="ユーザー管理"><figcaption>ユーザー管理</figcaption></figure>
+<h3 id="11_settings-一覧">一覧</h3>
+<table>
+    <thead><tr><th>列</th><th>内容</th></tr></thead>
+    <tbody><tr><td>氏名</td><td></td></tr><tr><td>メールアドレス</td><td>ログイン ID として利用</td></tr><tr><td>ロール</td><td>admin / agent / staff</td></tr><tr><td>部署</td><td>(任意)</td></tr><tr><td>ステータス</td><td>有効 / 無効</td></tr></tbody>
+  </table>
+<h3 id="11_settings-ユーザー招待">ユーザー招待</h3>
+<p><strong>［ユーザーを招待］</strong> ボタンから招待モーダルを開きます。</p>
+<table>
+    <thead><tr><th>項目</th><th>必須</th><th>内容</th></tr></thead>
+    <tbody><tr><td>メールアドレス</td><td>✓</td><td>RFC 準拠</td></tr><tr><td>氏名</td><td>✓</td><td>50 文字以内</td></tr><tr><td>ロール</td><td>✓</td><td>admin / agent / staff</td></tr></tbody>
+  </table>
+<h4 id="11_settings-招待の挙動">招待の挙動</h4>
+<ol><li>Supabase Auth に <strong>招待メール送信</strong>（<code>auth.users</code> に行が作成される）</li><li><strong><code>user_profiles</code></strong> に同 ID で行を作成（ロール・テナント所属を設定）</li><li>招待されたユーザーはメール内リンクからパスワード設定 → ログイン可能</li></ol>
+<table>
+    <thead><tr><th>ロール</th><th>主な権限</th></tr></thead>
+    <tbody><tr><td><strong>admin</strong></td><td>設定変更・ユーザー招待・意向把握の承認・Lark 連携設定</td></tr><tr><td><strong>agent</strong></td><td>担当顧客・契約・案件の登録／編集／意向把握作成</td></tr><tr><td><strong>staff</strong></td><td>顧客・契約の検索／登録／編集。意向把握の承認は不可</td></tr></tbody>
+  </table>
+<h3 id="11_settings-ロール変更">ロール変更</h3>
+<p>ユーザー行右側の <strong>ロール ドロップダウン</strong> から変更します。即時反映。</p>
+<h3 id="11_settings-アカウント無効化">アカウント無効化</h3>
+<p>ユーザー行右側の <strong>［無効化］</strong> で <code>is_active=false</code>。再有効化は <strong>［有効化］</strong> で。</p>
+<blockquote><p>⚠️ 無効化されたユーザーは： - ログイン不可 - 顧客・契約の担当者選択肢から除外 - 過去の担当履歴・対応履歴はそのまま残る</p></blockquote>
+<h2 id="11_settings-通知設定">通知設定</h2>
+<figure><img src="assets/11-03-settings-notification.png" alt="通知設定"><figcaption>通知設定</figcaption></figure>
+<h3 id="11_settings-満期アラート">満期アラート</h3>
+<p>満期 X 日前にアラートを通知。複数日数を設定可能。</p>
+<table>
+    <thead><tr><th>項目</th><th>既定値</th><th>制限</th></tr></thead>
+    <tbody><tr><td>満期アラート (X日前)</td><td>90 / 60 / 30</td><td>1〜5 個、0〜365</td></tr></tbody>
+  </table>
+<h3 id="11_settings-通知方法">通知方法</h3>
+<table>
+    <thead><tr><th>項目</th><th>内容</th></tr></thead>
+    <tbody><tr><td>メール</td><td>システムからメール送信（実装は順次）</td></tr><tr><td>Lark Bot</td><td>Lark チャットへ Bot 通知（<a href="#12_lark_integration">12. Lark 連携</a> 参照、準備中）</td></tr><tr><td>管理者にも通知</td><td>担当者だけでなく管理者にも CC で通知</td></tr></tbody>
+  </table>
+<h2 id="11_settings-コンプライアンス">コンプライアンス</h2>
+<figure><img src="assets/11-04-settings-compliance.png" alt="コンプライアンス"><figcaption>コンプライアンス</figcaption></figure>
+<table>
+    <thead><tr><th>項目</th><th>既定</th><th>内容</th></tr></thead>
+    <tbody><tr><td>高齢者の年齢閾値</td><td>70</td><td>この年齢以上の顧客は <strong>高齢者</strong> フラグが立つ。意向把握で追加チェックが必須に</td></tr><tr><td>新規契約に意向把握書を必須化</td><td>ON</td><td>OFF にすると契約登録時の意向把握書 ID 確認をスキップ（コンプラ的に非推奨）</td></tr><tr><td>意向把握書の承認を必須化</td><td>ON</td><td>OFF にするとフォースで承認なしでも契約紐付け可（コンプラ的に非推奨）</td></tr><tr><td>データ保持年数</td><td>10</td><td>削除済みデータの保持期間。年数超過後は技術担当による物理削除可</td></tr></tbody>
+  </table>
+<blockquote><p>⚠️ コンプライアンス設定の <strong>「意向把握書を必須化」</strong> を OFF にすると、保険業法対応の証跡が欠落する可能性があります。法令確認の上、明確な根拠なしには変更しないでください。</p></blockquote>
+<h2 id="11_settings-業務フロー例">業務フロー例</h2>
+<h3 id="11_settings-新しいスタッフを迎え入れる">新しいスタッフを迎え入れる</h3>
+<ol><li><strong>［ユーザー管理］</strong> タブ → <strong>［ユーザーを招待］</strong></li><li>メールアドレス・氏名・ロール（staff）を入力 → 招待送信</li><li>スタッフがメール内リンクからパスワード設定</li><li>ログイン → 顧客・契約の登録作業を開始</li></ol>
+<h3 id="11_settings-高齢者基準の見直し">高齢者基準の見直し</h3>
+<ol><li>監督官庁ガイドラインに合わせて閾値を変更（例: 70 → 65）</li><li><strong>［コンプライアンス］</strong> → 高齢者年齢閾値を <code>65</code> に変更 → 保存</li><li><code>customers_with_age</code> ビュー経由で全顧客の <code>is_elderly</code> フラグが即時更新される</li><li>該当顧客の意向把握では高齢者対応チェックリストが必須に</li></ol>
+<h2 id="11_settings-トラブルシュート">トラブルシュート</h2>
+<table>
+    <thead><tr><th>症状</th><th>原因</th><th>対応</th></tr></thead>
+    <tbody><tr><td>フィールドが編集できない</td><td>admin ロールでない</td><td>admin に依頼、または自分が admin か確認</td></tr><tr><td>招待メールが届かない</td><td>スパム判定／メールアドレス誤り</td><td>スパムフォルダ確認、メアドを再確認</td></tr><tr><td>ロール変更が反映されない</td><td>キャッシュ／セッション</td><td>ユーザーに再ログインを依頼</td></tr></tbody>
+  </table>
+        </section>
+      
+
+        <section class="chapter" id="12_lark_integration">
+          <h1 id="12_lark_integration">12. Lark 連携</h1>
+<blockquote><p>Lark（飛書）の各種サービスと HOKENA CRM を連携させる設定画面。 サイドバー <strong>［Lark 連携］</strong> から開きます。</p></blockquote>
+<blockquote><p>⚠️ 現在、<strong>実際の Lark API 連携は段階的に実装中</strong> です。設定 UI と DB 保存は完成していますが、同期・通知の実 API 呼び出しは順次有効化されます。</p></blockquote>
+<h2 id="12_lark_integration-接続状態サマリー">接続状態サマリー</h2>
+<figure><img src="assets/12-01-lark-status.png" alt="Lark 接続状態"><figcaption>Lark 接続状態</figcaption></figure>
+<p>ページ最上部に <strong>接続状態カード</strong> が並びます。</p>
+<table>
+    <thead><tr><th>項目</th><th>設定箇所</th></tr></thead>
+    <tbody><tr><td>App ID</td><td>環境変数 <code>LARK_APP_ID</code></td></tr><tr><td>App Secret</td><td>環境変数 <code>LARK_APP_SECRET</code></td></tr><tr><td>Webhook Token</td><td>環境変数 <code>LARK_WEBHOOK_VERIFY_TOKEN</code></td></tr><tr><td>Lark Base</td><td><code>base.base_id</code></td></tr><tr><td>Lark Calendar</td><td><code>calendar.calendar_id</code></td></tr><tr><td>Approval Flow</td><td><code>approval.intention_flow_id</code></td></tr><tr><td>Bot Chat</td><td><code>bot.alert_chat_id</code></td></tr></tbody>
+  </table>
+<p>「接続済」「未接続」のバッジで一目で状況がわかります。</p>
+<h2 id="12_lark_integration-タブ構成">タブ構成</h2>
+<table>
+    <thead><tr><th>タブ</th><th>内容</th></tr></thead>
+    <tbody><tr><td>SSO</td><td>Lark OAuth でのシングルサインオン設定</td></tr><tr><td>Base</td><td>Lark Base との顧客／契約／案件の双方向同期</td></tr><tr><td>Calendar</td><td>予定の Lark Calendar 同期</td></tr><tr><td>Approval</td><td>意向把握の Lark 承認フロー連携</td></tr><tr><td>Bot</td><td>通知 Bot のチャット設定</td></tr><tr><td>通知テンプレ</td><td>各通知文面のテンプレート編集</td></tr></tbody>
+  </table>
+<h2 id="12_lark_integration-sso-シングルサインオン">SSO（シングルサインオン）</h2>
+<figure><img src="assets/12-02-lark-sso.png" alt="Lark SSO 設定"><figcaption>Lark SSO 設定</figcaption></figure>
+<p>Lark Developer Console でアプリ登録した上で、以下を設定します。</p>
+<table>
+    <thead><tr><th>項目</th><th>設定場所</th><th>説明</th></tr></thead>
+    <tbody><tr><td><code>LARK_APP_ID</code></td><td>環境変数</td><td>Lark アプリの App ID</td></tr><tr><td><code>LARK_APP_SECRET</code></td><td>環境変数</td><td>Lark アプリの App Secret</td></tr><tr><td>リダイレクト URI</td><td>表示のみ（コピー用）</td><td>これを Lark Developer Console に登録</td></tr></tbody>
+  </table>
+<blockquote><p>⚠️ App Secret は環境変数管理（Lark Rules §6）。UI から直接編集はできません。<strong>Vercel の Environment Variables</strong> などで設定してください。</p></blockquote>
+<p><strong>［接続テスト］</strong> で疎通確認が行えます（実 API 連携後）。</p>
+<h2 id="12_lark_integration-base">Base</h2>
+<figure><img src="assets/12-03-lark-base.png" alt="Lark Base 連携"><figcaption>Lark Base 連携</figcaption></figure>
+<p>Lark Base（飛書ベース）と顧客・契約・案件を同期します。</p>
+<table>
+    <thead><tr><th>項目</th><th>設定</th></tr></thead>
+    <tbody><tr><td>Base ID</td><td><code>bascnXXXXXXXXXXX</code> 形式</td></tr><tr><td>同期対象</td><td>顧客 / 契約 / 案件 のチェック</td></tr></tbody>
+  </table>
+<p><strong>［手動同期］</strong> ボタンで強制同期（実 API 連携後）。</p>
+<h2 id="12_lark_integration-calendar">Calendar</h2>
+<table>
+    <thead><tr><th>項目</th><th>設定</th></tr></thead>
+    <tbody><tr><td>Calendar ID</td><td>Lark カレンダー ID</td></tr><tr><td>同期対象</td><td>カレンダーイベント</td></tr></tbody>
+  </table>
+<p>HOKENA CRM のカレンダー予定が、Lark Calendar に自動で双方向同期されます（<a href="#08_calendar">08. カレンダー</a> 参照）。</p>
+<h2 id="12_lark_integration-approval-承認フロー">Approval（承認フロー）</h2>
+<table>
+    <thead><tr><th>項目</th><th>設定</th></tr></thead>
+    <tbody><tr><td>意向把握用 承認フロー ID</td><td><code>APPROVAL_FLOW_XXXXX</code></td></tr></tbody>
+  </table>
+<p>意向把握の承認時に Lark の承認フローを起動します（<a href="#06_intentions">06. 意向把握</a> 参照）。</p>
+<h2 id="12_lark_integration-bot">Bot</h2>
+<figure><img src="assets/12-04-lark-bot.png" alt="Lark Bot 設定"><figcaption>Lark Bot 設定</figcaption></figure>
+<p>通知 Bot のチャット設定。</p>
+<table>
+    <thead><tr><th>項目</th><th>設定</th></tr></thead>
+    <tbody><tr><td>通知先チャット ID</td><td><code>oc_xxxxxxxx</code> 形式</td></tr><tr><td>満期アラート (X日前)</td><td>数値</td></tr><tr><td>通知トリガー</td><td>承認依頼 / 精算完了</td></tr></tbody>
+  </table>
+<blockquote><p>⚠️ <strong>重要</strong>: 通知を送るには、対象の Lark グループチャットに <strong>本システムのボット (アプリ) を追加</strong> する必要があります（Lark Rules §4.1）。ボットがチャットに追加されていないと API がエラーを返します。</p></blockquote>
+<h2 id="12_lark_integration-通知テンプレート">通知テンプレート</h2>
+<figure><img src="assets/12-05-lark-templates.png" alt="通知テンプレート編集"><figcaption>通知テンプレート編集</figcaption></figure>
+<p>Lark Bot から送る通知文面を、テンプレートとして編集できます。</p>
+<table>
+    <thead><tr><th>テンプレートキー</th><th>用途</th></tr></thead>
+    <tbody><tr><td>満期アラート</td><td>満期 X 日前の通知</td></tr><tr><td>承認依頼</td><td>意向把握書の承認待ち通知</td></tr><tr><td>精算完了</td><td>月次精算完了通知</td></tr></tbody>
+  </table>
+<h3 id="12_lark_integration-使える変数">使える変数</h3>
+<table>
+    <thead><tr><th>変数</th><th>例</th></tr></thead>
+    <tbody><tr><td><code>{{customer_name}}</code></td><td>山田 太郎</td></tr><tr><td><code>{{contract_number}}</code></td><td>NL-2026-001</td></tr><tr><td><code>{{expiry_date}}</code></td><td>2026-07-02</td></tr><tr><td><code>{{remaining_days}}</code></td><td>30</td></tr><tr><td><code>{{assigned_to}}</code></td><td>玉木亮司</td></tr></tbody>
+  </table>
+<p>リアルタイムプレビューでサンプル値を埋め込んだ文面を確認できます。</p>
+<h2 id="12_lark_integration-環境変数">環境変数</h2>
+<p>Lark 連携で利用する環境変数一覧。</p>
+<table>
+    <thead><tr><th>変数</th><th>用途</th><th>推奨設定場所</th></tr></thead>
+    <tbody><tr><td><code>LARK_APP_ID</code></td><td>App ID</td><td>Vercel Production / Preview</td></tr><tr><td><code>LARK_APP_SECRET</code></td><td>App Secret（秘匿）</td><td>Vercel Production / Preview, Sensitive</td></tr><tr><td><code>LARK_OAUTH_REDIRECT_URI</code></td><td>OAuth リダイレクト URI</td><td>Production 環境ごとに切り分け</td></tr><tr><td><code>LARK_WEBHOOK_VERIFY_TOKEN</code></td><td>Webhook 検証トークン</td><td>Sensitive</td></tr></tbody>
+  </table>
+<h2 id="12_lark_integration-初期セットアップ手順">初期セットアップ手順</h2>
+<ol><li><strong>Lark Developer Console</strong> でアプリ作成</li><li>アプリの App ID / App Secret を取得 → Vercel の Environment Variables に登録</li><li>リダイレクト URI を Console に登録（<strong>［SSO］</strong> タブで表示される URL をコピー）</li><li>アプリに必要な権限スコープを付与（ベース・カレンダー・チャット・承認）</li><li>HOKENA CRM の <strong>［Lark 連携］</strong> で各タブの ID を入力</li><li>Bot を通知先チャットに招待</li><li><strong>［接続テスト］</strong> で疎通確認</li></ol>
+<h2 id="12_lark_integration-トラブルシュート">トラブルシュート</h2>
+<table>
+    <thead><tr><th>症状</th><th>原因</th><th>対応</th></tr></thead>
+    <tbody><tr><td>「Lark アカウントでログイン」が押せない</td><td>App ID/Secret 未設定</td><td>環境変数を Vercel に登録、再デプロイ</td></tr><tr><td>通知が届かない</td><td>チャットに Bot 未追加</td><td>Lark 上で Bot をチャットに招待</td></tr><tr><td>Base 同期が反映されない</td><td>Base ID 誤り／権限不足</td><td>Console で権限スコープを再確認</td></tr><tr><td>承認フローが起動しない</td><td>フロー ID 誤り</td><td>Lark Approval の URL から ID を再取得</td></tr></tbody>
+  </table>
+        </section>
+      
+
+        <section class="chapter" id="13_admin_operations">
+          <h1 id="13_admin_operations">13. 管理者運用</h1>
+<blockquote><p>管理者ロール (<code>admin</code>) が日常的に行う、現場では直接見えないオペレーションをまとめます。</p></blockquote>
+<h2 id="13_admin_operations-日常運用カレンダー">日常運用カレンダー</h2>
+<table>
+    <thead><tr><th>頻度</th><th>作業</th><th>画面</th></tr></thead>
+    <tbody><tr><td>毎朝</td><td>ダッシュボードで「承認待ち意向把握」「満期アラート」を確認</td><td><a href="#10_dashboard">10. ダッシュボード</a></td></tr><tr><td>毎週</td><td>レポート画面で担当者別実績を確認</td><td><a href="#09_reports">09. レポート</a></td></tr><tr><td>毎月初</td><td>月次精算 CSV を取り込み・照合</td><td><a href="#07_settlement">07. 精算・MDRT 管理</a></td></tr><tr><td>毎月末</td><td>MDRT 進捗を確認、達成見込みの低い担当者をフォロー</td><td><a href="#07_settlement">07. 精算・MDRT 管理</a></td></tr><tr><td>不定期</td><td>意向把握書の承認</td><td><a href="#06_intentions">06. 意向把握</a></td></tr><tr><td>不定期</td><td>ユーザー招待・ロール変更</td><td><a href="#11_settings">11. 設定</a></td></tr></tbody>
+  </table>
+<h2 id="13_admin_operations-ユーザー管理">ユーザー管理</h2>
+<h3 id="13_admin_operations-新しいスタッフを迎え入れる">新しいスタッフを迎え入れる</h3>
+<ol><li><strong>［設定］</strong> → <strong>［ユーザー管理］</strong> タブ → <strong>［ユーザーを招待］</strong></li><li>メールアドレス、氏名、ロールを入力 → 招待送信</li><li>スタッフがメール内リンクをクリック → パスワード設定</li><li>ログイン → 担当者として顧客・契約に紐付け可能</li></ol>
+<h3 id="13_admin_operations-スタッフが退職する">スタッフが退職する</h3>
+<ol><li><strong>［設定］</strong> → <strong>［ユーザー管理］</strong> → 該当ユーザー行 → <strong>［無効化］</strong></li><li>ログイン不可、担当選択肢から除外</li><li><strong>過去の対応履歴・担当履歴・監査ログは残ります</strong></li></ol>
+<blockquote><p>⚠️ 「物理削除」はできません。退職者の <strong>アカウント削除</strong> ではなく、必ず「無効化」で対応してください。データの整合性が保たれます。</p></blockquote>
+<h3 id="13_admin_operations-ロール変更">ロール変更</h3>
+<p>ロールはいつでも変更可能：</p>
+<table>
+    <thead><tr><th>変更</th><th>影響</th></tr></thead>
+    <tbody><tr><td>staff → agent</td><td>自分が担当する顧客に対する意向把握作成権限を付与</td></tr><tr><td>agent → admin</td><td>すべての画面で編集可能、設定変更権限を付与</td></tr><tr><td>admin → staff</td><td>設定画面から弾かれる、意向把握の承認権限を失う</td></tr></tbody>
+  </table>
+<blockquote><p>⚠️ <strong>最後の管理者</strong> を staff に降格しないでください。設定画面・Lark 連携が誰も操作できなくなります。最低 1 名は admin を維持してください。</p></blockquote>
+<h2 id="13_admin_operations-パスワード再発行">パスワード再発行</h2>
+<p>利用者からの依頼ベース：</p>
+<ol><li>管理者は Supabase ダッシュボード → Authentication → Users で該当ユーザーを検索</li><li><strong>［Send password reset email］</strong> で再発行メールを送る</li><li>または Supabase の SQL Editor から <code>auth.admin.generate_link</code> を実行</li></ol>
+<blockquote><p>💡 アプリ内に「パスワードリセット」ボタンを置く UI は将来追加予定です。</p></blockquote>
+<h2 id="13_admin_operations-バックアップとリストア">バックアップとリストア</h2>
+<h3 id="13_admin_operations-バックアップ">バックアップ</h3>
+<p>Supabase のマネージドバックアップに依存します。</p>
+<table>
+    <thead><tr><th>種別</th><th>頻度</th><th>保持期間</th></tr></thead>
+    <tbody><tr><td>自動日次バックアップ</td><td>毎日</td><td>7 日（Free プラン）／ 14〜28 日（Pro 以上）</td></tr><tr><td>手動 PITR</td><td>必要時</td><td>プランによる</td></tr></tbody>
+  </table>
+<p>詳細は <strong>Supabase Dashboard → Database → Backups</strong> を参照。</p>
+<h3 id="13_admin_operations-復元">復元</h3>
+<ol><li>Supabase Dashboard → Backups → 該当時点を選択</li><li><strong>［Restore］</strong> で復元（注意：DB 全体が巻き戻る）</li><li>部分復元（特定テーブルのみ）はサポート外。SQL での手動復元が必要</li></ol>
+<blockquote><p>⚠️ 復元は本番影響が大きいため、必ずメンテナンス時間を取り、利用者全員に周知してください。</p></blockquote>
+<h2 id="13_admin_operations-監査ログ">監査ログ</h2>
+<p><code>audit_logs</code> テーブルに以下が記録されます：</p>
+<p>| 記録される操作 | |---| | 顧客・契約・案件・意向把握の作成／編集／削除 | | ユーザーの招待／ロール変更／無効化 | | Lark 連携設定の変更 | | ログイン／ログアウト | | 意向把握の承認／差戻し |</p>
+<h3 id="13_admin_operations-監査ログ閲覧-ui-将来">監査ログ閲覧 UI（将来）</h3>
+<p>現状、監査ログ閲覧 UI は未実装です。SQL で確認します：</p>
+<pre><code class="language-sql">SELECT
+  al.created_at,
+  up.name AS actor,
+  al.action,
+  al.target_type,
+  al.target_id,
+  al.changes
+FROM audit_logs al
+LEFT JOIN user_profiles up ON up.id = al.actor_id
+WHERE al.tenant_id = &#39;&lt;tenant_id&gt;&#39;
+ORDER BY al.created_at DESC
+LIMIT 100;</code></pre>
+<p>詳細は <a href="#14_security_compliance">14. セキュリティ</a> を参照。</p>
+<h2 id="13_admin_operations-環境変数の管理">環境変数の管理</h2>
+<p>主要な環境変数（Vercel の Environment Variables で設定）：</p>
+<table>
+    <thead><tr><th>変数</th><th>用途</th></tr></thead>
+    <tbody><tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>Supabase プロジェクト URL</td></tr><tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>Supabase Anonymous Key</td></tr><tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>Service Role Key（<strong>秘匿</strong>）</td></tr><tr><td><code>NEXT_PUBLIC_APP_URL</code></td><td>アプリの公開 URL（OAuth リダイレクト先）</td></tr><tr><td><code>LARK_APP_ID</code> / <code>LARK_APP_SECRET</code></td><td>Lark アプリ認証情報</td></tr><tr><td><code>LARK_WEBHOOK_VERIFY_TOKEN</code></td><td>Lark Webhook 検証トークン</td></tr><tr><td><code>LARK_OAUTH_REDIRECT_URI</code></td><td>Lark OAuth リダイレクト URI</td></tr></tbody>
+  </table>
+<blockquote><p>⚠️ <strong><code>SUPABASE_SERVICE_ROLE_KEY</code></strong> は <strong>RLS をバイパスする最強権限</strong> です。Vercel の Sensitive にチェックを入れ、Preview デプロイへの露出を最小化してください。</p></blockquote>
+<h2 id="13_admin_operations-デプロイ-更新作業">デプロイ・更新作業</h2>
+<ol><li>開発者がコードを GitHub にプッシュ</li><li>Vercel が自動ビルド → Preview デプロイ</li><li>テスト確認 → Production にプロモート</li><li>データベース変更がある場合は <code>supabase db push</code> で migration 適用</li></ol>
+<p>詳細は開発者ドキュメント（リポジトリの <code>AGENTS.md</code> 参照）。</p>
+<h2 id="13_admin_operations-トラブル対応">トラブル対応</h2>
+<table>
+    <thead><tr><th>症状</th><th>対応者</th><th>対応</th></tr></thead>
+    <tbody><tr><td>大量のエラー通知</td><td>開発者</td><td>Vercel ログ確認 → ロールバック</td></tr><tr><td>特定ユーザーのデータが見えない</td><td>管理者</td><td>ロール・テナント設定確認、<code>user_profiles.tenant_id</code> を技術担当に確認依頼</td></tr><tr><td>パフォーマンス劣化</td><td>開発者</td><td>Supabase Dashboard → Database → Query Performance</td></tr><tr><td>不正アクセス疑い</td><td>管理者 + 開発者</td><td>監査ログ確認、該当アカウント無効化、パスワード強制リセット</td></tr></tbody>
+  </table>
+<h2 id="13_admin_operations-連絡先-運用窓口">連絡先（運用窓口）</h2>
+<blockquote><p>開発・運用窓口情報をここに記載してください。 例: <code>support@grust.jp</code> / Lark Group: <code>HOKENA CRM 運用</code> / 緊急時: <code>XX-XXXX-XXXX</code></p></blockquote>
+        </section>
+      
+
+        <section class="chapter" id="14_security_compliance">
+          <h1 id="14_security_compliance">14. セキュリティとコンプライアンス</h1>
+<blockquote><p>HOKENA CRM のセキュリティ統制、保険業法対応、データ保持・破棄ポリシーをまとめます。 導入前審査・社内コンプラ部門への説明に利用してください。</p></blockquote>
+<h2 id="14_security_compliance-アクセス制御の二重構造">アクセス制御の二重構造</h2>
+<p>UI ガードだけではなく、データベースの <strong>Row Level Security (RLS)</strong> で多重に防御しています。</p>
+<pre><code class="language-">┌─────────────────────────────────────────────────────┐
+│  ① UI ガード   ロールに応じて画面・ボタンを出し分け    │
+└──────────────────┬──────────────────────────────────┘
+                   │ URL 直叩きでも
+                   ▼
+┌─────────────────────────────────────────────────────┐
+│  ② Server Action  Server 側で再度ロール確認           │
+└──────────────────┬──────────────────────────────────┘
+                   │ 例外的に通過しても
+                   ▼
+┌─────────────────────────────────────────────────────┐
+│  ③ Supabase RLS  DB レベルで tenant_id + ロールを    │
+│                  最終チェック (`current_user_role`)   │
+└─────────────────────────────────────────────────────┘</code></pre>
+<h3 id="14_security_compliance-テナント分離">テナント分離</h3>
+<p>すべての業務テーブルに <code>tenant_id</code> カラムがあり、RLS で以下のポリシーが適用されます：</p>
+<pre><code class="language-sql">USING ( tenant_id = current_user_tenant_id() )</code></pre>
+<p><code>current_user_tenant_id()</code> は <strong>ログインユーザーの user_profiles から取得</strong> される SQL 関数。他テナントのデータは原理的に参照不可。</p>
+<h3 id="14_security_compliance-ロール別-rls">ロール別 RLS</h3>
+<table>
+    <thead><tr><th>対象</th><th>admin</th><th>agent</th><th>staff</th></tr></thead>
+    <tbody><tr><td>顧客 (customers)</td><td>全件 R/W</td><td>自分担当のみ</td><td>全件 R/W</td></tr><tr><td>契約 (contracts)</td><td>全件 R/W</td><td>自分担当のみ</td><td>全件 R/W</td></tr><tr><td>案件 (opportunities)</td><td>全件 R/W</td><td>自分担当のみ</td><td>全件 R/W</td></tr><tr><td>意向把握 (intention_records)</td><td>全件 R + 承認</td><td>自分作成のみ R/W、承認不可</td><td>全件 R、作成不可</td></tr><tr><td>精算 (settlements)</td><td>全件 R/W</td><td>R only</td><td>R only</td></tr><tr><td>監査ログ (audit_logs)</td><td>R only</td><td>R only（自分の操作のみ）</td><td>R only（自分の操作のみ）</td></tr></tbody>
+  </table>
+<blockquote><p>💡 <code>tenants.settings.access_scope</code> を <code>tenant_wide</code> にすると、agent も全顧客を見られます。代理店の運用方針に合わせて切替可能（現状は技術担当が SQL で更新）。</p></blockquote>
+<h2 id="14_security_compliance-認証">認証</h2>
+<table>
+    <thead><tr><th>方式</th><th>状態</th></tr></thead>
+    <tbody><tr><td>ID + パスワード（Supabase Auth）</td><td>✅ 利用可能</td></tr><tr><td>Lark OAuth</td><td>🔧 準備中（<a href="#12_lark_integration">12. Lark 連携</a>）</td></tr><tr><td>パスワード強度</td><td>Supabase 標準（8 文字以上）</td></tr><tr><td>MFA / 2FA</td><td>Supabase Auth 側設定で有効化可（未デフォルト）</td></tr><tr><td>セッション期限</td><td>Supabase デフォルト（リフレッシュトークン 7 日）</td></tr></tbody>
+  </table>
+<h2 id="14_security_compliance-保険業法対応">保険業法対応</h2>
+<h3 id="14_security_compliance-意向把握記録">意向把握記録</h3>
+<table>
+    <thead><tr><th>項目</th><th>対応</th></tr></thead>
+    <tbody><tr><td>物理削除</td><td><strong>禁止</strong>。<code>deleted_at</code> 論理削除のみ。RLS でも <code>DELETE</code> ポリシー未定義</td></tr><tr><td>編集制限</td><td><code>承認済</code> 後は編集不可</td></tr><tr><td>承認フロー</td><td>担当者作成 → 管理者承認 → 確定</td></tr><tr><td>監査証跡</td><td><code>audit_logs</code> に作成・承認・差戻し・編集をすべて記録</td></tr><tr><td>比較推奨</td><td>イ方式 / ロ方式 を選択し、説明を強制（チェックリスト 9 項目）</td></tr><tr><td>高齢者対応</td><td>顧客が高齢者の場合、追加チェック項目を必須化</td></tr><tr><td>保管期間</td><td>設定 &gt; コンプライアンス &gt; データ保持年数（既定 10 年）</td></tr></tbody>
+  </table>
+<p>詳細は <a href="#06_intentions">06. 意向把握</a> 参照。</p>
+<h3 id="14_security_compliance-高齢者対応">高齢者対応</h3>
+<table>
+    <thead><tr><th>項目</th><th>仕組み</th></tr></thead>
+    <tbody><tr><td>高齢者判定</td><td><code>customers_with_age</code> ビューで生年月日から年齢を自動算出</td></tr><tr><td>閾値</td><td><code>tenants.settings.elderly_age_threshold</code>（既定 70 歳）</td></tr><tr><td>UI 表示</td><td>高齢者顧客の詳細画面に <strong>警告バナー</strong></td></tr><tr><td>意向把握</td><td>チェックリスト「高齢者対応を実施した」が必須に</td></tr><tr><td>推奨運用</td><td>家族同席または録音・録画</td></tr></tbody>
+  </table>
+<h2 id="14_security_compliance-監査ログ">監査ログ</h2>
+<p><code>audit_logs</code> テーブルに以下を記録：</p>
+<table>
+    <thead><tr><th>列</th><th>内容</th></tr></thead>
+    <tbody><tr><td><code>id</code></td><td>UUID</td></tr><tr><td><code>tenant_id</code></td><td>テナント</td></tr><tr><td><code>actor_id</code></td><td>操作したユーザー (<code>user_profiles.id</code>)</td></tr><tr><td><code>action</code></td><td><code>CREATE</code> / <code>UPDATE</code> / <code>DELETE</code> / <code>APPROVE</code> / <code>REJECT</code> / <code>LOGIN</code> 等</td></tr><tr><td><code>target_type</code></td><td><code>customer</code> / <code>contract</code> / <code>opportunity</code> / <code>intention_record</code> 等</td></tr><tr><td><code>target_id</code></td><td>対象レコードの UUID</td></tr><tr><td><code>changes</code></td><td>変更内容（JSONB、編集前後の差分）</td></tr><tr><td><code>created_at</code></td><td>タイムスタンプ</td></tr></tbody>
+  </table>
+<blockquote><p>💡 監査ログ閲覧 UI は将来追加予定。現状は SQL での確認（<a href="#13_admin_operations">13. 管理者運用</a> 参照）。</p></blockquote>
+<h2 id="14_security_compliance-データ保持-削除">データ保持・削除</h2>
+<h3 id="14_security_compliance-論理削除">論理削除</h3>
+<table>
+    <thead><tr><th>テーブル</th><th>削除方式</th><th>復元</th></tr></thead>
+    <tbody><tr><td>customers</td><td><code>deleted_at</code> セット</td><td>技術担当が SQL でクリア</td></tr><tr><td>contracts</td><td><code>deleted_at</code> セット</td><td>技術担当が SQL でクリア</td></tr><tr><td>opportunities</td><td><code>deleted_at</code> セット</td><td>技術担当が SQL でクリア</td></tr><tr><td>intention_records</td><td><code>deleted_at</code> セット</td><td><strong>原則復元しない</strong>（業法証跡として保持）</td></tr><tr><td>family_members</td><td>物理削除</td><td>不可</td></tr><tr><td>contact_histories</td><td>物理削除されない（業法対応）</td><td>—</td></tr></tbody>
+  </table>
+<h3 id="14_security_compliance-データ保持年数">データ保持年数</h3>
+<p>設定 &gt; コンプライアンス &gt; <strong>データ保持年数</strong>（既定 10 年）。</p>
+<ul><li>削除済みデータでも、保持年数を超えるまで物理削除しません。</li><li>保持年数を超過したデータについて、技術担当が SQL で物理削除する運用を想定。</li><li>監査ログは別途長期保管（保険業法上の保管義務に合わせる）。</li></ul>
+<h2 id="14_security_compliance-機密情報の取扱い">機密情報の取扱い</h2>
+<h3 id="14_security_compliance-環境変数-秘匿">環境変数（秘匿）</h3>
+<table>
+    <thead><tr><th>変数</th><th>漏洩リスク</th><th>対応</th></tr></thead>
+    <tbody><tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>RLS バイパス、全データ操作可</td><td>Vercel Sensitive、Preview デプロイから除外</td></tr><tr><td><code>LARK_APP_SECRET</code></td><td>Lark API 操作</td><td>Vercel Sensitive</td></tr><tr><td><code>LARK_WEBHOOK_VERIFY_TOKEN</code></td><td>Webhook 偽装</td><td>Vercel Sensitive</td></tr></tbody>
+  </table>
+<h3 id="14_security_compliance-クライアント側に露出してよい変数">クライアント側に露出してよい変数</h3>
+<p><code>NEXT_PUBLIC_</code> プレフィックス付きのみ：</p>
+<ul><li><code>NEXT_PUBLIC_SUPABASE_URL</code></li><li><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code>（Anonymous Key は RLS で制限される）</li><li><code>NEXT_PUBLIC_APP_URL</code></li></ul>
+<h2 id="14_security_compliance-ネットワーク">ネットワーク</h2>
+<table>
+    <thead><tr><th>項目</th><th>内容</th></tr></thead>
+    <tbody><tr><td>通信</td><td>全リクエスト HTTPS（Vercel が自動 TLS）</td></tr><tr><td>Supabase 通信</td><td>TLS（クライアント・サーバー両方）</td></tr><tr><td>Lark API</td><td>TLS</td></tr></tbody>
+  </table>
+<h2 id="14_security_compliance-脆弱性対策">脆弱性対策</h2>
+<table>
+    <thead><tr><th>種別</th><th>対応</th></tr></thead>
+    <tbody><tr><td>SQL Injection</td><td>Supabase クライアントが PostgREST 経由で実行、生 SQL は admin 操作のみ</td></tr><tr><td>XSS</td><td>React のデフォルトエスケープ、<code>dangerouslySetInnerHTML</code> 不使用</td></tr><tr><td>CSRF</td><td>Supabase Auth セッション + Next.js Server Actions の SameSite Cookie</td></tr><tr><td>CSV インポートインジェクション</td><td>サニタイズ層（<code>sanitizePostgrestSearch</code> 等）</td></tr><tr><td>認可バイパス</td><td>RLS + Server Actions の二重防御</td></tr></tbody>
+  </table>
+<h2 id="14_security_compliance-インシデント時の連絡フロー">インシデント時の連絡フロー</h2>
+<blockquote><p>実運用では下記を埋めて連絡先を確定させてください。</p></blockquote>
+<ol><li><strong>検知</strong>：監視ツール（Sentry／Vercel／Supabase）または利用者からの通報</li><li><strong>一次対応者</strong>：開発担当（XX）</li><li><strong>エスカレーション</strong>：管理責任者（XX） → 代理店オーナー（XX）</li><li><strong>対外</strong>：必要に応じて顧客告知・監督官庁報告</li></ol>
+<h2 id="14_security_compliance-コンプライアンスチェックリスト">コンプライアンスチェックリスト</h2>
+<p>新規導入時のチェック項目：</p>
+<ul><li>[ ] 管理者 1 名以上が登録されている</li><li>[ ] <code>elderly_age_threshold</code> が法令準拠の値（既定 70 歳）</li><li>[ ] 「新規契約に意向把握書を必須化」が ON</li><li>[ ] 「意向把握書の承認を必須化」が ON</li><li>[ ] データ保持年数が法定保管期間以上</li><li>[ ] <code>SUPABASE_SERVICE_ROLE_KEY</code> が Vercel Sensitive</li><li>[ ] バックアップ取得頻度・保持期間が組織ポリシーを満たす</li><li>[ ] スタッフ研修（操作・コンプラ）を完了</li><li>[ ] 監査ログの定期確認体制を整備</li></ul>
+        </section>
+      
+  </main>
+</body>
+</html>

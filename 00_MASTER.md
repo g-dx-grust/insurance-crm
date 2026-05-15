@@ -1,6 +1,6 @@
-# N-LIC CRM — 全体設計・実装マスター（Claude Code 向け）
+# HOKENA CRM — 全体設計・実装マスター（Claude Code 向け）
 
-> 本ドキュメント群は **N-LIC 様向け保険代理店 CRM** を Next.js 15 (App Router) + Supabase で本格実装するための指示書です。
+> 本ドキュメント群は **保険代理店向け保険代理店 CRM** を Next.js 15 (App Router) + Supabase で本格実装するための指示書です。
 > **憲法**（最優先・絶対遵守）として、同階層の以下 4 ファイルを必ず先に読み込むこと。
 >
 > 1. `CLAUDE.md` — グラスト G-DX 共通ルール（最上位）
@@ -191,7 +191,7 @@ LARK_WEBHOOK_VERIFY_TOKEN=
 2. **高齢者判定** — `customers_with_age` ビューで `age >= 70` を `is_elderly` として算出。閾値は `tenants.settings.elderly_age_threshold` で上書き可。
 3. **Lark 連携は UI 先行 + キュー設計** — Phase 8 で API 接続するが、それまでも `notification_logs` への積み上げ・モック送信は Phase 1 から動く構造にする。
 4. **精算 CSV 照合** — Phase 7 で保険会社別 CSV インポート + 突合機能を実装（08_phase7_settlement_lark.md 参照）。
-5. **業務 PDF（手書きシート）** — `N-LIC様_業務フロー・改善ご要望＿手書きシート.pdf` は画像 PDF。**OCR 結果を踏まえて Phase 1 の列挙値（顧客ステータス・案件ステージ・保険商品カテゴリ等）と業務用語の整合確認が未完**。N-LIC 様にヒアリング後、本マスター + Phase 1 を更新すること。
+5. **業務 PDF（手書きシート）** — `導入代理店_業務フロー・改善ご要望＿手書きシート.pdf` は画像 PDF。**OCR 結果を踏まえて Phase 1 の列挙値（顧客ステータス・案件ステージ・保険商品カテゴリ等）と業務用語の整合確認が未完**。導入代理店にヒアリング後、本マスター + Phase 1 を更新すること。
 
 ---
 

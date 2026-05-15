@@ -6,9 +6,11 @@ import {
 } from '@/lib/auth/server'
 import {
   IntentionDetailClient,
+  type FinancialCheckDetail,
   type IntentionDetail,
   type IntentionProductRow,
   type IntentionSignatureEvidence,
+  type IntentionSignatureRequestRow,
 } from '@/components/features/intentions/IntentionDetailClient'
 import {
   INTENTION_SIGNATURE_BUCKET,
@@ -16,7 +18,7 @@ import {
   verifyServerSeal,
 } from '@/lib/security/intention-signature'
 
-export const metadata = { title: '意向把握詳細 | N-LIC CRM' }
+export const metadata = { title: '意向把握詳細 | HOKENA CRM' }
 
 export default async function IntentionDetailPage({
   params,
@@ -31,7 +33,7 @@ export default async function IntentionDetailPage({
   const { data: intention, error } = await supabase
     .from('intention_records')
     .select(
-      `*, customers!customer_id(id, name, name_kana), contracts!contract_id(id, policy_number, product_name), approver:user_profiles!approver_id(id, name), creator:user_profiles!created_by(id, name)`,
+      `*, customers!customer_id(id, name, name_kana, email), contracts!contract_id(id, policy_number, product_name), approver:user_profiles!approver_id(id, name), creator:user_profiles!created_by(id, name)`,
     )
     .eq('id', id)
     .maybeSingle()
@@ -39,7 +41,13 @@ export default async function IntentionDetailPage({
   if (error) throw new Error(error.message)
   if (!intention) notFound()
 
-  const [{ data: products }, { data: approvers }, { data: signatureRows }] = await Promise.all([
+  const [
+    { data: products },
+    { data: financialChecks },
+    { data: approvers },
+    { data: signatureRequests },
+    { data: signatureRows },
+  ] = await Promise.all([
     supabase
       .from('intention_products')
       .select(
@@ -48,12 +56,24 @@ export default async function IntentionDetailPage({
       .eq('intention_record_id', id)
       .order('sort_order', { ascending: true }),
     supabase
+      .from('financial_situation_checks')
+      .select(
+        'id, annual_income, employer_name, investment_experience, investment_knowledge, note, recorded_at, user_profiles!recorded_by(name)',
+      )
+      .eq('intention_record_id', id)
+      .order('recorded_at', { ascending: false }),
+    supabase
       .from('user_profiles')
       .select('id, name')
       .eq('tenant_id', tenantId)
       .eq('role', 'admin')
       .eq('is_active', true)
       .order('name'),
+    supabase
+      .from('intention_signature_requests')
+      .select('id, signer_name, signer_email, status, expires_at, sent_at, signed_at, created_at')
+      .eq('intention_record_id', id)
+      .order('created_at', { ascending: false }),
     supabase
       .from('intention_signature_evidences')
       .select(
@@ -72,7 +92,9 @@ export default async function IntentionDetailPage({
     <IntentionDetailClient
       intention={intention as unknown as IntentionDetail}
       products={(products ?? []) as IntentionProductRow[]}
+      financialChecks={(financialChecks ?? []) as unknown as FinancialCheckDetail[]}
       signatureEvidences={signatureEvidences}
+      signatureRequests={(signatureRequests ?? []) as IntentionSignatureRequestRow[]}
       approvers={approvers ?? []}
       currentUserRole={profile.role}
       currentUserId={user.id}

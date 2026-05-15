@@ -270,7 +270,7 @@ export interface CsvTemplate {
   }
 }
 
-// 例（実際の列名は N-LIC 様ヒアリング後に確定）
+// 例（実際の列名は 導入代理店ヒアリング後に確定）
 export const CSV_TEMPLATES: CsvTemplate[] = [
   {
     insurance_company: '日本生命',

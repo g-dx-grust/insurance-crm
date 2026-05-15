@@ -3,7 +3,7 @@ import { ContractForm } from '@/components/features/contracts/ContractForm'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenantId } from '@/lib/auth/server'
 
-export const metadata = { title: '契約新規登録 | N-LIC CRM' }
+export const metadata = { title: '契約新規登録 | HOKENA CRM' }
 
 export default async function NewContractPage({
   searchParams,

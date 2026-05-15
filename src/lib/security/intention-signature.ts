@@ -105,6 +105,7 @@ export function buildIntentionSignatureManifest({
       initial_recorded_at: initialRecordedAt,
       comparison_method: values.comparison_method,
       comparison_reason: values.comparison_reason ?? null,
+      financial_situation: values.financial_situation ?? null,
       final_intention: values.final_intention,
       final_change_note: values.final_change_note ?? null,
       final_recorded_at: finalRecordedAt,

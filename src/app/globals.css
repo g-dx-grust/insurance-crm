@@ -22,7 +22,7 @@
   --color-border:        #E5E5E5;
   --color-border-strong: #D1D5DB;
 
-  /* アクセント（N-LIC 用に 1 色のみ） */
+  /* アクセント（HOKENA 用に 1 色のみ） */
   --color-accent:       #1A56DB;
   --color-accent-hover: #1648C2;
   --color-accent-tint:  rgba(26, 86, 219, 0.08);

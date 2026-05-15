@@ -1,6 +1,6 @@
-# N-LIC CRM 説明書
+# HOKENA CRM 説明書
 
-保険代理店業務を止めずに回すための業務 CRM、N-LIC CRM の利用マニュアルです。
+保険代理店業務を止めずに回すための業務 CRM、HOKENA CRM の利用マニュアルです。
 **管理者・選定担当者の方** が、機能・運用・コンプライアンス対応を把握し、現場への導入判断や運用設計を行うことを想定しています。
 
 ---
@@ -25,6 +25,17 @@
 | 14 | [セキュリティとコンプライアンス](./14_security_compliance.md) | RLS・監査ログ・保険業法・データ保持 |
 
 スクリーンショットは [`assets/`](./assets/) に配置されています。
+
+## 配布用ファイル
+
+Markdown を開かなくても共有できるように、説明書と打ち合わせ用サマリーを HTML / PDF で出力しています。
+
+| 文書 | HTML | PDF |
+|---|---|---|
+| HOKENA CRM 説明書 | [hokena-crm-manual.html](./hokena-crm-manual.html) | [hokena-crm-manual.pdf](./hokena-crm-manual.pdf) |
+| 現状報告・打ち合わせ確認事項 | [customer-meeting-brief.html](./customer-meeting-brief.html) | [customer-meeting-brief.pdf](./customer-meeting-brief.pdf) |
+
+再生成する場合はリポジトリルートで `pnpm docs:export` を実行します。
 
 ---
 

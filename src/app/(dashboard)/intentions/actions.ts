@@ -1,6 +1,6 @@
 'use server'
 
-import { randomUUID } from 'node:crypto'
+import { randomBytes, randomUUID } from 'node:crypto'
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -14,6 +14,10 @@ import {
   intentionWizardSchema,
   type IntentionWizardValues,
 } from '@/lib/validations/intention'
+import {
+  intentionSignatureRequestSchema,
+  type IntentionSignatureRequestValues,
+} from '@/lib/validations/intention-signature-request'
 import { toTokyoIsoFromDateTimeLocal } from '@/lib/utils/datetime'
 import {
   buildIntentionSignatureManifest,
@@ -171,6 +175,25 @@ export async function createIntentionRecord(
     if (prodErr) return { ok: false, error: prodErr.message }
   }
 
+  if (v.financial_situation) {
+    const { error: financialErr } = await supabase
+      .from('financial_situation_checks')
+      .insert({
+        tenant_id: tenantId,
+        customer_id: v.customer_id,
+        contract_id: v.contract_id ?? null,
+        intention_record_id: record.id,
+        source: 'intention',
+        annual_income: v.financial_situation.annual_income,
+        employer_name: v.financial_situation.employer_name,
+        investment_experience: v.financial_situation.investment_experience,
+        investment_knowledge: v.financial_situation.investment_knowledge,
+        note: v.financial_situation.note ?? null,
+        recorded_by: user.id,
+      })
+    if (financialErr) return { ok: false, error: financialErr.message }
+  }
+
   const { error: evidenceErr } = await supabase
     .from('intention_signature_evidences')
     .insert({
@@ -191,6 +214,7 @@ export async function createIntentionRecord(
       server_seal_algorithm: INTENTION_SIGNATURE_SEAL_ALGORITHM,
       server_seal_key_id: getSignatureSealKeyId(),
       server_seal: serverSeal,
+      signature_channel: 'onsite',
       client_ip: clientIp,
       client_user_agent: clientUserAgent,
       created_by: user.id,
@@ -214,6 +238,7 @@ export async function createIntentionRecord(
   })
 
   revalidatePath('/intentions')
+  revalidatePath('/financial-checks')
   revalidatePath(`/customers/${v.customer_id}`)
   if (v.contract_id) revalidatePath(`/contracts/${v.contract_id}`)
   redirect(`/intentions/${record.id}`)
@@ -225,6 +250,88 @@ function getClientIp(headersList: Headers): string | null {
 
   const realIp = headersList.get('x-real-ip')?.trim()
   return realIp ? realIp.slice(0, 100) : null
+}
+
+// ─── リモート署名依頼 ─────────────────────────────────────────────
+
+export async function createRemoteSignatureRequest(
+  values: IntentionSignatureRequestValues,
+): Promise<ActionResult<{ id: string; signingUrl: string }>> {
+  const parsed = intentionSignatureRequestSchema.safeParse(values)
+  if (!parsed.success) {
+    return { ok: false, error: '入力内容に誤りがあります。' }
+  }
+
+  const supabase = await createClient()
+  const tenantId = await getCurrentTenantId()
+  const { user } = await getSessionUserOrRedirect()
+  const requestHeaders = await headers()
+
+  const { data: intention, error: intentionError } = await supabase
+    .from('intention_records')
+    .select('id')
+    .eq('id', parsed.data.intention_record_id)
+    .single()
+  if (intentionError || !intention) {
+    return { ok: false, error: intentionError?.message ?? '意向把握記録が見つかりません' }
+  }
+
+  const token = randomBytes(32).toString('base64url')
+  const tokenHash = sha256Hex(token)
+  const expiresAt = new Date(
+    Date.now() + parsed.data.expires_in_days * 24 * 60 * 60 * 1000,
+  ).toISOString()
+  const origin = resolveAppOrigin(requestHeaders)
+  const signingUrl = `${origin}/sign/intention/${token}`
+
+  const { data: request, error } = await supabase
+    .from('intention_signature_requests')
+    .insert({
+      tenant_id: tenantId,
+      intention_record_id: intention.id,
+      signer_name: parsed.data.signer_name,
+      signer_email: parsed.data.signer_email,
+      token_hash: tokenHash,
+      status: '送信待ち',
+      expires_at: expiresAt,
+      sent_at: new Date().toISOString(),
+      created_by: user.id,
+    })
+    .select('id')
+    .single()
+
+  if (error || !request) {
+    return { ok: false, error: error?.message ?? '署名依頼の作成に失敗しました' }
+  }
+
+  const admin = createAdminClient()
+  await admin.from('notification_logs').insert({
+    tenant_id: tenantId,
+    channel: 'email',
+    target_type: 'email',
+    target_value: parsed.data.signer_email,
+    template_key: 'intention_remote_signature_request',
+    payload: {
+      intention_id: intention.id,
+      signature_request_id: request.id,
+      signer_name: parsed.data.signer_name,
+      signing_url: signingUrl,
+      expires_at: expiresAt,
+    },
+    status: 'pending',
+  })
+
+  revalidatePath(`/intentions/${intention.id}`)
+  revalidatePath('/intentions')
+  return { ok: true, data: { id: request.id, signingUrl } }
+}
+
+function resolveAppOrigin(headersList: Headers): string {
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL
+
+  const proto = headersList.get('x-forwarded-proto') ?? 'http'
+  const host = headersList.get('x-forwarded-host') ?? headersList.get('host')
+  return host ? `${proto}://${host}` : 'http://localhost:3000'
 }
 
 // ─── 承認依頼 (Lark Approval キュー登録のモック) ─────────────────────

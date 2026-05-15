@@ -79,7 +79,7 @@ URL クエリで状態を保持：`?year=2026&month=5&view=month`。ブックマ
 
 ## Lark Calendar 連携（準備中）
 
-[12. Lark 連携](./12_lark_integration.md) > Calendar タブで `calendar_id` を設定すると、N-LIC CRM の予定が Lark Calendar へ自動同期されます（実装は準備中）。
+[12. Lark 連携](./12_lark_integration.md) > Calendar タブで `calendar_id` を設定すると、HOKENA CRM の予定が Lark Calendar へ自動同期されます（実装は準備中）。
 
 ## 業務フロー例
 

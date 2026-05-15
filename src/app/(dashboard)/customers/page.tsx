@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenantId } from '@/lib/auth/server'
 import { sanitizePostgrestSearch } from '@/lib/utils/escape'
 
-export const metadata = { title: '顧客管理 | N-LIC CRM' }
+export const metadata = { title: '顧客管理 | HOKENA CRM' }
 
 const PAGE_SIZE = 20
 

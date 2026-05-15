@@ -22,8 +22,8 @@ const FONT_SCALE_MAP = { small: 0.9, normal: 1.0, large: 1.1 } as const
 type FontScaleKey = keyof typeof FONT_SCALE_MAP
 
 export const metadata: Metadata = {
-  title: 'N-LIC CRM',
-  description: 'N-LIC 様向け 保険代理店 CRM',
+  title: 'HOKENA CRM',
+  description: '保険代理店向け 業務 CRM',
 }
 
 export default async function RootLayout({
@@ -31,10 +31,10 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const cookieStore = await cookies()
   const theme =
-    (cookieStore.get('nlic_theme')?.value as 'light' | 'dark' | undefined) ??
+    (cookieStore.get('hokena_theme')?.value as 'light' | 'dark' | undefined) ??
     'light'
   const fontScale =
-    (cookieStore.get('nlic_font_scale')?.value as FontScaleKey | undefined) ??
+    (cookieStore.get('hokena_font_scale')?.value as FontScaleKey | undefined) ??
     'normal'
   const fontScaleValue = FONT_SCALE_MAP[fontScale]
 

@@ -16,7 +16,7 @@ import {
   tokyoMonthRangeIso,
 } from '@/lib/utils/datetime'
 
-export const metadata = { title: 'レポート | N-LIC CRM' }
+export const metadata = { title: 'レポート | HOKENA CRM' }
 
 type SearchParams = Promise<{ period?: string }>
 

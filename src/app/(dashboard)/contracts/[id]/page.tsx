@@ -4,12 +4,13 @@ import { getCurrentTenantId } from '@/lib/auth/server'
 import {
   ContractDetailClient,
   type ContractDetail,
+  type FinancialCheckSummary,
   type IntentionRow,
   type RenewalHistoryRow,
   type RiderRow,
 } from '@/components/features/contracts/ContractDetailClient'
 
-export const metadata = { title: '契約詳細 | N-LIC CRM' }
+export const metadata = { title: '契約詳細 | HOKENA CRM' }
 
 export default async function ContractDetailPage({
   params,
@@ -38,6 +39,7 @@ export default async function ContractDetailPage({
     { data: riders },
     { data: intentions },
     { data: renewalHistories },
+    { data: financialChecks },
     { data: users },
   ] = await Promise.all([
     supabase
@@ -60,6 +62,14 @@ export default async function ContractDetailPage({
       .order('contacted_at', { ascending: false })
       .limit(50),
     supabase
+      .from('financial_situation_checks')
+      .select(
+        'id, annual_income, employer_name, investment_experience, investment_knowledge, recorded_at, user_profiles!recorded_by(name)',
+      )
+      .eq('contract_id', id)
+      .order('recorded_at', { ascending: false })
+      .limit(5),
+    supabase
       .from('user_profiles')
       .select('id, name')
       .eq('tenant_id', tenantId)
@@ -73,6 +83,7 @@ export default async function ContractDetailPage({
       riders={(riders ?? []) as RiderRow[]}
       intentions={(intentions ?? []) as unknown as IntentionRow[]}
       renewalHistories={(renewalHistories ?? []) as unknown as RenewalHistoryRow[]}
+      financialChecks={(financialChecks ?? []) as unknown as FinancialCheckSummary[]}
       users={users ?? []}
     />
   )

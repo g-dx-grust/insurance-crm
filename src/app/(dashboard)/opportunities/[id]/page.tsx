@@ -8,7 +8,7 @@ import {
 } from '@/components/features/opportunities/OpportunityDetailClient'
 import { SUITABILITY_ITEMS, type SuitabilityKey } from '@/lib/constants/suitability'
 
-export const metadata = { title: '案件詳細 | N-LIC CRM' }
+export const metadata = { title: '案件詳細 | HOKENA CRM' }
 
 const EMPTY_SUITABILITY: Record<SuitabilityKey, boolean> = SUITABILITY_ITEMS.reduce(
   (acc, item) => {

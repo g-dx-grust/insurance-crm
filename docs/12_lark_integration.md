@@ -1,6 +1,6 @@
 # 12. Lark 連携
 
-> Lark（飛書）の各種サービスと N-LIC CRM を連携させる設定画面。
+> Lark（飛書）の各種サービスと HOKENA CRM を連携させる設定画面。
 > サイドバー **［Lark 連携］** から開きます。
 
 > ⚠️ 現在、**実際の Lark API 連携は段階的に実装中** です。設定 UI と DB 保存は完成していますが、同期・通知の実 API 呼び出しは順次有効化されます。
@@ -70,7 +70,7 @@ Lark Base（飛書ベース）と顧客・契約・案件を同期します。
 | Calendar ID | Lark カレンダー ID |
 | 同期対象 | カレンダーイベント |
 
-N-LIC CRM のカレンダー予定が、Lark Calendar に自動で双方向同期されます（[08. カレンダー](./08_calendar.md) 参照）。
+HOKENA CRM のカレンダー予定が、Lark Calendar に自動で双方向同期されます（[08. カレンダー](./08_calendar.md) 参照）。
 
 ## Approval（承認フロー）
 
@@ -135,7 +135,7 @@ Lark 連携で利用する環境変数一覧。
 2. アプリの App ID / App Secret を取得 → Vercel の Environment Variables に登録
 3. リダイレクト URI を Console に登録（**［SSO］** タブで表示される URL をコピー）
 4. アプリに必要な権限スコープを付与（ベース・カレンダー・チャット・承認）
-5. N-LIC CRM の **［Lark 連携］** で各タブの ID を入力
+5. HOKENA CRM の **［Lark 連携］** で各タブの ID を入力
 6. Bot を通知先チャットに招待
 7. **［接続テスト］** で疎通確認
 

@@ -6,10 +6,11 @@ import {
   type ContractRow,
   type CustomerDetail,
   type FamilyRow,
+  type MeetingTemplateOption,
   type OpportunityRow,
 } from '@/components/features/customers/CustomerDetailClient'
 
-export const metadata = { title: '顧客詳細 | N-LIC CRM' }
+export const metadata = { title: '顧客詳細 | HOKENA CRM' }
 
 export default async function CustomerDetailPage({
   params,
@@ -33,6 +34,7 @@ export default async function CustomerDetailPage({
     { data: contactHistories },
     { data: opportunities },
     { data: familyMembers },
+    { data: meetingTemplates },
   ] = await Promise.all([
     supabase
       .from('contracts')
@@ -57,6 +59,12 @@ export default async function CustomerDetailPage({
       .select('id, name, name_kana, relationship, birth_date, gender, is_insured, is_beneficiary, note')
       .eq('customer_id', id)
       .order('created_at', { ascending: true }),
+    supabase
+      .from('meeting_record_templates')
+      .select('id, title, type, content, next_action')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: true }),
   ])
 
   return (
@@ -66,6 +74,7 @@ export default async function CustomerDetailPage({
       contactHistories={(contactHistories ?? []) as unknown as ContactHistoryRow[]}
       opportunities={(opportunities ?? []) as OpportunityRow[]}
       familyMembers={(familyMembers ?? []) as FamilyRow[]}
+      meetingTemplates={(meetingTemplates ?? []) as MeetingTemplateOption[]}
     />
   )
 }

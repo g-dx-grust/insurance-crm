@@ -15,6 +15,8 @@ const PAGE_TITLES: Record<string, string> = {
   '/opportunities': '案件管理',
   '/calendar': 'カレンダー',
   '/intentions': '意向把握',
+  '/financial-checks': '財務状況確認',
+  '/carry-out-logs': '持ち出し記録簿',
   '/settlement': '精算・MDRT管理',
   '/reports': 'レポート',
   '/lark': 'Lark 連携設定',
@@ -25,7 +27,7 @@ function resolveTitle(pathname: string): string {
   const matches = Object.entries(PAGE_TITLES)
     .filter(([k]) => (k === '/' ? pathname === '/' : pathname.startsWith(k)))
     .sort((a, b) => b[0].length - a[0].length)
-  return matches[0]?.[1] ?? 'N-LIC CRM'
+  return matches[0]?.[1] ?? 'HOKENA CRM'
 }
 
 export function Header({ userProfile }: { userProfile: UserProfile | null }) {

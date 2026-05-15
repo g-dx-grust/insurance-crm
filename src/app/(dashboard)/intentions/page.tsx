@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenantId } from '@/lib/auth/server'
 import { sanitizePostgrestSearch } from '@/lib/utils/escape'
 
-export const metadata = { title: '意向把握 | N-LIC CRM' }
+export const metadata = { title: '意向把握 | HOKENA CRM' }
 
 type SearchParams = Promise<{
   q?: string

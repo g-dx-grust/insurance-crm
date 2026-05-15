@@ -44,4 +44,5 @@ next-env.d.ts
 # 顧客機密ファイル (Private リポジトリでも除外)
 N-LIC様_業務フロー・改善ご要望＿手書きシート.pdf
 *.pdf
-
+!docs/hokena-crm-manual.pdf
+!docs/customer-meeting-brief.pdf

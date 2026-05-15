@@ -6,7 +6,7 @@ import {
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenantId } from '@/lib/auth/server'
 
-export const metadata = { title: '意向把握 新規作成 | N-LIC CRM' }
+export const metadata = { title: '意向把握 新規作成 | HOKENA CRM' }
 
 export default async function NewIntentionPage({
   searchParams,

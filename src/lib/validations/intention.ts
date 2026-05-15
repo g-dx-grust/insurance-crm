@@ -1,6 +1,20 @@
 import { z } from 'zod'
 import { COMPARISON_METHODS } from '@/lib/constants/intention'
+import {
+  annualIncomeOptions,
+  investmentExperienceOptions,
+  investmentKnowledgeOptions,
+  isSavingsProductCategory,
+} from '@/lib/constants/financial-situation'
 import { intentionProductSchema } from '@/lib/validations/intention-product'
+
+const intentionFinancialSituationSchema = z.object({
+  annual_income: z.enum(annualIncomeOptions),
+  employer_name: z.string().min(1, '勤務先を入力してください').max(100),
+  investment_experience: z.enum(investmentExperienceOptions),
+  investment_knowledge: z.enum(investmentKnowledgeOptions),
+  note: z.string().max(1000).nullable().optional(),
+})
 
 /**
  * ウィザード全体スキーマ。Step 単位のバリデーションは IntentionWizard 内で
@@ -29,6 +43,7 @@ export const intentionWizardSchema = z
     products: z
       .array(intentionProductSchema)
       .min(1, '提案商品を1件以上追加してください'),
+    financial_situation: intentionFinancialSituationSchema.nullable().optional(),
 
     // Step 3
     final_intention: z
@@ -55,6 +70,24 @@ export const intentionWizardSchema = z
       .boolean()
       .refine((v) => v, '同意文言の確認が必要です'),
   })
+  .refine(
+    (d) => {
+      const hasSavingsProduct = d.products.some((p) =>
+        isSavingsProductCategory(p.product_category),
+      )
+      if (!hasSavingsProduct) return true
+      if (!d.financial_situation) return false
+      return (
+        d.financial_situation.annual_income !== '未確認' &&
+        d.financial_situation.investment_experience !== '未確認' &&
+        d.financial_situation.investment_knowledge !== '未確認'
+      )
+    },
+    {
+      message: '積立系商品では年収・勤務先・投資経験・投資知識を確認してください',
+      path: ['financial_situation'],
+    },
+  )
   .refine(
     (d) => {
       // ロ方式は推奨商品を1件以上指定 + 推奨理由必須

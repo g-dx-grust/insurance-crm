@@ -10,7 +10,7 @@ import { currentMonth, past12MonthsStart } from '@/lib/constants/settlement'
 import { CSV_TEMPLATES } from '@/lib/settlement/csvTemplates'
 import { currentTokyoYearMonth } from '@/lib/utils/datetime'
 
-export const metadata = { title: '精算・MDRT管理 | N-LIC CRM' }
+export const metadata = { title: '精算・MDRT管理 | HOKENA CRM' }
 
 type SearchParams = Promise<{
   month?: string

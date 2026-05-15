@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenantId } from '@/lib/auth/server'
 import type { ContractFormValues } from '@/lib/validations/contract'
 
-export const metadata = { title: '契約編集 | N-LIC CRM' }
+export const metadata = { title: '契約編集 | HOKENA CRM' }
 
 export default async function EditContractPage({
   params,

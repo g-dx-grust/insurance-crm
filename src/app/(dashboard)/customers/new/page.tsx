@@ -3,7 +3,7 @@ import { CustomerForm } from '@/components/features/customers/CustomerForm'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenantId } from '@/lib/auth/server'
 
-export const metadata = { title: '顧客新規登録 | N-LIC CRM' }
+export const metadata = { title: '顧客新規登録 | HOKENA CRM' }
 
 export default async function NewCustomerPage() {
   const supabase = await createClient()

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Textarea } from '@/components/ui/textarea'
 import { StatusBadge, type StatusVariant } from '@/components/ui/StatusBadge'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import {
@@ -29,13 +30,19 @@ import {
   type OrgInfoValues,
 } from '@/lib/validations/settings'
 import {
+  contactHistoryTypes,
+} from '@/lib/validations/contact-history'
+import type { MeetingRecordTemplateFormValues } from '@/lib/validations/meeting-record-template'
+import {
   activateUser,
   deactivateUser,
+  deleteMeetingRecordTemplate,
   inviteUser,
   setUserRole,
   updateComplianceSettings,
   updateNotificationSettings,
   updateOrgInfo,
+  upsertMeetingRecordTemplate,
 } from '@/app/(dashboard)/settings/actions'
 
 export interface UserRow {
@@ -47,16 +54,28 @@ export interface UserRow {
   is_active: boolean
 }
 
+export interface MeetingRecordTemplateRow {
+  id: string
+  title: string
+  type: string
+  content: string
+  next_action: string | null
+  is_active: boolean
+  sort_order: number
+}
+
 export function SettingsClient({
   orgInfo,
   notification,
   compliance,
+  templates,
   users,
   isAdmin,
 }: {
   orgInfo: OrgInfoValues
   notification: NotificationSettingsValues
   compliance: ComplianceSettingsValues
+  templates: MeetingRecordTemplateRow[]
   users: UserRow[]
   isAdmin: boolean
 }) {
@@ -67,6 +86,7 @@ export function SettingsClient({
         <TabsTrigger value="users">ユーザー管理</TabsTrigger>
         <TabsTrigger value="notification">通知設定</TabsTrigger>
         <TabsTrigger value="compliance">コンプライアンス</TabsTrigger>
+        <TabsTrigger value="templates">面談テンプレート</TabsTrigger>
       </TabsList>
 
       <TabsContent value="org" className="mt-4">
@@ -80,6 +100,9 @@ export function SettingsClient({
       </TabsContent>
       <TabsContent value="compliance" className="mt-4">
         <ComplianceTab initial={compliance} disabled={!isAdmin} />
+      </TabsContent>
+      <TabsContent value="templates" className="mt-4">
+        <TemplatesTab templates={templates} disabled={!isAdmin} />
       </TabsContent>
     </Tabs>
   )
@@ -569,6 +592,228 @@ function ComplianceTab({
         {pending ? '保存中…' : '保存'}
       </Button>
     </section>
+  )
+}
+
+// ─── Meeting Templates ─────────────────────────────────────────────
+
+const EMPTY_TEMPLATE: MeetingRecordTemplateFormValues = {
+  title: '',
+  type: '訪問',
+  content: '',
+  next_action: null,
+  is_active: true,
+  sort_order: 0,
+}
+
+function TemplatesTab({
+  templates,
+  disabled,
+}: {
+  templates: MeetingRecordTemplateRow[]
+  disabled: boolean
+}) {
+  const [values, setValues] = useState<MeetingRecordTemplateFormValues>(EMPTY_TEMPLATE)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [confirmId, setConfirmId] = useState<string | null>(null)
+  const [pending, startTransition] = useTransition()
+
+  const startEdit = (template: MeetingRecordTemplateRow) => {
+    setEditingId(template.id)
+    setValues({
+      title: template.title,
+      type: template.type as MeetingRecordTemplateFormValues['type'],
+      content: template.content,
+      next_action: template.next_action,
+      is_active: template.is_active,
+      sort_order: template.sort_order,
+    })
+  }
+
+  const reset = () => {
+    setEditingId(null)
+    setValues(EMPTY_TEMPLATE)
+  }
+
+  const save = () => {
+    startTransition(async () => {
+      const result = await upsertMeetingRecordTemplate(values, editingId ?? undefined)
+      if (!result.ok) {
+        toast.error(result.error)
+        return
+      }
+      toast.success(editingId ? 'テンプレートを更新しました' : 'テンプレートを作成しました')
+      reset()
+    })
+  }
+
+  const remove = () => {
+    if (!confirmId) return
+    startTransition(async () => {
+      const result = await deleteMeetingRecordTemplate(confirmId)
+      if (!result.ok) {
+        toast.error(result.error)
+        return
+      }
+      toast.success('テンプレートを削除しました')
+      setConfirmId(null)
+      if (editingId === confirmId) reset()
+    })
+  }
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+      <section className="rounded-md border border-border bg-bg p-5 space-y-4">
+        <h3 className="text-sm font-semibold text-text-sub">
+          {editingId ? 'テンプレートを編集' : 'テンプレートを作成'}
+        </h3>
+        <Field label="テンプレート名 *">
+          <Input
+            value={values.title}
+            onChange={(event) => setValues({ ...values, title: event.target.value })}
+            disabled={disabled}
+          />
+        </Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="対応種別 *">
+            <Select
+              value={values.type}
+              onValueChange={(type) =>
+                setValues({ ...values, type: type as MeetingRecordTemplateFormValues['type'] })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {contactHistoryTypes.map((type) => (
+                  <SelectItem key={type} value={type}>{type}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field label="並び順">
+            <Input
+              type="number"
+              inputMode="numeric"
+              value={values.sort_order}
+              onChange={(event) =>
+                setValues({ ...values, sort_order: Number(event.target.value) || 0 })
+              }
+              disabled={disabled}
+            />
+          </Field>
+        </div>
+        <Field label="本文 *">
+          <Textarea
+            rows={8}
+            value={values.content}
+            onChange={(event) => setValues({ ...values, content: event.target.value })}
+            disabled={disabled}
+          />
+        </Field>
+        <Field label="次回アクション">
+          <Input
+            value={values.next_action ?? ''}
+            onChange={(event) =>
+              setValues({ ...values, next_action: event.target.value || null })
+            }
+            disabled={disabled}
+          />
+        </Field>
+        <CheckRow
+          label="有効"
+          checked={values.is_active}
+          onChange={(is_active) => setValues({ ...values, is_active })}
+          disabled={disabled}
+        />
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={save}
+            disabled={pending || disabled || !values.title || !values.content}
+          >
+            <Save className="mr-1 size-4" />
+            {pending ? '保存中…' : '保存'}
+          </Button>
+          {editingId && (
+            <Button variant="outline" onClick={reset} disabled={pending || disabled}>
+              新規に戻す
+            </Button>
+          )}
+        </div>
+      </section>
+
+      <section className="overflow-hidden rounded-md border border-border bg-bg">
+        <table>
+          <thead>
+            <tr>
+              <th>テンプレート</th>
+              <th>種別</th>
+              <th>状態</th>
+              <th>並び順</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {templates.map((template) => (
+              <tr key={template.id}>
+                <td>
+                  <p className="font-medium text-text">{template.title}</p>
+                  <p className="mt-1 line-clamp-2 max-w-xl text-xs text-text-muted">
+                    {template.content}
+                  </p>
+                </td>
+                <td>{template.type}</td>
+                <td>
+                  <StatusBadge variant={template.is_active ? 'success' : 'muted'}>
+                    {template.is_active ? '有効' : '無効'}
+                  </StatusBadge>
+                </td>
+                <td className="text-text-sub">{template.sort_order}</td>
+                <td className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => startEdit(template)}
+                    disabled={disabled}
+                    className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-bg-secondary)] hover:text-text disabled:opacity-30"
+                    aria-label="編集"
+                    title="編集"
+                  >
+                    <Save className="size-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmId(template.id)}
+                    disabled={disabled}
+                    className="rounded-sm p-1 text-text-muted hover:bg-[color:var(--color-error)]/10 hover:text-[color:var(--color-error)] disabled:opacity-30"
+                    aria-label="削除"
+                    title="削除"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {templates.length === 0 && (
+          <p className="p-5 text-sm text-text-muted">
+            テンプレートはまだ登録されていません。
+          </p>
+        )}
+      </section>
+
+      <ConfirmDialog
+        open={confirmId !== null}
+        onOpenChange={(open) => !open && setConfirmId(null)}
+        title="テンプレートを削除しますか?"
+        description="削除したテンプレートは対応履歴入力画面に表示されなくなります。"
+        confirmLabel="削除する"
+        tone="danger"
+        loading={pending}
+        onConfirm={remove}
+      />
+    </div>
   )
 }
 

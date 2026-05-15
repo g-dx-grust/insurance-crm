@@ -1,5 +1,5 @@
 /**
- * 保険会社別 CSV テンプレート。実際の列名は N-LIC 様ヒアリング後に確定。
+ * 保険会社別 CSV テンプレート。実際の列名は導入代理店ヒアリング後に確定。
  * 暫定値で進行 (memory: pending_pdf_ocr.md 参照)。
  */
 export interface CsvTemplate {

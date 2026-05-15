@@ -21,7 +21,7 @@ import {
   ymdAfterTokyo,
 } from '@/lib/utils/datetime'
 
-export const metadata = { title: 'ダッシュボード | N-LIC CRM' }
+export const metadata = { title: 'ダッシュボード | HOKENA CRM' }
 
 type SearchParams = Promise<{ period?: string }>
 

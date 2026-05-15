@@ -34,7 +34,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
-    document.cookie = `nlic_theme=${theme}; path=/; max-age=31536000; samesite=lax`
+    document.cookie = `hokena_theme=${theme}; path=/; max-age=31536000; samesite=lax`
   }, [theme])
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export function ThemeProvider({
       '--font-scale',
       String(FONT_SCALE_MAP[fontScale]),
     )
-    document.cookie = `nlic_font_scale=${fontScale}; path=/; max-age=31536000; samesite=lax`
+    document.cookie = `hokena_font_scale=${fontScale}; path=/; max-age=31536000; samesite=lax`
   }, [fontScale])
 
   return (

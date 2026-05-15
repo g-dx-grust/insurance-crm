@@ -7,7 +7,7 @@ import {
   type LarkSettings,
 } from '@/lib/validations/lark-settings'
 
-export const metadata = { title: 'Lark 連携設定 | N-LIC CRM' }
+export const metadata = { title: 'Lark 連携設定 | HOKENA CRM' }
 
 export default async function LarkPage() {
   const supabase = await createClient()

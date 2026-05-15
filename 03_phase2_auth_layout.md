@@ -30,7 +30,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-[color:var(--color-accent)]/15" />
         <div className="relative flex h-full items-end p-10">
           <p className="text-sm text-text-sub leading-relaxed">
-            N-LIC CRM<br />
+            HOKENA CRM<br />
             保険代理店業務を、現場の手で止めずに回す。
           </p>
         </div>
@@ -431,7 +431,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 仕様（憲法 Design Rules §7 を厳守）:
 
 - 展開時 **200px** / 折りたたみ時 **56px**
-- 折りたたみ状態は `localStorage('nlic_sidebar_collapsed')` に保存
+- 折りたたみ状態は `localStorage('hokena_sidebar_collapsed')` に保存
 - 折りたたみ時はホバーでツールチップ（背景 `bg-gray-900`、白テキスト）
 - アクティブ項目の背景は `var(--color-accent-tint)`、テキストは `var(--color-accent)`
 - アイコンは Lucide React のみ
@@ -522,7 +522,7 @@ export function Header({ userProfile }: { userProfile: UserProfile | null }) {
 
   const title = Object.entries(PAGE_TITLES)
     .filter(([k]) => pathname.startsWith(k))
-    .sort((a, b) => b[0].length - a[0].length)[0]?.[1] ?? 'N-LIC CRM'
+    .sort((a, b) => b[0].length - a[0].length)[0]?.[1] ?? 'HOKENA CRM'
 
   const handleLogout = async () => {
     const supabase = createClient()

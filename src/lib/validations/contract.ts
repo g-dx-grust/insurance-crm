@@ -6,6 +6,7 @@ export const productCategories = [
   '医療保険',
   '介護保険',
   '年金保険',
+  '積立保険',
 ] as const
 
 export const contractStatuses = ['有効', '満期', '解約', '更改中'] as const

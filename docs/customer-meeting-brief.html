@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HOKENA CRM 現状報告・打ち合わせ確認事項</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap');
+
+    :root {
+      --color-bg: #FFFFFF;
+      --color-bg-secondary: #F5F5F5;
+      --color-text: #111111;
+      --color-text-sub: #374151;
+      --color-text-muted: #6B7280;
+      --color-border: #E5E5E5;
+      --color-border-strong: #D1D5DB;
+      --color-accent: #1A56DB;
+      --color-accent-tint: rgba(26, 86, 219, 0.08);
+      --color-warning: #CA8A04;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --font-base: 'Noto Sans JP', sans-serif;
+      --font-xs: 11px;
+      --font-sm: 12px;
+      --font-md: 14px;
+      --font-lg: 16px;
+      --font-xl: 20px;
+      --font-2xl: 24px;
+      --line: 1.78;
+      --page-width: 1080px;
+    }
+
+    @page {
+      size: A4;
+      margin: 14mm 12mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--color-bg-secondary);
+      color: var(--color-text);
+      font-family: var(--font-base);
+      font-size: var(--font-md);
+      line-height: var(--line);
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-bg);
+    }
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .cover {
+      border-bottom: 1px solid var(--color-border);
+      padding: 48px 40px 32px;
+    }
+
+    .cover-inner,
+    .content {
+      margin: 0 auto;
+      max-width: var(--page-width);
+    }
+
+    .doc-label {
+      color: var(--color-text-muted);
+      font-size: var(--font-sm);
+      font-weight: 500;
+      letter-spacing: 0;
+      margin: 0 0 14px;
+    }
+
+    .cover h1 {
+      font-size: 30px;
+      line-height: 1.35;
+      margin: 0 0 8px;
+      font-weight: 600;
+    }
+
+    .cover p {
+      color: var(--color-text-sub);
+      margin: 0;
+    }
+
+    .meta {
+      color: var(--color-text-muted);
+      font-size: var(--font-sm);
+      margin-top: 18px;
+    }
+
+    .toc {
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+      padding: 24px 40px;
+    }
+
+    .toc h2 {
+      font-size: var(--font-lg);
+      margin: 0 0 12px;
+    }
+
+    .toc-grid {
+      display: grid;
+      gap: 6px 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 0 auto;
+      max-width: var(--page-width);
+    }
+
+    .toc-grid a {
+      align-items: baseline;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text);
+      display: flex;
+      gap: 10px;
+      min-height: 36px;
+      padding: 6px 10px;
+      text-decoration: none;
+    }
+
+    .toc-grid span {
+      color: var(--color-text-muted);
+      font-size: var(--font-xs);
+      min-width: 22px;
+    }
+
+    .content {
+      padding: 24px 40px 56px;
+    }
+
+    .chapter {
+      break-before: page;
+      padding-top: 8px;
+    }
+
+    .chapter:first-child {
+      break-before: auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      color: var(--color-text);
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.45;
+    }
+
+    h1 {
+      border-bottom: 1px solid var(--color-border-strong);
+      font-size: var(--font-2xl);
+      margin: 20px 0 18px;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: var(--font-xl);
+      margin: 28px 0 12px;
+    }
+
+    h3 {
+      font-size: var(--font-lg);
+      margin: 22px 0 8px;
+    }
+
+    h4 {
+      font-size: var(--font-md);
+      margin: 18px 0 6px;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote,
+    table,
+    pre,
+    figure {
+      margin: 0 0 14px;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.45em;
+    }
+
+    li + li {
+      margin-top: 4px;
+    }
+
+    blockquote {
+      background: var(--color-accent-tint);
+      border-left: 4px solid var(--color-accent);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-sub);
+      padding: 10px 12px;
+    }
+
+    table {
+      border-collapse: collapse;
+      font-size: var(--font-sm);
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--color-border);
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--color-bg-secondary);
+      font-weight: 600;
+      text-align: left;
+    }
+
+    code {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-base);
+      font-size: 0.92em;
+      padding: 0.08em 0.32em;
+    }
+
+    pre {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      padding: 12px;
+      white-space: pre-wrap;
+    }
+
+    pre code {
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+
+    figure {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      padding: 10px;
+    }
+
+    img {
+      display: block;
+      height: auto;
+      max-width: 100%;
+    }
+
+    figcaption {
+      color: var(--color-text-muted);
+      font-size: var(--font-xs);
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid var(--color-border);
+      margin: 24px 0;
+    }
+
+    .status-table td:first-child,
+    .status-table th:first-child {
+      white-space: nowrap;
+    }
+
+    @media screen and (max-width: 760px) {
+      .cover,
+      .toc,
+      .content {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      html,
+      body {
+        background: var(--color-bg);
+      }
+
+      .cover {
+        padding-top: 0;
+      }
+
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      a {
+        color: var(--color-text);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="cover">
+    <div class="cover-inner">
+      <p class="doc-label">HOKENA CRM / GRUST G-DX</p>
+      <h1>HOKENA CRM 現状報告・打ち合わせ確認事項</h1>
+      <p>先方打ち合わせ用サマリー</p>
+      <p class="meta">生成日時: 2026年5月15日 12:03</p>
+    </div>
+  </header>
+  <nav class="toc" aria-label="目次">
+    <div class="cover-inner">
+      <h2>目次</h2>
+      <div class="toc-grid">
+        <a href="#customer-meeting-brief"><span>01</span>HOKENA CRM 現状報告・打ち合わせ確認事項</a>
+      </div>
+    </div>
+  </nav>
+  <main class="content">
+    
+        <section class="chapter" id="customer-meeting-brief">
+          <h1 id="customer-meeting-brief">HOKENA CRM 現状報告・打ち合わせ確認事項</h1>
+<p>作成日: 2026年5月11日</p>
+<p>この資料は、先方打ち合わせで「現在どこまでできているか」「追加要望の可否」「完成に必要な情報」を確認するためのサマリーです。 詳細な画面操作は <code>HOKENA CRM 説明書</code> を参照してください。</p>
+<h2 id="customer-meeting-brief-現状サマリー">現状サマリー</h2>
+<table>
+    <thead><tr><th>項目</th><th>状態</th><th>補足</th></tr></thead>
+    <tbody><tr><td>デプロイ</td><td>Vercel へ反映済み</td><td>本資料はリポジトリ確認ベースで整理</td></tr><tr><td>フロントエンド</td><td>実装済み</td><td>Next.js 16 / React 19 / Tailwind CSS v4</td></tr><tr><td>データベース</td><td>実装済み</td><td>Supabase PostgreSQL、テナント分離 RLS、論理削除</td></tr><tr><td>認証</td><td>ID + パスワードは実装済み</td><td>Lark OAuth は準備中</td></tr><tr><td>説明書</td><td>作成済み</td><td>画面付き手順書を HTML / PDF 化</td></tr><tr><td>Lark 連携</td><td>設定 UI と DB 保存は実装済み</td><td>実 API 連携は段階的に有効化予定</td></tr></tbody>
+  </table>
+<h2 id="customer-meeting-brief-現在利用できる主な機能">現在利用できる主な機能</h2>
+<table>
+    <thead><tr><th>機能</th><th>現状</th></tr></thead>
+    <tbody><tr><td>ダッシュボード</td><td>KPI、月次推移、担当者別実績、満期アラートを表示</td></tr><tr><td>顧客管理</td><td>顧客検索、登録、編集、詳細、家族構成、対応履歴、高齢者フラグ</td></tr><tr><td>契約管理</td><td>契約登録、編集、特約、更改履歴、満期管理、論理削除</td></tr><tr><td>案件管理</td><td>カンバン、リスト、案件登録、ステージ変更、活動履歴、失注理由</td></tr><tr><td>意向把握</td><td>4ステップウィザード、比較推奨、チェックリスト、承認ステータス管理</td></tr><tr><td>精算・MDRT</td><td>CSV インポート、契約突合、入金確認、月次手数料、MDRT 進捗</td></tr><tr><td>カレンダー</td><td>月表示、週表示、予定登録、編集、削除、顧客・案件との紐付け</td></tr><tr><td>レポート</td><td>月次契約推移、担当者別、商品カテゴリ別、顧客年代分布</td></tr><tr><td>設定</td><td>代理店情報、ユーザー招待、ロール変更、通知設定、コンプライアンス設定</td></tr><tr><td>Lark 連携設定</td><td>SSO / Base / Calendar / Approval / Bot / 通知テンプレートの設定保存</td></tr></tbody>
+  </table>
+<h2 id="customer-meeting-brief-準備中-追加判断が必要な機能">準備中・追加判断が必要な機能</h2>
+<table>
+    <thead><tr><th>機能</th><th>現状</th><th>打ち合わせで決めたいこと</th></tr></thead>
+    <tbody><tr><td>Lark OAuth ログイン</td><td>ルートはあるが実ログインは未接続</td><td>Lark アプリ情報、許可スコープ、ログイン運用</td></tr><tr><td>Lark Base 同期</td><td>設定 UI は実装済み、同期 API は未接続</td><td>Base / Table / Field 構成、同期方向、競合時の扱い</td></tr><tr><td>Lark Calendar 同期</td><td>CRM 側カレンダーは実装済み、Lark 同期は未接続</td><td>Calendar ID、同期対象、担当者別運用</td></tr><tr><td>Lark Approval</td><td>CRM 内承認は実装済み、Lark 承認フロー起動は未接続</td><td>承認フロー ID、承認者、差戻し運用</td></tr><tr><td>Lark Bot 通知</td><td>通知ログ・テンプレートは準備済み、送信 API は未接続</td><td>通知先チャット、送信タイミング、文面</td></tr><tr><td>メール通知</td><td>準備中</td><td>メール通知を使うか、Lark に一本化するか</td></tr><tr><td>レポート出力</td><td>グラフ閲覧のみ</td><td>CSV / PDF エクスポートの必要範囲</td></tr><tr><td>監査ログ閲覧 UI</td><td>DB 側の監査ログは想定、閲覧画面は未実装</td><td>管理者画面で見る必要があるか</td></tr><tr><td>パスワード再発行 UI</td><td>アプリ内ボタンは未実装</td><td>Supabase 側運用か、管理画面に追加するか</td></tr><tr><td>MDRT 目標設定 UI</td><td>目標値は DB 管理、画面更新は未実装</td><td>管理者が年度目標を画面で変える必要があるか</td></tr><tr><td>タスク管理</td><td>旧タスクテーブルは撤去済み</td><td>カレンダー予定で足りるか、独立タスクが必要か</td></tr><tr><td>Web会議 URL 専用項目</td><td>現状はメモ欄で運用</td><td>専用フィールドを追加するか</td></tr></tbody>
+  </table>
+<h2 id="customer-meeting-brief-機能追加の可否整理">機能追加の可否整理</h2>
+<table>
+    <thead><tr><th>区分</th><th>内容</th></tr></thead>
+    <tbody><tr><td>すぐ運用確認できる</td><td>顧客、契約、案件、意向把握、精算、カレンダー、レポート、設定</td></tr><tr><td>情報が揃えば対応可能</td><td>Lark 実連携、既存データ移行、保険会社別 CSV テンプレート確定、レポート出力</td></tr><tr><td>仕様決定後に対応</td><td>独立タスク管理、監査ログ閲覧 UI、MDRT 目標設定 UI、通知ルール拡張</td></tr><tr><td>原則スコープ外</td><td>保険会社の見積作成、申込書作成、顧客との直接チャット、会計・税務処理</td></tr></tbody>
+  </table>
+<h2 id="customer-meeting-brief-完成に必要な情報">完成に必要な情報</h2>
+<h3 id="customer-meeting-brief-スタッフ-権限">スタッフ・権限</h3>
+<table>
+    <thead><tr><th>必要情報</th><th>用途</th></tr></thead>
+    <tbody><tr><td>氏名、メールアドレス、部署</td><td>ユーザー招待、担当者選択</td></tr><tr><td>ロール</td><td><code>admin</code> / <code>agent</code> / <code>staff</code> の権限付与</td></tr><tr><td>有効・無効ステータス</td><td>退職者や閲覧停止ユーザーの管理</td></tr><tr><td>Lark ユーザー情報</td><td>Lark OAuth / DM 通知を行う場合に必要</td></tr></tbody>
+  </table>
+<h3 id="customer-meeting-brief-保険会社-商品-サービス">保険会社・商品・サービス</h3>
+<table>
+    <thead><tr><th>必要情報</th><th>用途</th></tr></thead>
+    <tbody><tr><td>取扱保険会社一覧</td><td>契約登録、精算 CSV 照合</td></tr><tr><td>商品カテゴリ</td><td>現状候補: 生命保険 / 損害保険 / 医療保険 / 介護保険 / 年金保険</td></tr><tr><td>商品名・サービス名</td><td>契約・案件・レポートの選択肢</td></tr><tr><td>手数料率、計上ルール</td><td>精算・MDRT 管理</td></tr><tr><td>保険会社別 CSV サンプル</td><td>インポートテンプレート確定</td></tr></tbody>
+  </table>
+<h3 id="customer-meeting-brief-顧客-契約データ">顧客・契約データ</h3>
+<table>
+    <thead><tr><th>必要情報</th><th>用途</th></tr></thead>
+    <tbody><tr><td>既存顧客データ</td><td>初期移行</td></tr><tr><td>既存契約データ</td><td>契約・満期アラート・精算突合</td></tr><tr><td>証券番号の採番ルール</td><td>重複防止、CSV 照合</td></tr><tr><td>顧客ステータス</td><td>見込 / 既存 / 休眠 で足りるか確認</td></tr><tr><td>家族情報の有無</td><td>高齢者対応、受取人・被保険者管理</td></tr></tbody>
+  </table>
+<h3 id="customer-meeting-brief-コンプライアンス-運用ルール">コンプライアンス・運用ルール</h3>
+<table>
+    <thead><tr><th>必要情報</th><th>用途</th></tr></thead>
+    <tbody><tr><td>高齢者判定年齢</td><td>初期値は 70 歳</td></tr><tr><td>意向把握チェックリスト</td><td>現状 9 項目で足りるか</td></tr><tr><td>承認者と承認条件</td><td>意向把握の承認フロー</td></tr><tr><td>データ保持年数</td><td>削除・監査ログ・バックアップ方針</td></tr><tr><td>担当者の閲覧範囲</td><td>自分担当のみ / テナント全体</td></tr></tbody>
+  </table>
+<h3 id="customer-meeting-brief-lark-連携">Lark 連携</h3>
+<table>
+    <thead><tr><th>必要情報</th><th>用途</th></tr></thead>
+    <tbody><tr><td>Lark App ID / App Secret</td><td>Vercel 環境変数に登録</td></tr><tr><td>Redirect URI</td><td>Lark Developer Console に登録</td></tr><tr><td>必要スコープ</td><td>SSO、Base、Calendar、Approval、Bot 通知</td></tr><tr><td>Base ID / Table ID / Field ID</td><td>顧客・契約・案件同期</td></tr><tr><td>Calendar ID</td><td>予定同期</td></tr><tr><td>Approval Flow ID</td><td>意向把握承認</td></tr><tr><td>通知先チャット ID</td><td>Bot 通知</td></tr><tr><td>Bot 追加状況</td><td>通知先グループにアプリを追加する必要あり</td></tr></tbody>
+  </table>
+<h3 id="customer-meeting-brief-本番運用">本番運用</h3>
+<table>
+    <thead><tr><th>必要情報</th><th>用途</th></tr></thead>
+    <tbody><tr><td>本番ドメイン</td><td>リダイレクト URI、利用者案内</td></tr><tr><td>Supabase 本番プロジェクト情報</td><td>DB、Auth、バックアップ</td></tr><tr><td>Vercel 環境変数</td><td>Supabase / Lark / APP URL</td></tr><tr><td>初期管理者</td><td>初回ログイン、ユーザー招待</td></tr><tr><td>受入テストシナリオ</td><td>完成判定</td></tr></tbody>
+  </table>
+<h2 id="customer-meeting-brief-打ち合わせでの確認順">打ち合わせでの確認順</h2>
+<ol><li>現行画面を見せ、利用できる機能範囲を確認する</li><li>Lark 連携をどこまで初回リリースに含めるか決める</li><li>スタッフ・商品・保険会社・既存データの提供形式を確認する</li><li>意向把握、承認、高齢者対応、通知の運用ルールを確認する</li><li>追加要望を「初回リリース必須」と「リリース後改善」に分ける</li><li>受入テストの日程、確認担当、完了条件を決める</li></ol>
+        </section>
+      
+  </main>
+</body>
+</html>

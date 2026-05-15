@@ -59,6 +59,14 @@ export interface ContactHistoryRow {
   user_profiles: { name: string } | null
 }
 
+export interface MeetingTemplateOption {
+  id: string
+  title: string
+  type: string
+  content: string
+  next_action: string | null
+}
+
 export interface OpportunityRow {
   id: string
   title: string
@@ -75,12 +83,14 @@ export function CustomerDetailClient({
   contactHistories,
   opportunities,
   familyMembers,
+  meetingTemplates,
 }: {
   customer: CustomerDetail
   contracts: ContractRow[]
   contactHistories: ContactHistoryRow[]
   opportunities: OpportunityRow[]
   familyMembers: FamilyRow[]
+  meetingTemplates: MeetingTemplateOption[]
 }) {
   const [contactOpen, setContactOpen] = useState(false)
   const [familyModalOpen, setFamilyModalOpen] = useState(false)
@@ -346,6 +356,7 @@ export function CustomerDetailClient({
         open={contactOpen}
         onOpenChange={setContactOpen}
         customerId={customer.id}
+        templates={meetingTemplates}
       />
       <FamilyMemberModal
         open={familyModalOpen}

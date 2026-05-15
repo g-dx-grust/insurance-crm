@@ -17,6 +17,7 @@ import {
   formatRemainingDays,
   getExpiryBadgeVariant,
 } from '@/lib/utils/contract'
+import { isSavingsProductCategory } from '@/lib/constants/financial-situation'
 import { RiderModal, type RiderInitial } from './RiderModal'
 import { RenewalHistoryModal } from './RenewalHistoryModal'
 import { DeleteContractButton } from './DeleteContractButton'
@@ -62,6 +63,16 @@ export interface RenewalHistoryRow {
   user_profiles: { name: string } | null
 }
 
+export interface FinancialCheckSummary {
+  id: string
+  annual_income: string
+  employer_name: string | null
+  investment_experience: string
+  investment_knowledge: string
+  recorded_at: string
+  user_profiles: { name: string } | null
+}
+
 interface UserOption {
   id: string
   name: string
@@ -72,12 +83,14 @@ export function ContractDetailClient({
   riders,
   intentions,
   renewalHistories,
+  financialChecks,
   users,
 }: {
   contract: ContractDetail
   riders: RiderRow[]
   intentions: IntentionRow[]
   renewalHistories: RenewalHistoryRow[]
+  financialChecks: FinancialCheckSummary[]
   users: UserOption[]
 }) {
   const [riderModalOpen, setRiderModalOpen] = useState(false)
@@ -88,6 +101,8 @@ export function ContractDetailClient({
     .filter((r) => r.is_active)
     .reduce((sum, r) => sum + (r.premium ?? 0), 0)
   const totalPremium = contract.premium + ridersPremiumTotal
+  const isSavingsProduct = isSavingsProductCategory(contract.product_category)
+  const latestFinancialCheck = financialChecks[0] ?? null
 
   const openRiderNew = () => {
     setEditingRider(null)
@@ -300,6 +315,43 @@ export function ContractDetailClient({
 
       {/* 右サイド: 概要 */}
       <aside className="space-y-4">
+        {isSavingsProduct && (
+          <SidePanel title="財務状況確認">
+            {latestFinancialCheck ? (
+              <div className="space-y-2 text-xs text-text-sub">
+                <p>
+                  年収: <span className="font-medium text-text">{latestFinancialCheck.annual_income}</span>
+                </p>
+                <p>
+                  勤務先: <span className="font-medium text-text">{latestFinancialCheck.employer_name ?? '—'}</span>
+                </p>
+                <p>
+                  投資経験: <span className="font-medium text-text">{latestFinancialCheck.investment_experience}</span>
+                </p>
+                <p>
+                  投資知識: <span className="font-medium text-text">{latestFinancialCheck.investment_knowledge}</span>
+                </p>
+                <p className="text-text-muted">
+                  記録: {formatTokyoDate(latestFinancialCheck.recorded_at)}
+                  {latestFinancialCheck.user_profiles?.name && ` / ${latestFinancialCheck.user_profiles.name}`}
+                </p>
+              </div>
+            ) : (
+              <p className="text-xs text-[color:var(--color-warning)]">
+                積立系商品のため、財務状況確認が必要です。
+              </p>
+            )}
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-3 w-full"
+              render={<Link href="/financial-checks" />}
+            >
+              確認画面を開く
+            </Button>
+          </SidePanel>
+        )}
+
         <SidePanel title="契約者">
           {contract.customers ? (
             <Link

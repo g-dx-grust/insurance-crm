@@ -1,5 +1,5 @@
 {
-  "name": "n-lic-crm",
+  "name": "hokena-crm",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
+    "docs:export": "node scripts/export-docs.mjs",
     "db:types": "supabase gen types typescript --linked > src/lib/types/database.types.ts",
     "db:migrate": "supabase db push",
     "db:reset": "supabase db reset"

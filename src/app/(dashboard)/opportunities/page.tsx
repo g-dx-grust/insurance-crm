@@ -6,7 +6,7 @@ import {
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenantId } from '@/lib/auth/server'
 
-export const metadata = { title: '案件管理 | N-LIC CRM' }
+export const metadata = { title: '案件管理 | HOKENA CRM' }
 
 type SearchParams = Promise<{ stage?: string; assigned_to?: string }>
 

@@ -1,6 +1,7 @@
 import { PageHeader } from '@/components/ui/PageHeader'
 import {
   SettingsClient,
+  type MeetingRecordTemplateRow,
   type UserRow,
 } from '@/components/features/settings/SettingsClient'
 import { createClient } from '@/lib/supabase/server'
@@ -17,14 +18,14 @@ import {
   type OrgInfoValues,
 } from '@/lib/validations/settings'
 
-export const metadata = { title: '設定 | N-LIC CRM' }
+export const metadata = { title: '設定 | HOKENA CRM' }
 
 export default async function SettingsPage() {
   const supabase = await createClient()
   const tenantId = await getCurrentTenantId()
   const { profile } = await getSessionUserOrRedirect()
 
-  const [{ data: tenant }, { data: users }] = await Promise.all([
+  const [{ data: tenant }, { data: users }, { data: templates }] = await Promise.all([
     supabase
       .from('tenants')
       .select('name, settings')
@@ -35,6 +36,12 @@ export default async function SettingsPage() {
       .select('id, name, email, role, department, is_active')
       .eq('tenant_id', tenantId)
       .order('name'),
+    supabase
+      .from('meeting_record_templates')
+      .select('id, title, type, content, next_action, is_active, sort_order')
+      .eq('tenant_id', tenantId)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: true }),
   ])
 
   const raw = (tenant?.settings ?? {}) as Record<string, unknown>
@@ -70,6 +77,7 @@ export default async function SettingsPage() {
         orgInfo={orgInfo}
         notification={notification}
         compliance={compliance}
+        templates={(templates ?? []) as MeetingRecordTemplateRow[]}
         users={(users ?? []) as UserRow[]}
         isAdmin={profile.role === 'admin'}
       />

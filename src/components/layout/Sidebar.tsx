@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import Link, { useLinkStatus } from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   BarChart2,
@@ -52,7 +52,11 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     label: '保険業法対応',
-    items: [{ label: '意向把握', path: '/intentions', icon: ClipboardList }],
+    items: [
+      { label: '意向把握', path: '/intentions', icon: ClipboardList },
+      { label: '財務状況確認', path: '/financial-checks', icon: ClipboardList },
+      { label: '持ち出し記録簿', path: '/carry-out-logs', icon: FileText },
+    ],
   },
   {
     label: '精算・成績',
@@ -68,7 +72,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ]
 
-const STORAGE_KEY = 'nlic_sidebar_collapsed'
+const STORAGE_KEY = 'hokena_sidebar_collapsed'
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -77,8 +81,10 @@ export function Sidebar() {
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored === 'true') setCollapsed(true)
-    setHydrated(true)
+    queueMicrotask(() => {
+      if (stored === 'true') setCollapsed(true)
+      setHydrated(true)
+    })
   }, [])
 
   useEffect(() => {
@@ -106,7 +112,7 @@ export function Sidebar() {
             aria-label="ダッシュボードへ"
           >
             <LogoMark />
-            <span>N-LIC CRM</span>
+            <span>HOKENA CRM</span>
           </Link>
         )}
         {collapsed && (
@@ -155,6 +161,7 @@ export function Sidebar() {
                         collapsed && 'justify-center px-2',
                       )}
                     >
+                      <NavPendingBar />
                       <Icon className="size-4 shrink-0" />
                       {!collapsed && <span className="truncate">{item.label}</span>}
                     </Link>
@@ -166,6 +173,20 @@ export function Sidebar() {
         ))}
       </nav>
     </aside>
+  )
+}
+
+function NavPendingBar() {
+  const { pending } = useLinkStatus()
+
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        'fixed left-0 top-0 z-50 h-[2px] w-full bg-[color:var(--color-accent)] opacity-0 transition-opacity duration-150',
+        pending && 'opacity-100',
+      )}
+    />
   )
 }
 

@@ -17,6 +17,10 @@ import {
   type NotificationSettingsValues,
   type OrgInfoValues,
 } from '@/lib/validations/settings'
+import {
+  meetingRecordTemplateSchema,
+  type MeetingRecordTemplateFormValues,
+} from '@/lib/validations/meeting-record-template'
 
 type ActionResult<T = void> =
   | { ok: true; data?: T }
@@ -105,12 +109,78 @@ export async function updateComplianceSettings(
   })
 }
 
+// ─── Meeting record templates ─────────────────────────────────────
+
+export async function upsertMeetingRecordTemplate(
+  values: MeetingRecordTemplateFormValues,
+  id?: string,
+): Promise<ActionResult<{ id: string }>> {
+  const parsed = meetingRecordTemplateSchema.safeParse(emptyToNull(values))
+  if (!parsed.success) return { ok: false, error: '入力内容に誤りがあります' }
+
+  const auth = await ensureAdmin()
+  if ('error' in auth) return { ok: false, error: auth.error }
+
+  const supabase = await createClient()
+  const payload = {
+    tenant_id: auth.tenantId,
+    title: parsed.data.title,
+    type: parsed.data.type,
+    content: parsed.data.content,
+    next_action: parsed.data.next_action ?? null,
+    is_active: parsed.data.is_active,
+    sort_order: parsed.data.sort_order,
+  }
+
+  if (id) {
+    const { data, error } = await supabase
+      .from('meeting_record_templates')
+      .update(payload)
+      .eq('id', id)
+      .select('id')
+      .single()
+    if (error || !data) return { ok: false, error: error?.message ?? '更新に失敗しました' }
+    revalidatePath('/settings')
+    return { ok: true, data }
+  }
+
+  const { data, error } = await supabase
+    .from('meeting_record_templates')
+    .insert({ ...payload, created_by: auth.userId })
+    .select('id')
+    .single()
+
+  if (error || !data) return { ok: false, error: error?.message ?? '登録に失敗しました' }
+
+  revalidatePath('/settings')
+  return { ok: true, data }
+}
+
+export async function deleteMeetingRecordTemplate(id: string): Promise<ActionResult> {
+  const auth = await ensureAdmin()
+  if ('error' in auth) return { ok: false, error: auth.error }
+
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('meeting_record_templates')
+    .delete()
+    .eq('id', id)
+    .eq('tenant_id', auth.tenantId)
+
+  if (error) return { ok: false, error: error.message }
+
+  revalidatePath('/settings')
+  return { ok: true }
+}
+
 // ─── User management (admin 専用) ──────────────────────────────────
 
-async function ensureAdmin(): Promise<{ tenantId: string } | { error: string }> {
-  const { profile } = await getSessionUserOrRedirect()
+async function ensureAdmin(): Promise<
+  { tenantId: string; userId: string } | { error: string }
+> {
+  const { user, profile } = await getSessionUserOrRedirect()
   if (profile.role !== 'admin') return { error: '管理者のみが操作できます' }
-  return { tenantId: profile.tenant_id }
+  return { tenantId: profile.tenant_id, userId: user.id }
 }
 
 export async function inviteUser(

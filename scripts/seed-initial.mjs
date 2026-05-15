@@ -10,14 +10,14 @@
 import { createClient } from '@supabase/supabase-js'
 
 const TENANT = {
-  name: '株式会社N-LIC',
-  code: 'n-lic',
+  name: 'HOKENA デモ代理店',
+  code: 'hokena',
 }
 
 const ADMIN = {
-  email:    process.env.SEED_ADMIN_EMAIL ?? 'demo@n-lic-crm.local',
-  password: process.env.SEED_ADMIN_PASSWORD ?? 'Nlic2026demo!',
-  name:     process.env.SEED_ADMIN_NAME ?? 'N-LIC デモ管理者',
+  email:    process.env.SEED_ADMIN_EMAIL ?? 'demo@hokena-crm.local',
+  password: process.env.SEED_ADMIN_PASSWORD ?? 'Hokena2026demo!',
+  name:     process.env.SEED_ADMIN_NAME ?? 'HOKENA デモ管理者',
 }
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL

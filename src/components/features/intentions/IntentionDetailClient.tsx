@@ -1,9 +1,15 @@
 'use client'
 
+import { useState, useTransition } from 'react'
 import Link from 'next/link'
-import { ShieldCheck } from 'lucide-react'
+import { Copy, Mail, ShieldCheck } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { ApprovalSection } from './ApprovalSection'
+import { createRemoteSignatureRequest } from '@/app/(dashboard)/intentions/actions'
 import { INTENTION_CHECKLIST_ITEMS } from '@/lib/constants/intention'
 import { formatTokyoDateTime } from '@/lib/utils/datetime'
 
@@ -22,7 +28,7 @@ export interface IntentionDetail {
   rejection_reason: string | null
   lark_approval_id: string | null
   created_at: string
-  customers: { id: string; name: string; name_kana: string } | null
+  customers: { id: string; name: string; name_kana: string; email: string | null } | null
   contracts: { id: string; policy_number: string; product_name: string } | null
   approver: { id: string; name: string } | null
   creator: { id: string; name: string } | null
@@ -65,6 +71,28 @@ export interface IntentionSignatureEvidence {
   signature_hash_valid: boolean | null
 }
 
+export interface FinancialCheckDetail {
+  id: string
+  annual_income: string
+  employer_name: string | null
+  investment_experience: string
+  investment_knowledge: string
+  note: string | null
+  recorded_at: string
+  user_profiles: { name: string } | null
+}
+
+export interface IntentionSignatureRequestRow {
+  id: string
+  signer_name: string
+  signer_email: string
+  status: string
+  expires_at: string
+  sent_at: string | null
+  signed_at: string | null
+  created_at: string
+}
+
 interface UserOption {
   id: string
   name: string
@@ -73,14 +101,18 @@ interface UserOption {
 export function IntentionDetailClient({
   intention,
   products,
+  financialChecks,
   signatureEvidences,
+  signatureRequests,
   approvers,
   currentUserRole,
   currentUserId,
 }: {
   intention: IntentionDetail
   products: IntentionProductRow[]
+  financialChecks: FinancialCheckDetail[]
   signatureEvidences: IntentionSignatureEvidence[]
+  signatureRequests: IntentionSignatureRequestRow[]
   approvers: UserOption[]
   currentUserRole: string
   currentUserId: string
@@ -192,6 +224,30 @@ export function IntentionDetailClient({
             </div>
           )}
         </section>
+
+        {financialChecks.length > 0 && (
+          <section className="rounded-md border border-border bg-bg p-5 space-y-3">
+            <h2 className="text-sm font-semibold text-text-sub">積立系商品の財務状況確認</h2>
+            {financialChecks.map((check) => (
+              <div key={check.id} className="grid gap-3 text-sm sm:grid-cols-2">
+                <DetailField label="年収" value={check.annual_income} />
+                <DetailField label="勤務先" value={check.employer_name ?? '—'} />
+                <DetailField label="投資経験" value={check.investment_experience} />
+                <DetailField label="投資知識" value={check.investment_knowledge} />
+                {check.note && (
+                  <div className="sm:col-span-2">
+                    <p className="text-xs font-medium text-text-muted">補足</p>
+                    <p className="mt-1 whitespace-pre-wrap text-sm text-text">{check.note}</p>
+                  </div>
+                )}
+                <p className="sm:col-span-2 text-xs text-text-muted">
+                  記録: {formatTokyoDateTime(check.recorded_at)}
+                  {check.user_profiles?.name && ` / ${check.user_profiles.name}`}
+                </p>
+              </div>
+            ))}
+          </section>
+        )}
 
         {/* Step 3 */}
         <section className="rounded-md border border-border bg-bg p-5 space-y-2">
@@ -310,7 +366,7 @@ export function IntentionDetailClient({
         </section>
       </div>
 
-      <aside>
+      <aside className="space-y-4">
         <ApprovalSection
           intentionId={intention.id}
           status={intention.status}
@@ -323,7 +379,153 @@ export function IntentionDetailClient({
           currentUserRole={currentUserRole}
           currentUserId={currentUserId}
         />
+        <RemoteSignatureRequestPanel
+          intentionId={intention.id}
+          defaultSignerName={intention.customers?.name ?? ''}
+          defaultSignerEmail={intention.customers?.email ?? ''}
+          requests={signatureRequests}
+        />
       </aside>
+    </div>
+  )
+}
+
+function RemoteSignatureRequestPanel({
+  intentionId,
+  defaultSignerName,
+  defaultSignerEmail,
+  requests,
+}: {
+  intentionId: string
+  defaultSignerName: string
+  defaultSignerEmail: string
+  requests: IntentionSignatureRequestRow[]
+}) {
+  const [signerName, setSignerName] = useState(defaultSignerName)
+  const [signerEmail, setSignerEmail] = useState(defaultSignerEmail)
+  const [expiresInDays, setExpiresInDays] = useState(7)
+  const [latestUrl, setLatestUrl] = useState<string | null>(null)
+  const [pending, startTransition] = useTransition()
+
+  const submit = () => {
+    startTransition(async () => {
+      const result = await createRemoteSignatureRequest({
+        intention_record_id: intentionId,
+        signer_name: signerName,
+        signer_email: signerEmail,
+        expires_in_days: expiresInDays,
+      })
+      if (!result.ok) {
+        toast.error(result.error)
+        return
+      }
+      setLatestUrl(result.data?.signingUrl ?? null)
+      toast.success('リモート署名依頼を作成しました', {
+        description: 'メール送信キューに登録しました。',
+      })
+    })
+  }
+
+  const copyLatestUrl = async () => {
+    if (!latestUrl) return
+    await navigator.clipboard.writeText(latestUrl)
+    toast.success('署名リンクをコピーしました')
+  }
+
+  return (
+    <section className="rounded-md border border-border bg-bg p-4">
+      <div className="flex items-center gap-2">
+        <Mail className="size-4 text-text-muted" />
+        <h2 className="text-sm font-semibold text-text-sub">リモート署名</h2>
+      </div>
+      <div className="mt-3 space-y-3">
+        <FieldInline label="署名者名">
+          <Input
+            value={signerName}
+            onChange={(event) => setSignerName(event.target.value)}
+          />
+        </FieldInline>
+        <FieldInline label="メール">
+          <Input
+            type="email"
+            value={signerEmail}
+            onChange={(event) => setSignerEmail(event.target.value)}
+          />
+        </FieldInline>
+        <FieldInline label="有効期限(日)">
+          <Input
+            type="number"
+            inputMode="numeric"
+            value={expiresInDays}
+            onChange={(event) => setExpiresInDays(Number(event.target.value) || 7)}
+          />
+        </FieldInline>
+        <Button
+          className="w-full"
+          onClick={submit}
+          disabled={pending || !signerName.trim() || !signerEmail.trim()}
+        >
+          {pending ? '作成中…' : '署名リンクをメール送信'}
+        </Button>
+      </div>
+
+      {latestUrl && (
+        <div className="mt-3 rounded-sm border border-border bg-[color:var(--color-bg-secondary)] p-2">
+          <p className="break-all text-xs text-text-sub">{latestUrl}</p>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="mt-2 w-full"
+            onClick={copyLatestUrl}
+          >
+            <Copy className="size-3.5" />
+            リンクをコピー
+          </Button>
+        </div>
+      )}
+
+      {requests.length > 0 && (
+        <div className="mt-4 space-y-2">
+          <p className="text-xs font-medium text-text-muted">依頼履歴</p>
+          {requests.map((request) => (
+            <div
+              key={request.id}
+              className="rounded-sm border border-border bg-[color:var(--color-bg-secondary)] p-2"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="truncate text-xs font-medium text-text">
+                  {request.signer_name}
+                </p>
+                <StatusBadge variant={signatureRequestVariant(request.status)}>
+                  {request.status}
+                </StatusBadge>
+              </div>
+              <p className="mt-1 break-all text-xs text-text-muted">
+                {request.signer_email}
+              </p>
+              <p className="mt-1 text-xs text-text-muted">
+                期限: {formatTokyoDateTime(request.expires_at)}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}
+
+function FieldInline({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <Label className="mb-1 block text-xs font-medium text-text-sub">{label}</Label>
+      {children}
     </div>
   )
 }
@@ -339,11 +541,29 @@ function statusVariant(status: string) {
   }
 }
 
+function signatureRequestVariant(status: string) {
+  switch (status) {
+    case '署名済': return 'success' as const
+    case '期限切れ': return 'danger' as const
+    case '取消': return 'muted' as const
+    default: return 'warning' as const
+  }
+}
+
 function EvidenceField({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="font-medium text-text-muted">{label}</p>
       <p className="mt-0.5 break-all text-text-sub">{value}</p>
+    </div>
+  )
+}
+
+function DetailField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs font-medium text-text-muted">{label}</p>
+      <p className="mt-1 text-sm text-text">{value}</p>
     </div>
   )
 }

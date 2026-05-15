@@ -28,6 +28,12 @@ import {
   INTENTION_SIGNATURE_CONSENT_TEXT,
   type ComparisonMethod,
 } from '@/lib/constants/intention'
+import {
+  annualIncomeOptions,
+  investmentExperienceOptions,
+  investmentKnowledgeOptions,
+  isSavingsProductCategory,
+} from '@/lib/constants/financial-situation'
 import { productCategories } from '@/lib/validations/contract'
 import type { IntentionWizardValues } from '@/lib/validations/intention'
 import { nowTokyoDateTimeLocal } from '@/lib/utils/datetime'
@@ -65,6 +71,13 @@ interface WizardState {
   comparison_method: ComparisonMethod | ''
   comparison_reason: string
   products: ProductDraft[]
+  financial_situation: {
+    annual_income: (typeof annualIncomeOptions)[number]
+    employer_name: string
+    investment_experience: (typeof investmentExperienceOptions)[number]
+    investment_knowledge: (typeof investmentKnowledgeOptions)[number]
+    note: string
+  }
 
   final_intention: string
   final_change_note: string
@@ -113,6 +126,13 @@ export function IntentionWizard({
     comparison_method: '',
     comparison_reason: '',
     products: [],
+    financial_situation: {
+      annual_income: '未確認',
+      employer_name: '',
+      investment_experience: '未確認',
+      investment_knowledge: '未確認',
+      note: '',
+    },
 
     final_intention: '',
     final_change_note: '',
@@ -161,6 +181,20 @@ export function IntentionWizard({
           return 'イ方式では商品を1件のみ提案してください'
         if (!state.products[0].recommendation_reason.trim())
           return 'イ方式では提案理由 (推奨理由) が必須です'
+      }
+      if (state.products.some((p) => isSavingsProductCategory(p.product_category))) {
+        if (state.financial_situation.annual_income === '未確認') {
+          return '積立系商品では年収を確認してください'
+        }
+        if (!state.financial_situation.employer_name.trim()) {
+          return '積立系商品では勤務先を入力してください'
+        }
+        if (state.financial_situation.investment_experience === '未確認') {
+          return '積立系商品では投資経験を確認してください'
+        }
+        if (state.financial_situation.investment_knowledge === '未確認') {
+          return '積立系商品では投資知識を確認してください'
+        }
       }
     }
     if (s === 3) {
@@ -234,6 +268,17 @@ export function IntentionWizard({
           recommendation_reason: rest.recommendation_reason || null,
         }
       }),
+      financial_situation: state.products.some((p) =>
+        isSavingsProductCategory(p.product_category),
+      )
+        ? {
+            annual_income: state.financial_situation.annual_income,
+            employer_name: state.financial_situation.employer_name,
+            investment_experience: state.financial_situation.investment_experience,
+            investment_knowledge: state.financial_situation.investment_knowledge,
+            note: state.financial_situation.note || null,
+          }
+        : null,
       final_intention: state.final_intention,
       final_change_note: state.final_change_note || null,
       final_recorded_at: state.final_recorded_at,
@@ -428,6 +473,9 @@ function Step2({
 
   const isLo = state.comparison_method === 'ロ方式'
   const isI = state.comparison_method === 'イ方式'
+  const hasSavingsProduct = state.products.some((p) =>
+    isSavingsProductCategory(p.product_category),
+  )
 
   return (
     <div className="space-y-4">
@@ -577,6 +625,105 @@ function Step2({
           </ul>
         )}
       </div>
+
+      {hasSavingsProduct && (
+        <div className="rounded-md border border-[color:var(--color-warning)]/30 bg-[color:var(--color-warning)]/10 p-4">
+          <div className="mb-3">
+            <h3 className="text-sm font-semibold text-[color:var(--color-warning)]">
+              積立系商品の財務状況確認
+            </h3>
+            <p className="mt-1 text-xs text-text-sub">
+              商品カテゴリが積立系のため、年収・勤務先・投資経験・投資知識を確認します。
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field label="年収 *">
+              <Select
+                value={state.financial_situation.annual_income}
+                onValueChange={(v) =>
+                  update('financial_situation', {
+                    ...state.financial_situation,
+                    annual_income: v as (typeof annualIncomeOptions)[number],
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {annualIncomeOptions.map((option) => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="勤務先 *">
+              <Input
+                value={state.financial_situation.employer_name}
+                onChange={(e) =>
+                  update('financial_situation', {
+                    ...state.financial_situation,
+                    employer_name: e.target.value,
+                  })
+                }
+                placeholder="勤務先名"
+              />
+            </Field>
+            <Field label="投資経験 *">
+              <Select
+                value={state.financial_situation.investment_experience}
+                onValueChange={(v) =>
+                  update('financial_situation', {
+                    ...state.financial_situation,
+                    investment_experience: v as (typeof investmentExperienceOptions)[number],
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {investmentExperienceOptions.map((option) => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="投資知識 *">
+              <Select
+                value={state.financial_situation.investment_knowledge}
+                onValueChange={(v) =>
+                  update('financial_situation', {
+                    ...state.financial_situation,
+                    investment_knowledge: v as (typeof investmentKnowledgeOptions)[number],
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {investmentKnowledgeOptions.map((option) => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="補足" className="sm:col-span-2">
+              <Textarea
+                rows={2}
+                value={state.financial_situation.note}
+                onChange={(e) =>
+                  update('financial_situation', {
+                    ...state.financial_situation,
+                    note: e.target.value,
+                  })
+                }
+              />
+            </Field>
+          </div>
+        </div>
+      )}
 
       {isLo && (
         <Field label="比較推奨理由 (全体)">
@@ -737,12 +884,14 @@ function Step4({
 function Field({
   label,
   children,
+  className,
 }: {
   label: string
   children: React.ReactNode
+  className?: string
 }) {
   return (
-    <div>
+    <div className={className}>
       <Label className="mb-1 block text-xs font-medium text-text-sub">{label}</Label>
       {children}
     </div>

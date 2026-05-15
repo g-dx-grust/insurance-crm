@@ -44,7 +44,7 @@ interface UserOption {
   name: string
 }
 
-const VIEW_KEY = 'nlic_opportunities_view'
+const VIEW_KEY = 'hokena_opportunities_view'
 
 export function OpportunitiesClient({
   opportunities,

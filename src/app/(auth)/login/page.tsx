@@ -1,7 +1,7 @@
 import { LoginPanel } from '@/components/features/auth/LoginPanel'
 
 export const metadata = {
-  title: 'ログイン | N-LIC CRM',
+  title: 'ログイン | HOKENA CRM',
 }
 
 export default function LoginPage() {
@@ -15,7 +15,7 @@ export default function LoginPage() {
         />
         <div className="relative flex h-full items-end p-10">
           <p className="text-sm leading-relaxed text-text-sub">
-            N-LIC CRM
+            HOKENA CRM
             <br />
             保険代理店業務を、現場の手で止めずに回す。
           </p>

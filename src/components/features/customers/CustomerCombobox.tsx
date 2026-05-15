@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Check, ChevronsUpDown, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -54,13 +54,14 @@ export function CustomerCombobox({
     )
   }, [query, customers])
 
-  // value が外部から変わった時にローカル query をリセット
-  useEffect(() => {
-    if (!open) setQuery('')
-  }, [open])
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen)
+        if (!nextOpen) setQuery('')
+      }}
+    >
       <PopoverTrigger
         render={
           <Button

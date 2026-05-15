@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server'
 import { sanitizePostgrestSearch } from '@/lib/utils/escape'
 import { ymdAfterTokyoMonths } from '@/lib/utils/datetime'
 
-export const metadata = { title: '契約管理 | N-LIC CRM' }
+export const metadata = { title: '契約管理 | HOKENA CRM' }
 
 const PAGE_SIZE = 20
 
